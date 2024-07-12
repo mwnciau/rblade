@@ -18,20 +18,18 @@ end
 
 
 class BladeCompiler
-  include CompilesEchos
-
   def self.compileString(stringTemplate)
     tokens = [Token.new(:unprocessed, stringTemplate)]
 
-    CompilesEchos.compile_echos!(tokens)
+    CompilesEchos.compile!(tokens)
 
     output = "_out='';";
 
     tokens.each do |token, cake|
-      if token.type == :unprocessed
-        output.<< "_out.<<'".<< escape_quotes(token.value) .<< "';"
+      if token.type == :unprocessed || token.type == :raw_text
+        output << "_out<<'" << escape_quotes(token.value) << "';"
       else
-        output.<< token.value
+        output << token.value
       end
     end
 
