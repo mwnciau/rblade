@@ -1,5 +1,5 @@
-require_relative "../../test_case"
-require_relative "../../../lib/compiler/blade_compiler"
+require_relative "../../../test_case"
+require_relative "../../../../lib/compiler/blade_compiler"
 
 class EchoTest < TestCase
   def test_echo_variable
