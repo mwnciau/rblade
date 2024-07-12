@@ -1,3 +1,4 @@
+require_relative "concerns/compiles_comments"
 require_relative "concerns/compiles_echos"
 require "htmlentities"
 
@@ -21,6 +22,7 @@ class BladeCompiler
   def self.compileString(stringTemplate)
     tokens = [Token.new(:unprocessed, stringTemplate)]
 
+    CompilesComments.compile!(tokens)
     CompilesEchos.compile!(tokens)
 
     output = "_out='';";
