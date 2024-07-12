@@ -1,0 +1,7 @@
+services:
+  blade:
+    image: ruby:3.3.4
+    working_dir: /var/source
+    volumes:
+      - .:/var/source
+      - ./storage/bundle_cache:/usr/local/bundle
