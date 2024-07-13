@@ -25,15 +25,15 @@ class EchoTest < TestCase
   end
 
   def test_echo_expression
-    assert_compiles_to %q[{{ foo + bar << 'BAZ' }}], %q[_out='';_out<<h(foo + bar << 'BAZ');], "FOOBARBAZ"
-    assert_compiles_to %q[{{ "foo" + 'bar' }}], %q[_out='';_out<<h("foo" + 'bar');], "foobar"
-    assert_compiles_to %q[{{ "#{foo}" }}], %q[_out='';_out<<h("#{foo}");], "FOO"
-    assert_compiles_to %q[{{ 'a' * 3 }}], %q[_out='';_out<<h('a' * 3);], "aaa"
+    assert_compiles_to "{{ foo + bar << 'BAZ' }}", "_out='';_out<<h(foo + bar << 'BAZ');", "FOOBARBAZ"
+    assert_compiles_to %q({{ "foo" + 'bar' }}), %q[_out='';_out<<h("foo" + 'bar');], "foobar"
+    assert_compiles_to %q({{ "#{foo}" }}), %q[_out='';_out<<h("#{foo}");], "FOO"
+    assert_compiles_to "{{ 'a' * 3 }}", "_out='';_out<<h('a' * 3);", "aaa"
 
-    assert_compiles_to %q[{!! foo + bar << 'BAZ' !!}], %q[_out='';_out<<(foo + bar << 'BAZ');], "FOOBARBAZ"
-    assert_compiles_to %q[{!! "foo" + 'bar' !!}], %q[_out='';_out<<("foo" + 'bar');], "foobar"
-    assert_compiles_to %q[{!! "#{foo}" !!}], %q[_out='';_out<<("#{foo}");], "FOO"
-    assert_compiles_to %q[{!! 'a' * 3 !!}], %q[_out='';_out<<('a' * 3);], "aaa"
+    assert_compiles_to "{!! foo + bar << 'BAZ' !!}", "_out='';_out<<(foo + bar << 'BAZ');", "FOOBARBAZ"
+    assert_compiles_to %q({!! "foo" + 'bar' !!}), %q[_out='';_out<<("foo" + 'bar');], "foobar"
+    assert_compiles_to %q({!! "#{foo}" !!}), %q[_out='';_out<<("#{foo}");], "FOO"
+    assert_compiles_to "{!! 'a' * 3 !!}", "_out='';_out<<('a' * 3);", "aaa"
   end
 
   def test_echo_multiple
@@ -61,9 +61,9 @@ class EchoTest < TestCase
       foo
       }}"
 
-      assert_compiles_to "@{!!foo!!}", "_out='';_out<<'{!!foo!!}';", "{!!foo!!}"
-      assert_compiles_to "@{!! foo !!}", "_out='';_out<<'{!! foo !!}';", "{!! foo !!}"
-      assert_compiles_to "@{!!
+    assert_compiles_to "@{!!foo!!}", "_out='';_out<<'{!!foo!!}';", "{!!foo!!}"
+    assert_compiles_to "@{!! foo !!}", "_out='';_out<<'{!! foo !!}';", "{!! foo !!}"
+    assert_compiles_to "@{!!
         foo
         !!}", "_out='';_out<<'{!!
         foo
@@ -72,13 +72,12 @@ class EchoTest < TestCase
         !!}"
   end
 
-
   def test_echo_dangerous_strings
-    assert_compiles_to %q[{{ '"\'\\\\\\'' }}], %q[_out='';_out<<h('"\'\\\\\\'');], "&quot;&apos;\\&apos;"
-    assert_compiles_to %q[{{ '<&"\'>' }}], %q[_out='';_out<<h('<&"\'>');], "&lt;&amp;&quot;&apos;&gt;"
-    assert_compiles_to %q[@{{ '"\'\\\\\\'' }}], nil, %q[{{ '\"\\'\\\\\\'' }}]
+    assert_compiles_to %q({{ '"\'\\\\\\'' }}), %q[_out='';_out<<h('"\'\\\\\\'');], "&quot;&apos;\\&apos;"
+    assert_compiles_to %q({{ '<&"\'>' }}), %q[_out='';_out<<h('<&"\'>');], "&lt;&amp;&quot;&apos;&gt;"
+    assert_compiles_to %q(@{{ '"\'\\\\\\'' }}), nil, %q({{ '\"\\'\\\\\\'' }})
 
-    assert_compiles_to %q[{!! '"\'\\\\\\'' !!}], %q[_out='';_out<<('"\'\\\\\\'');], %q["'\\']
-    assert_compiles_to %q[{!! '<&"\'>' !!}], %q[_out='';_out<<('<&"\'>');], "<&\"'>"
+    assert_compiles_to %q({!! '"\'\\\\\\'' !!}), %q[_out='';_out<<('"\'\\\\\\'');], %q("'\\')
+    assert_compiles_to %q({!! '<&"\'>' !!}), %q[_out='';_out<<('<&"\'>');], "<&\"'>"
   end
 end

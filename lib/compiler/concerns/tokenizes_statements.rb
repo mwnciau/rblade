@@ -5,15 +5,15 @@ class TokenizesStatements
     tokens.map! do |token|
       next(token) if token.type != :unprocessed
 
-      segments = token.value.split /\B(@@?)(\w+(?:::\w+)?)(?:[ \t]*(\(.*?\)))?/m
+      segments = token.value.split(/\B(@@?)(\w+(?:::\w+)?)(?:[ \t]*(\(.*?\)))?/m)
 
-      self.parseSegments! segments
+      parseSegments! segments
     end.flatten!
   end
 
   def self.parseSegments! segments
     i = 0
-    while i < segments.count do
+    while i < segments.count
       segment = segments[i]
 
       # The @ symbol is used to escape blade directives so we return it unprocessed
@@ -23,10 +23,10 @@ class TokenizesStatements
 
         i += 1
       elsif segment == "@"
-        self.tokenizeStatement! segments, i
+        tokenizeStatement! segments, i
 
         i += 1
-      elsif segments[i] != nil && segments[i] != ""
+      elsif !segments[i].nil? && segments[i] != ""
         segments[i] = Token.new(type: :unprocessed, value: segments[i])
 
         i += 1
@@ -44,7 +44,7 @@ class TokenizesStatements
     segments.delete_at i + 1
 
     if segments.count > i + 1 && segments[i + 1][0] == "("
-      arguments = self.tokenizeArguments! segments, i + 1
+      arguments = tokenizeArguments! segments, i + 1
 
       if !arguments.nil?
         statementData[:arguments] = arguments
@@ -56,7 +56,7 @@ class TokenizesStatements
   private_class_method :tokenizeStatement!
 
   def self.tokenizeArguments!(segments, segmentIndex)
-    success = self.expandSegmentToEndParenthesis! segments, segmentIndex
+    success = expandSegmentToEndParenthesis! segments, segmentIndex
 
     # If no matching parentheses were found, so we combine the argument string with the next segment
     if !success
@@ -68,7 +68,7 @@ class TokenizesStatements
       return nil
     end
 
-    arguments = self.extractArguments segments[segmentIndex]
+    arguments = extractArguments segments[segmentIndex]
     segments.delete_at segmentIndex
 
     arguments
@@ -80,12 +80,12 @@ class TokenizesStatements
     tokens = nil
 
     loop do
-      tokens = Ripper.lex(segments[segmentIndex]).map {|token| token[1]}
+      tokens = Ripper.lex(segments[segmentIndex]).map { |token| token[1] }
       parenthesesDifference = tokens.count(:on_lparen) - tokens.count(:on_rparen)
 
       break if parenthesesDifference.zero? || segments[segmentIndex + 1].nil?
 
-      index = segments[segmentIndex + 1].each_char.find_index { |c| c == ")" && (parenthesesDifference = parenthesesDifference-1).zero? }
+      index = segments[segmentIndex + 1].each_char.find_index { |c| c == ")" && (parenthesesDifference -= 1).zero? }
 
       if index.nil?
         segments[segmentIndex] << segments[segmentIndex + 1]
@@ -103,7 +103,7 @@ class TokenizesStatements
 
   def self.extractArguments(segment)
     # Add a comma to the end to delimit the end of the last argument
-    segment = segment[1..-2] + ','
+    segment = segment[1..-2] + ","
     segmentLines = segment.lines
 
     tokens = Ripper.lex segment

@@ -12,9 +12,7 @@ class TestCase < Minitest::Test
     end
 
     if expected_result
-      foo = "FOO"
-      bar = "BAR"
-      result = eval compiledString + ";_out"
+      result = eval "foo = 'FOO';bar = 'BAR';" + compiledString + ";_out"
 
       assert_equal expected_result, result
     end
