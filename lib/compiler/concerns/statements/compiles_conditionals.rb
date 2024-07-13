@@ -7,12 +7,44 @@ class CompilesConditionals
     return "if(#{args[0]});"
   end
 
+  def self.compileElsif args
+    if args&.count != 1
+      raise Exception.new "Elsif statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+    end
+
+    return "elsif(#{args[0]});"
+  end
+
+  def self.compileElse args
+    if !args.nil?
+      raise Exception.new "Else statement: wrong number of arguments (given #{args&.count || 0}, expecting 0)"
+    end
+
+    return "else;"
+  end
+
   def self.compileUnless args
     if args&.count != 1
       raise Exception.new "Unless statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
     return "unless(#{args[0]});"
+  end
+
+  def self.compileCase args
+    if args&.count != 1
+      raise Exception.new "Case statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+    end
+
+    return "case(#{args[0]});"
+  end
+
+  def self.compileWhen args
+    if args.nil? || args.count == 0
+      raise Exception.new "When statement: wrong number of arguments (given #{args&.count || 0}, expecting at least 1)"
+    end
+
+    return "when #{args.join ','};"
   end
 
   def self.compileChecked args

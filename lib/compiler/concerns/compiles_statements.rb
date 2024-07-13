@@ -24,15 +24,20 @@ class CompilesStatements
   end
 
   @@statementHandlers = {
+    "case" => CompilesConditionals.method(:compileCase),
     "checked" => CompilesConditionals.method(:compileChecked),
     "disabled" => CompilesConditionals.method(:compileDisabled),
+    "else" => CompilesConditionals.method(:compileElse),
+    "elsif" => CompilesConditionals.method(:compileElsif),
     "end" => CompilesStatements.method(:compileEnd),
+    "endcase" => CompilesStatements.method(:compileEnd),
     "endif" => CompilesStatements.method(:compileEnd),
     "endunless" => CompilesStatements.method(:compileEnd),
     "if" => CompilesConditionals.method(:compileIf),
     "readonly" => CompilesConditionals.method(:compileReadonly),
     "required" => CompilesConditionals.method(:compileRequired),
     "selected" => CompilesConditionals.method(:compileSelected),
-    "unless" => CompilesConditionals.method(:compileUnless)
+    "unless" => CompilesConditionals.method(:compileUnless),
+    "when" => CompilesConditionals.method(:compileWhen)
   }
 end
