@@ -40,7 +40,7 @@ class TokenizesStatements
   private_class_method :parseSegments!
 
   def self.tokenizeStatement!(segments, i)
-    statementData = {statement: segments[i + 1]}
+    statementData = {name: segments[i + 1]}
     segments.delete_at i + 1
 
     if segments.count > i + 1 && segments[i + 1][0] == "("

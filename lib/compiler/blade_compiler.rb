@@ -1,5 +1,6 @@
 require_relative "concerns/compiles_comments"
 require_relative "concerns/compiles_echos"
+require_relative "concerns/compiles_statements"
 require_relative "concerns/tokenizes_statements"
 require "htmlentities"
 require "pp"
@@ -26,9 +27,10 @@ class BladeCompiler
 
     CompilesComments.compile!(tokens)
     TokenizesStatements.tokenize!(tokens)
+    CompilesStatements.compile!(tokens)
     CompilesEchos.compile!(tokens)
 
-    output = "_out='';"
+    output = ""
 
     tokens.each do |token, cake|
       if token.type == :unprocessed || token.type == :raw_text
