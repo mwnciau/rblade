@@ -21,43 +21,39 @@ class EchoTest < TestCase
     assert_compiles_to "@if(true) hi @endif", "if(true);_out<<' hi ';end;", " hi "
     assert_compiles_to "@if(false) hi @endif", "if(false);_out<<' hi ';end;", ""
     assert_compiles_to "@if(true)#{MULTILINE_STRING}@endif", "if(true);_out<<'#{MULTILINE_STRING}';end;", "#{MULTILINE_STRING}"
-  end
-
-
-  def test_unless
-    assert_compiles_to "@unless ( false ) hi @endunless", "if(!(false));_out<<' hi ';end;", " hi "
-    assert_compiles_to "@unless(false) hi @endunless", "if(!(false));_out<<' hi ';end;", " hi "
-    assert_compiles_to "@unless(true) hi @endunless", "if(!(true));_out<<' hi ';end;", ""
-    assert_compiles_to "@unless(false)#{MULTILINE_STRING}@endunless", "if(!(false));_out<<'#{MULTILINE_STRING}';end;", "#{MULTILINE_STRING}"
-  end
-
-  def test_if_variables
     assert_compiles_to "@if ( foo == 'FOO' ){{bar}}@endif", "if(foo == 'FOO');_out<<h(bar);end;", "BAR"
   end
 
-  def test_if_fails_with_wrong_arguments
-    exception = assert_raises Exception do
-      BladeCompiler.compileString("@if()")
-    end
-    assert_equal "If statement: wrong number of arguments (given 0, expecting 1)", exception.to_s
-
-
-    exception = assert_raises Exception do
-      BladeCompiler.compileString("@if(1, 2)")
-    end
-    assert_equal "If statement: wrong number of arguments (given 2, expecting 1)", exception.to_s
+  def test_unless
+    assert_compiles_to "@unless ( false ) hi @endunless", "unless(false);_out<<' hi ';end;", " hi "
+    assert_compiles_to "@unless(false) hi @endunless", "unless(false);_out<<' hi ';end;", " hi "
+    assert_compiles_to "@unless(true) hi @endunless", "unless(true);_out<<' hi ';end;", ""
+    assert_compiles_to "@unless(false)#{MULTILINE_STRING}@endunless", "unless(false);_out<<'#{MULTILINE_STRING}';end;", "#{MULTILINE_STRING}"
+    assert_compiles_to "@unless( foo == 'BAR' ){{bar}}@endif", "unless(foo == 'BAR');_out<<h(bar);end;", "BAR"
   end
 
-  def test_unless_fails_with_wrong_arguments
-    exception = assert_raises Exception do
-      BladeCompiler.compileString("@unless()")
+  ['checked', 'disabled', 'required', 'selected', 'readonly'].each do |statement|
+    define_method("test_#{statement}") do
+      assert_compiles_to "@#{statement}(true)", "if(true);_out<<'#{statement}';end;", "#{statement}"
+      assert_compiles_to "@#{statement}(false)", "if(false);_out<<'#{statement}';end;", ""
     end
-    assert_equal "Unless statement: wrong number of arguments (given 0, expecting 1)", exception.to_s
+  end
 
+  ['if', 'unless', 'checked', 'disabled', 'required', 'selected', 'readonly'].each do |statement|
+    define_method("test_#{statement}_with_no_arguments") do
+      exception = assert_raises Exception do
+        BladeCompiler.compileString("@#{statement}()")
+      end
 
-    exception = assert_raises Exception do
-      BladeCompiler.compileString("@unless(1, 2)")
+      assert_equal "#{statement.capitalize} statement: wrong number of arguments (given 0, expecting 1)", exception.to_s
     end
-    assert_equal "Unless statement: wrong number of arguments (given 2, expecting 1)", exception.to_s
+
+    define_method("test_#{statement}_with_too_many_arguments") do
+      exception = assert_raises Exception do
+        BladeCompiler.compileString("@#{statement}(1, 2)")
+      end
+
+      assert_equal "#{statement.capitalize} statement: wrong number of arguments (given 2, expecting 1)", exception.to_s
+    end
   end
 end
