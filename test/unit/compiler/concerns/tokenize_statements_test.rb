@@ -24,10 +24,20 @@ class EchoTest < TestCase
     3)", [{:statement => "foo", :arguments => ["1", "2", "3"]}]
   end
 
+  def test_nested_statements
+    assert_tokenizes_to "@foo(@bar)", [{:statement => "foo", :arguments => ["@bar"]}]
+    assert_tokenizes_to "@foo(@@bar)", [{:statement => "foo", :arguments => ["@@bar"]}]
+    assert_tokenizes_to "@@foo(@bar)", ["@foo", "(@bar)"]
+
+    # The following is a deviation from how Illuminate's blade compiler handles this edge case,
+    # it would be expecting ["@foo", "(()@bar)"].
+    assert_tokenizes_to "@@foo(()@bar)", ["@foo", "(()", {:statement => "bar"}, ")"]
+  end
+
   def test_skip_statement
-    assert_tokenizes_to "@@foo", ["@@foo"]
-    assert_tokenizes_to "@@foo::bar", ["@@foo::bar"]
-    assert_tokenizes_to "@@foo(1, 2, 3)", ["@@foo", "(1, 2, 3)"]
+    assert_tokenizes_to "@@foo", ["@foo"]
+    assert_tokenizes_to "@@foo::bar", ["@foo::bar"]
+    assert_tokenizes_to "@@foo(1, 2, 3)", ["@foo", "(1, 2, 3)"]
   end
 
   def test_bracket_matching

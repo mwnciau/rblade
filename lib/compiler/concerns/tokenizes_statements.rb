@@ -7,36 +7,43 @@ class TokenizesStatements
 
       segments = token.value.split /\B(@@?)(\w+(?:::\w+)?)(?:[ \t]*(\(.*?\)))?/m
 
-      i = 0
-      while i < segments.count do
-        segment = segments[i]
-        if segment == "@@"
-          segments[i] = Token.new(type: :unprocessed, value: segment << segments[i + 1])
-          segments.delete_at i + 1
-
-          i += 1
-        elsif segment == "@"
-          self.tokenizeStatement! segments, i
-
-          i += 1
-        elsif segments[i] != nil && segments[i] != ""
-          segments[i] = Token.new(type: :unprocessed, value: segments[i])
-
-          i += 1
-        else
-          segments.delete_at i
-        end
-      end
-
-      segments
+      self.parseSegments! segments
     end.flatten!
   end
 
+  def self.parseSegments! segments
+    i = 0
+    while i < segments.count do
+      segment = segments[i]
+
+      # The @ symbol is used to escape blade directives so we return it unprocessed
+      if segment == "@@"
+        segments[i] = Token.new(type: :unprocessed, value: segment[1..-1] + segments[i + 1])
+        segments.delete_at i + 1
+
+        i += 1
+      elsif segment == "@"
+        self.tokenizeStatement! segments, i
+
+        i += 1
+      elsif segments[i] != nil && segments[i] != ""
+        segments[i] = Token.new(type: :unprocessed, value: segments[i])
+
+        i += 1
+      else
+        segments.delete_at i
+      end
+    end
+
+    segments
+  end
+  private_class_method :parseSegments!
+
   def self.tokenizeStatement!(segments, i)
-    statementData = {statement: segments[i+1]}
+    statementData = {statement: segments[i + 1]}
     segments.delete_at i + 1
 
-    if i + 1 < segments.count && segments[i + 1][0] == "("
+    if segments.count > i + 1 && segments[i + 1][0] == "("
       arguments = self.tokenizeArguments! segments, i + 1
 
       if !arguments.nil?
@@ -129,5 +136,4 @@ class TokenizesStatements
     arguments
   end
   private_class_method :extractArguments
-
 end
