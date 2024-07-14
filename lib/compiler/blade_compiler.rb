@@ -26,6 +26,7 @@ class BladeCompiler
     tokens = [Token.new(:unprocessed, stringTemplate)]
 
     CompilesComments.compile!(tokens)
+    TokenizesComponents.tokenize!(tokens)
     TokenizesStatements.tokenize!(tokens)
     CompilesStatements.compile!(tokens)
     CompilesEchos.compile!(tokens)
