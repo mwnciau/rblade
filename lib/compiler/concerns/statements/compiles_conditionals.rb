@@ -4,7 +4,7 @@ class CompilesConditionals
       raise Exception.new "If statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    return "if(#{args[0]});"
+    "if(#{args[0]});"
   end
 
   def self.compileElsif args
@@ -12,7 +12,7 @@ class CompilesConditionals
       raise Exception.new "Elsif statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    return "elsif(#{args[0]});"
+    "elsif(#{args[0]});"
   end
 
   def self.compileElse args
@@ -20,7 +20,7 @@ class CompilesConditionals
       raise Exception.new "Else statement: wrong number of arguments (given #{args&.count || 0}, expecting 0)"
     end
 
-    return "else;"
+    "else;"
   end
 
   def self.compileUnless args
@@ -28,7 +28,7 @@ class CompilesConditionals
       raise Exception.new "Unless statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    return "unless(#{args[0]});"
+    "unless(#{args[0]});"
   end
 
   def self.compileCase args
@@ -36,7 +36,7 @@ class CompilesConditionals
       raise Exception.new "Case statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    return "case(#{args[0]});"
+    "case(#{args[0]});"
   end
 
   def self.compileWhen args
@@ -44,7 +44,7 @@ class CompilesConditionals
       raise Exception.new "When statement: wrong number of arguments (given #{args&.count || 0}, expecting at least 1)"
     end
 
-    return "when #{args.join ','};"
+    "when #{args.join ","};"
   end
 
   def self.compileChecked args
@@ -52,7 +52,7 @@ class CompilesConditionals
       raise Exception.new "Checked statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    return "if(#{args[0]});_out<<'checked';end;"
+    "if(#{args[0]});_out<<'checked';end;"
   end
 
   def self.compileDisabled args
@@ -60,7 +60,7 @@ class CompilesConditionals
       raise Exception.new "Disabled statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    return "if(#{args[0]});_out<<'disabled';end;"
+    "if(#{args[0]});_out<<'disabled';end;"
   end
 
   def self.compileReadonly args
@@ -68,7 +68,7 @@ class CompilesConditionals
       raise Exception.new "Readonly statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    return "if(#{args[0]});_out<<'readonly';end;"
+    "if(#{args[0]});_out<<'readonly';end;"
   end
 
   def self.compileRequired args
@@ -76,7 +76,7 @@ class CompilesConditionals
       raise Exception.new "Required statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    return "if(#{args[0]});_out<<'required';end;"
+    "if(#{args[0]});_out<<'required';end;"
   end
 
   def self.compileSelected args
@@ -84,6 +84,6 @@ class CompilesConditionals
       raise Exception.new "Selected statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    return "if(#{args[0]});_out<<'selected';end;"
+    "if(#{args[0]});_out<<'selected';end;"
   end
 end

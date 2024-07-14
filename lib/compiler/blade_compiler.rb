@@ -7,9 +7,9 @@ require "pp"
 
 Token = Struct.new(:type, :value)
 
-def dd *args
+def dd(*)
   print "\n\ndd output:\n"
-  pp(*args)
+  pp(*)
   exit 0
 end
 

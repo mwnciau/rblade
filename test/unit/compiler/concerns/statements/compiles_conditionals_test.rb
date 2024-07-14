@@ -68,23 +68,23 @@ class EchoTest < TestCase
       " ONE OR TWO "
 
     assert_compiles_to "@case(2)@when(1,2) ONE OR TWO @endcase",
-    "case(2);when 1,2;_out<<' ONE OR TWO ';end;",
-    " ONE OR TWO "
+      "case(2);when 1,2;_out<<' ONE OR TWO ';end;",
+      " ONE OR TWO "
 
     assert_compiles_to "@case(3)@when(1,2) ONE OR TWO @endcase",
       "case(3);when 1,2;_out<<' ONE OR TWO ';end;",
       ""
   end
 
-  ['checked', 'disabled', 'required', 'selected', 'readonly'].each do |statement|
-    define_method("test_#{statement}") do
+  ["checked", "disabled", "required", "selected", "readonly"].each do |statement|
+    define_method(:"test_#{statement}") do
       assert_compiles_to "@#{statement}(true)", "if(true);_out<<'#{statement}';end;", "#{statement}"
       assert_compiles_to "@#{statement}(false)", "if(false);_out<<'#{statement}';end;", ""
     end
   end
 
-  ['if', 'unless', 'checked', 'disabled', 'required', 'selected', 'readonly'].each do |statement|
-    define_method("test_#{statement}_with_no_arguments") do
+  ["if", "unless", "checked", "disabled", "required", "selected", "readonly"].each do |statement|
+    define_method(:"test_#{statement}_with_no_arguments") do
       exception = assert_raises Exception do
         BladeCompiler.compileString("@#{statement}()")
       end
@@ -92,7 +92,7 @@ class EchoTest < TestCase
       assert_equal "#{statement.capitalize} statement: wrong number of arguments (given 0, expecting 1)", exception.to_s
     end
 
-    define_method("test_#{statement}_with_too_many_arguments") do
+    define_method(:"test_#{statement}_with_too_many_arguments") do
       exception = assert_raises Exception do
         BladeCompiler.compileString("@#{statement}(1, 2)")
       end

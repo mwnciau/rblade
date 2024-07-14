@@ -20,7 +20,7 @@ class CompilesStatements
   end
 
   def self.compileEnd statement
-    return "end;"
+    "end;"
   end
 
   @@statementHandlers = {
