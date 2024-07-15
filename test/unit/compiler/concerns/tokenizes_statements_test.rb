@@ -2,7 +2,7 @@ require_relative "../../../test_case"
 require_relative "../../../../lib/compiler/blade_compiler"
 require_relative "../../../../lib/compiler/concerns/tokenizes_statements"
 
-class EchoTest < TestCase
+class TokenizesStatementsTest < TestCase
   def assert_tokenizes_to template, expected
     tokens = [Token.new(:unprocessed, template)]
     TokenizesStatements.tokenize!(tokens)

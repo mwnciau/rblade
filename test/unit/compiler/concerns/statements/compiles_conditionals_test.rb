@@ -1,7 +1,7 @@
 require_relative "../../../../test_case"
 require_relative "../../../../../lib/compiler/blade_compiler"
 
-class EchoTest < TestCase
+class CompilesConditionalsTest < TestCase
   MULTILINE_STRING = "
     this
     string

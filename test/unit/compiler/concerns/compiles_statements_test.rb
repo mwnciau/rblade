@@ -1,7 +1,7 @@
 require_relative "../../../test_case"
 require_relative "../../../../lib/compiler/blade_compiler"
 
-class EchoTest < TestCase
+class CompilesStatementsTest < TestCase
   def test_end
     assert_compiles_to "@end", "end;"
   end

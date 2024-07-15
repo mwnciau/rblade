@@ -1,7 +1,7 @@
 require_relative "../../../test_case"
 require_relative "../../../../lib/compiler/blade_compiler"
 
-class EchoTest < TestCase
+class CompilesEchoTest < TestCase
   def test_echo_variable
     assert_compiles_to "{{foo}}", "_out<<h(foo);", "FOO"
     assert_compiles_to "{{ foo }}", "_out<<h(foo);", "FOO"
