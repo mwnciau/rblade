@@ -53,29 +53,32 @@ class TokenizesComponentsTest < TestCase
     assert_tokenizes_to "<x-banana <x-apple>>", ["<x-banana ", {name: "apple", attributes: []}, ">"]
   end
 
-  def test_echos_in_attribute
-    # todo
-    assert_tokenizes_to '<x-a b="out{{\'value\'}}">', [{name: "a", attributes: [{name: "b", value: "_out<<'out';_out<<h('value');", type: "compiled"}]}]
-  end
-
   def test_tokenize_single_attributes
-    assert_tokenizes_to "<x-a attribute='value'>", [{name: "a", attributes: [{name: "attribute", value: "_out<<'value';", type: "compiled"}]}]
-    assert_tokenizes_to '<x-a b="c">', [{name: "a", attributes: [{name: "b", value: "_out<<'c';", type: "compiled"}]}]
+    assert_tokenizes_to "<x-a attribute='value'>", [{name: "a", attributes: [{name: "attribute", value: "value", type: "string"}]}]
+    assert_tokenizes_to '<x-a b="c">', [{name: "a", attributes: [{name: "b", value: "c", type: "string"}]}]
+    assert_tokenizes_to '<x-a b="{{ c }}">', [{name: "a", attributes: [{name: "b", value: "{{ c }}", type: "string"}]}]
     assert_tokenizes_to '<x-a :b="c">', [{name: "a", attributes: [{name: "b", value: "c", type: "ruby"}]}]
-    assert_tokenizes_to '<x-a ::b="c">', [{name: "a", attributes: [{name: ":b", value: "_out<<'c';", type: "compiled"}]}]
-    assert_tokenizes_to '<x-a b=c>', [{name: "a", attributes: [{name: "b", value: "_out<<'c';", type: "compiled"}]}]
+    assert_tokenizes_to '<x-a ::b="c">', [{name: "a", attributes: [{name: ":b", value: "c", type: "string"}]}]
+    assert_tokenizes_to '<x-a b=c>', [{name: "a", attributes: [{name: "b", value: "c", type: "string"}]}]
     assert_tokenizes_to '<x-a :b>', [{name: "a", attributes: [{name: "b", type: "pass_through"}]}]
     assert_tokenizes_to '<x-a b>', [{name: "a", attributes: [{name: "b", type: "empty"}]}]
 
-    assert_tokenizes_to '<x-a      b="c"    >', [{name: "a", attributes: [{name: "b", value: "_out<<'c';", type: "compiled"}]}]
+    assert_tokenizes_to '<x-a      b="c"    >', [{name: "a", attributes: [{name: "b", value: "c", type: "string"}]}]
     assert_tokenizes_to '<x-a
       b="c"
-    >', [{name: "a", attributes: [{name: "b", value: "_out<<'c';", type: "compiled"}]}]
+    >', [{name: "a", attributes: [{name: "b", value: "c", type: "string"}]}]
+  end
+
+  def test_class
+    multiline_hash = '{
+
+    }'
+    assert_tokenizes_to '<x-a @class({"block w-full": true})>', [{name: "a", attributes: [{type: "class", arguments: '{"block w-full": true}'}]}]
   end
 
   def scenario
     #assert_tokenizes_to '<x-component {{ attributes(blah) }}>', []
-    #assert_tokenizes_to '<x-component @class({cake: "one"})>', []
+    #
     #assert_tokenizes_to '<x-component @style({cake: "two"})>', []
     #assert_tokenizes_to '<x-component cheese=yes readonly>', []
     assert_tokenizes_to %[

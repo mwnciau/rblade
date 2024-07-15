@@ -68,9 +68,8 @@ class TokenizesComponents
 
         # The "::" at the start of attributes is used to escape attribute names beginning with ":"
         if name [0..1] == "::"
-          attribute[:type] = "compiled"
+          attribute[:type] = "string"
           attribute[:name].delete_prefix! ":"
-          attribute[:value] = BladeCompiler.compileAttributeString attribute[:value]
           attributes.push(attribute)
           next
         end
@@ -85,8 +84,7 @@ class TokenizesComponents
         if attribute[:value].nil?
           attribute[:type] = "empty";
         else
-          attribute[:type] = "compiled";
-          attribute[:value] = BladeCompiler.compileAttributeString attribute[:value]
+          attribute[:type] = "string";
         end
         attributes.push(attribute)
       end
