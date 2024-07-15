@@ -31,6 +31,19 @@ class BladeCompiler
     CompilesStatements.compile!(tokens)
     CompilesEchos.compile!(tokens)
 
+    compileTokens tokens
+  end
+
+  def self.compileAttributeString(stringTemplate)
+    tokens = [Token.new(:unprocessed, stringTemplate)]
+
+    CompilesComments.compile!(tokens)
+    CompilesEchos.compile!(tokens)
+
+    compileTokens tokens
+  end
+
+  def self.compileTokens tokens
     output = ""
 
     tokens.each do |token, cake|
