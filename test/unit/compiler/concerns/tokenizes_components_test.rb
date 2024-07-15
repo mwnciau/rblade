@@ -71,9 +71,23 @@ class TokenizesComponentsTest < TestCase
 
   def test_class
     multiline_hash = '{
-
+      "block w-full h-full": maximized,
+      "inline w-auto": !maximized
     }'
     assert_tokenizes_to '<x-a @class({"block w-full": true})>', [{name: "a", attributes: [{type: "class", arguments: '{"block w-full": true}'}]}]
+    assert_tokenizes_to "<x-a @class(#{multiline_hash})>", [{name: "a", attributes: [{type: "class", arguments: multiline_hash}]}]
+
+    # todo
+    assert_tokenizes_to '<x-a @class({"block w-full": (true)})>', [{name: "a", attributes: [{type: "class", arguments: '{"block w-full": (true)}'}]}]
+  end
+
+  def test_style
+    multiline_hash = '{
+      "background-colour: red": showError,
+      "font-weight: bold": true
+    }'
+    assert_tokenizes_to '<x-a @class({"font-size: 20px": true})>', [{name: "a", attributes: [{type: "class", arguments: '{"font-size: 20px": true}'}]}]
+    assert_tokenizes_to "<x-a @class(#{multiline_hash})>", [{name: "a", attributes: [{type: "class", arguments: multiline_hash}]}]
   end
 
   def scenario
