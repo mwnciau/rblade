@@ -17,7 +17,7 @@ class TokenizesComponentsTest < TestCase
     end
   end
 
-  def test_tokenize_tags
+  def test_tokenize_opening_tags
     assert_tokenizes_to "<x-banana>", [{name: "banana", attributes: [], token_type: :component_start}]
     assert_tokenizes_to "<x:banana>", [{name: "banana", attributes: [], token_type: :component_start}]
     assert_tokenizes_to "<x-banana>", [{name: "banana", attributes: [], token_type: :component_start}]
@@ -30,11 +30,16 @@ class TokenizesComponentsTest < TestCase
     assert_tokenizes_to "<
       x-banana
     >", [{name: "banana", attributes: []}]
+  end
 
+  def test_tokenize_self_closing_tags
     assert_tokenizes_to "<x-banana/>", [{name: "banana", attributes: [], token_type: :component}]
     assert_tokenizes_to "<x:banana/>", [{name: "banana", attributes: [], token_type: :component}]
     assert_tokenizes_to "<   x-banana   />", [{name: "banana", attributes: [], token_type: :component}]
+    assert_tokenizes_to "<x-banana a=b />", [{name: "banana", attributes: [{name: "a", value: "b", type: "string"}], token_type: :component}]
+  end
 
+  def test_tokenize_closing_tags
     assert_tokenizes_to "</x-banana>", [{name: "banana", token_type: :component_end}]
     assert_tokenizes_to "</x:banana>", [{name: "banana", token_type: :component_end}]
     assert_tokenizes_to "</    x-banana   >", [{name: "banana", token_type: :component_end}]
