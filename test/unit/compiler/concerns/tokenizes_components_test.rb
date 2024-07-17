@@ -89,11 +89,7 @@ class TokenizesComponentsTest < TestCase
     assert_tokenizes_to '<x-a @style({"font-size: 20px": (true)})>', [{name: "a", attributes: [{type: "style", arguments: '{"font-size: 20px": (true)}'}]}]
   end
 
-  def scenario
-    #assert_tokenizes_to '<x-component {{ attributes(blah) }}>', []
-    #
-    #assert_tokenizes_to '<x-component @style({cake: "two"})>', []
-    #assert_tokenizes_to '<x-component cheese=yes readonly>', []
+  def complex_component
     assert_tokenizes_to %[
       <x-component
         attribute="value"
@@ -105,6 +101,17 @@ class TokenizesComponentsTest < TestCase
         readonly
         ::escaped="I only have one colon"
       >
-    ], []
+    ], [
+      {name: "component", attributes: [
+        {name: "attribute", value: "value", type: "string"},
+        {name: "special", value: "special value", type: "ruby"},
+        {name: "pass_through", type: "pass_through"},
+        {type: "class", arguments: '{cake: "one"}'},
+        {type: "style", arguments: '{cake: "two"}'},
+        {name: "cheese", value: "yes", type: "string"},
+        {name: "readonly", type: "empty"},
+        {name: ":escaped", value: "I only have one colon", type: "string"}
+      ]}
+    ]
   end
 end
