@@ -1,6 +1,8 @@
 require_relative "concerns/compiles_comments"
+require_relative "concerns/compiles_components"
 require_relative "concerns/compiles_echos"
 require_relative "concerns/compiles_statements"
+require_relative "concerns/tokenizes_components"
 require_relative "concerns/tokenizes_statements"
 require "htmlentities"
 require "pp"
@@ -25,11 +27,12 @@ class BladeCompiler
   def self.compileString(stringTemplate)
     tokens = [Token.new(:unprocessed, stringTemplate)]
 
-    CompilesComments.compile!(tokens)
-    TokenizesComponents.tokenize!(tokens)
-    TokenizesStatements.tokenize!(tokens)
-    CompilesStatements.compile!(tokens)
-    CompilesEchos.compile!(tokens)
+    CompilesComments.compile! tokens
+    TokenizesComponents.tokenize! tokens
+    TokenizesStatements.tokenize! tokens
+    CompilesStatements.compile! tokens
+    CompilesEchos.compile! tokens
+    CompilesComponents.compile! tokens
 
     compileTokens tokens
   end
