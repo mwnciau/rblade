@@ -21,10 +21,9 @@ class CompilesComponents
 
   def self.compile_token_start token
     attributes = compile_attributes token
-    code = "def method(#{attributes.join ','});"
-    token.value[:attributes].each do |attribute|
-    end
+    code = "def method({#{attributes[:arguments].join(',')}});#{attributes[:assignments].join}"
 
+    dd code
   end
   private_class_method :compile_token_start
 
@@ -64,7 +63,7 @@ class CompilesComponents
       end
     end
 
-    dd ({arguments: attribute_arguments, assignments: attribute_assignments})
+    ({arguments: attribute_arguments, assignments: attribute_assignments})
   end
   private_class_method :compile_attributes
 
