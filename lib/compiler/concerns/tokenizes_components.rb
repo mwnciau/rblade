@@ -23,7 +23,9 @@ class TokenizesComponents
           if rawAttributes.nil?
             segments.delete_at i + 1
           else
-            segments.slice! i + 1, 2
+            while segments[i + 1] != ">" && segments[i + 1] != "/>"
+              segments.delete_at i + 1
+            end
           end
 
           token_type = segments[i + 1] == "/>" ? :component : :component_start
@@ -44,17 +46,16 @@ class TokenizesComponents
     end.flatten!
   end
 
-  def self.processAttributes rawAttributes = 0
+  def self.processAttributes rawAttributes
     attributes = []
     i = 0
     while i < rawAttributes.count
       name = rawAttributes[i]
-
       if name == "@class" || name == "@style"
-        attributes.push({type: name[1..-1], arguments: rawAttributes[i + 1]})
+        attributes.push({type: name[1..-1], arguments: rawAttributes[i + 1][1..-2]})
         i += 2
       elsif name[0..1] == '{{'
-        attributes.push({type: 'attributes', arguments: rawAttributes[i + 1]})
+        attributes.push({type: 'attributes', arguments: rawAttributes[i + 1][2..-2]})
         i += 1
       else
         attribute = {name:}
@@ -105,19 +106,15 @@ class TokenizesComponents
             \s+
             (?:
               (?:
-                @class\( (?: (?>[^()]+) )* \)
+                @class(\( (?: (?>[^()]+) | \g<-1> )* \))
               )
               |
               (?:
-                @style\( (?: (?>[^()]+) )* \)
+                @style(\( (?: (?>[^()]+)| \g<-1> )* \))
               )
               |
-              (?:
+              (
                 \{\{\s*attributes(?:[^}]+?)?\s*\}\}
-              )
-              |
-              (?:
-                \:\w+
               )
               |
               (?:
@@ -129,7 +126,7 @@ class TokenizesComponents
                     |
                     '[^\']*'
                     |
-                    [^'"=<>]+
+                    [^'"=<>\s]+
                   )
                 )?
               )
@@ -157,19 +154,15 @@ class TokenizesComponents
       (?<=\s|^)
       (?:
         (?:
-          (@class)\( ((?>[^()]+)) \)
+          (@class)(\( (?: (?>[^()]+) | \g<-1> )* \))
         )
         |
         (?:
-          (@style)\( ((?>[^()]+)) \)
+          (@style)(\( (?: (?>[^()]+)| \g<-1> )* \))
         )
         |
         (?:
           (\{\{)\s*attributes([^}]+?)?\s*(\}\})
-        )
-        |
-        (?:
-          (\:\w+)
         )
         |
         (?:
