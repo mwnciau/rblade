@@ -79,9 +79,9 @@ class TokenizesComponentsTest < TestCase
       "block w-full h-full": maximized,
       "inline w-auto": !maximized
     }'
-    assert_tokenizes_to '<x-a @class({"block w-full": true})>', [{name: "a", attributes: [{type: "class", arguments: '{"block w-full": true}'}]}]
-    assert_tokenizes_to "<x-a @class(#{multiline_hash})>", [{name: "a", attributes: [{type: "class", arguments: multiline_hash}]}]
-    assert_tokenizes_to '<x-a @class({"block w-full": (true)})>', [{name: "a", attributes: [{type: "class", arguments: '{"block w-full": (true)}'}]}]
+    assert_tokenizes_to '<x-a @class({"block w-full": true})>', [{name: "a", attributes: [{type: "class", value: '{"block w-full": true}'}]}]
+    assert_tokenizes_to "<x-a @class(#{multiline_hash})>", [{name: "a", attributes: [{type: "class", value: multiline_hash}]}]
+    assert_tokenizes_to '<x-a @class({"block w-full": (true)})>', [{name: "a", attributes: [{type: "class", value: '{"block w-full": (true)}'}]}]
   end
 
   def test_style
@@ -89,9 +89,9 @@ class TokenizesComponentsTest < TestCase
       "background-colour: red": showError,
       "font-weight: bold": true
     }'
-    assert_tokenizes_to '<x-a @style({"font-size: 20px": true})>', [{name: "a", attributes: [{type: "style", arguments: '{"font-size: 20px": true}'}]}]
-    assert_tokenizes_to "<x-a @style(#{multiline_hash})>", [{name: "a", attributes: [{type: "style", arguments: multiline_hash}]}]
-    assert_tokenizes_to '<x-a @style({"font-size: 20px": (true)})>', [{name: "a", attributes: [{type: "style", arguments: '{"font-size: 20px": (true)}'}]}]
+    assert_tokenizes_to '<x-a @style({"font-size: 20px": true})>', [{name: "a", attributes: [{type: "style", value: '{"font-size: 20px": true}'}]}]
+    assert_tokenizes_to "<x-a @style(#{multiline_hash})>", [{name: "a", attributes: [{type: "style", value: multiline_hash}]}]
+    assert_tokenizes_to '<x-a @style({"font-size: 20px": (true)})>', [{name: "a", attributes: [{type: "style", value: '{"font-size: 20px": (true)}'}]}]
   end
 
   def complex_component
@@ -111,8 +111,8 @@ class TokenizesComponentsTest < TestCase
         {name: "attribute", value: "value", type: "string"},
         {name: "special", value: "special value", type: "ruby"},
         {name: "pass_through", type: "pass_through"},
-        {type: "class", arguments: '{cake: "one"}'},
-        {type: "style", arguments: '{cake: "two"}'},
+        {type: "class", value: '{cake: "one"}'},
+        {type: "style", value: '{cake: "two"}'},
         {name: "cheese", value: "yes", type: "string"},
         {name: "readonly", type: "empty"},
         {name: ":escaped", value: "I only have one colon", type: "string"}

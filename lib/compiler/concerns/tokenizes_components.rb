@@ -52,10 +52,10 @@ class TokenizesComponents
     while i < rawAttributes.count
       name = rawAttributes[i]
       if name == "@class" || name == "@style"
-        attributes.push({type: name[1..-1], arguments: rawAttributes[i + 1][1..-2]})
+        attributes.push({type: name[1..-1], value: rawAttributes[i + 1][1..-2]})
         i += 2
       elsif name[0..1] == '{{'
-        attributes.push({type: 'attributes', arguments: rawAttributes[i + 1][2..-2]})
+        attributes.push({type: 'attributes', value: rawAttributes[i + 1][2..-2]})
         i += 1
       else
         attribute = {name:}
@@ -174,7 +174,7 @@ class TokenizesComponents
               |
               '([^\']*)'
               |
-              ([^'"=<> ]+)
+              ([^'"=<>\s]+)
             )
           )?
         )
