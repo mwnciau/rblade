@@ -1,8 +1,6 @@
 require "minitest/autorun"
 require "minitest/reporters"
 
-Minitest::Reporters.use!
-
 class TestCase < Minitest::Test
   def assert_compiles_to template, expected_code = nil, expected_result = nil
     compiledString = BladeCompiler.compileString(template)
