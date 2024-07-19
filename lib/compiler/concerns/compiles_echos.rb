@@ -6,6 +6,7 @@ class CompilesEchos
 
   def self.compile_regular_echos!(tokens)
     compile_echos! tokens, "{{", "}}", "h"
+    compile_echos! tokens, "<%=", "%>", "h"
   end
   private_class_method :compile_regular_echos!
 

@@ -28,12 +28,12 @@ class BladeCompiler
   def self.compileString(stringTemplate)
     tokens = [Token.new(:unprocessed, stringTemplate)]
 
-    CompilesRuby.compile! tokens
     CompilesComments.compile! tokens
+    CompilesEchos.compile! tokens
+    CompilesRuby.compile! tokens
     TokenizesComponents.tokenize! tokens
     TokenizesStatements.tokenize! tokens
     CompilesStatements.compile! tokens
-    CompilesEchos.compile! tokens
     CompilesComponents.compile! tokens
 
     compileTokens tokens

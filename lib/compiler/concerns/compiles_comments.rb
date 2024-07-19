@@ -4,6 +4,7 @@ class CompilesComments
       next if token.type != :unprocessed
 
       token.value.gsub!(/\{\{--.*?--\}\}/m, "")
+      token.value.gsub!(/<%#.*?%>/m, "")
     end
   end
 end
