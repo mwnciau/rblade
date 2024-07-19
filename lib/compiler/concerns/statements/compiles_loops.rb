@@ -35,6 +35,18 @@ class CompilesLoops
     end
   end
 
+  def compileNextIf args
+    if args.nil? || args.count > 2
+      raise StandardError.new "For statement: wrong number of arguments (given #{args&.count || 0}, expecting 1 or 2)"
+    end
+
+    if args.count == 1
+      "if #{args[0]};next;end;"
+    else
+      "if #{args[0]};next #{args[1]};end;"
+    end
+  end
+
   def compileUntil args
     if args&.count != 1
       raise StandardError.new "Until statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"

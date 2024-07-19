@@ -59,6 +59,7 @@ class CompilesStatements
 
   @@statement_handlers = {
     "break" => [CompilesLoops, :compileBreak],
+    "breakif" => [CompilesLoops, :compileBreakIf],
     "case" => [CompilesConditionals, :compileCase],
     "checked" => [CompilesConditionals, :compileChecked],
     "disabled" => [CompilesConditionals, :compileDisabled],
@@ -77,6 +78,7 @@ class CompilesStatements
     "forelse" => [CompilesLoops, :compileForElse],
     "if" => [CompilesConditionals, :compileIf],
     "next" => [CompilesLoops, :compileNext],
+    "nextif" => [CompilesLoops, :compileNextIf],
     "readonly" => [CompilesConditionals, :compileReadonly],
     "required" => [CompilesConditionals, :compileRequired],
     "ruby" => [CompilesInlineRuby, :compile],
