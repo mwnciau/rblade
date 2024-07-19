@@ -1,4 +1,8 @@
 class CompilesLoops
+  def initialize
+    @forElseCounter = 0
+  end
+
   def compileBreak args
     if !args.nil?
       raise StandardError.new "Break statement: wrong number of arguments (given #{args&.count}, expecting 0)"
@@ -21,6 +25,21 @@ class CompilesLoops
     end
 
     "for #{args[0]};"
+  end
+
+  def compileForElse args
+    if args&.count != 1
+      raise StandardError.new "For statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+    end
+    @forElseCounter += 1
+
+    "_fe_empty_#{@forElseCounter}=true;for #{args[0]};_fe_empty_#{@forElseCounter}=false;"
+  end
+
+  def compileEmpty
+    @forElseCounter -= 1
+
+    "end;if _fe_empty_#{@forElseCounter + 1};"
   end
 
   def compileNext args

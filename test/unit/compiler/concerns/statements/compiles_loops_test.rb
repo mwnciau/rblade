@@ -45,4 +45,20 @@ class CompilesLoopsTest < TestCase
       "i = 0;while i < 5;i += 1;if i == 3;next;end;_out<<h(i);end;",
       "1245"
   end
+
+  def test_for_else
+    assert_compiles_to "@forelse(i in []) {{ i }} @empty 0 @endforelse",
+      "_fe_empty_1=true;for i in [];_fe_empty_1=false;_out<<h(i);end;if _fe_empty_1;_out<<'0';end;",
+      "0"
+
+    assert_compiles_to "@forelse(i in 1..1) {{ i }} @empty 0 @endforelse",
+      "_fe_empty_1=true;for i in 1..1;_fe_empty_1=false;_out<<h(i);end;if _fe_empty_1;_out<<'0';end;",
+      "1"
+  end
+
+  def test_nested_for_else
+    assert_compiles_to "@forelse(i in 1..1) @forelse(i in []) {{ i }} @empty 8 @endforelse @empty 9 @endforelse",
+      "_fe_empty_1=true;for i in 1..1;_fe_empty_1=false;_fe_empty_2=true;for i in [];_fe_empty_2=false;_out<<h(i);end;if _fe_empty_2;_out<<'8';end;end;if _fe_empty_1;_out<<'9';end;",
+      "8"
+  end
 end
