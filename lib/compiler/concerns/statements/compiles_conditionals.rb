@@ -4,7 +4,7 @@ class CompilesConditionals
       raise StandardError.new "If statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    "if(#{args[0]});"
+    "if #{args[0]};"
   end
 
   def compileElsif args
@@ -12,7 +12,7 @@ class CompilesConditionals
       raise StandardError.new "Elsif statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    "elsif(#{args[0]});"
+    "elsif #{args[0]};"
   end
 
   def compileElse args
@@ -28,7 +28,7 @@ class CompilesConditionals
       raise StandardError.new "Unless statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    "unless(#{args[0]});"
+    "unless #{args[0]};"
   end
 
   def compileCase args
@@ -36,7 +36,7 @@ class CompilesConditionals
       raise StandardError.new "Case statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    "case(#{args[0]});"
+    "case #{args[0]};"
   end
 
   def compileWhen args
@@ -52,7 +52,7 @@ class CompilesConditionals
       raise StandardError.new "Checked statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    "if(#{args[0]});_out<<'checked';end;"
+    "if #{args[0]};_out<<'checked';end;"
   end
 
   def compileDisabled args
@@ -60,7 +60,7 @@ class CompilesConditionals
       raise StandardError.new "Disabled statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    "if(#{args[0]});_out<<'disabled';end;"
+    "if #{args[0]};_out<<'disabled';end;"
   end
 
   def compileReadonly args
@@ -68,7 +68,7 @@ class CompilesConditionals
       raise StandardError.new "Readonly statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    "if(#{args[0]});_out<<'readonly';end;"
+    "if #{args[0]};_out<<'readonly';end;"
   end
 
   def compileRequired args
@@ -76,7 +76,7 @@ class CompilesConditionals
       raise StandardError.new "Required statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    "if(#{args[0]});_out<<'required';end;"
+    "if #{args[0]};_out<<'required';end;"
   end
 
   def compileSelected args
@@ -84,6 +84,6 @@ class CompilesConditionals
       raise StandardError.new "Selected statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    "if(#{args[0]});_out<<'selected';end;"
+    "if #{args[0]};_out<<'selected';end;"
   end
 end
