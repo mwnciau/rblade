@@ -1,14 +1,5 @@
 class CompilesRuby
-  def self.compile!(tokens)
-    compile_inline_ruby!(tokens)
-    compile_block_ruby!(tokens)
-  end
-
-  def self.compile_inline_ruby! tokens
-
-  end
-
-  def self.compile_block_ruby!(tokens)
+  def compile!(tokens)
     tokens.map! do |token|
       next(token) if token.type != :unprocessed
 
@@ -61,5 +52,4 @@ class CompilesRuby
       segments
     end.flatten!
   end
-  private_class_method :compile_block_ruby!
 end

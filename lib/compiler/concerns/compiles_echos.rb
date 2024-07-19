@@ -1,21 +1,21 @@
 class CompilesEchos
-  def self.compile!(tokens)
+  def compile!(tokens)
     compile_regular_echos!(tokens)
     compile_unsafe_echos!(tokens)
   end
 
-  def self.compile_regular_echos!(tokens)
+  private
+
+  def compile_regular_echos!(tokens)
     compile_echos! tokens, "{{", "}}", "h"
     compile_echos! tokens, "<%=", "%>", "h"
   end
-  private_class_method :compile_regular_echos!
 
-  def self.compile_unsafe_echos!(tokens)
+  def compile_unsafe_echos!(tokens)
     compile_echos! tokens, "{!!", "!!}"
   end
-  private_class_method :compile_unsafe_echos!
 
-  def self.compile_echos!(tokens, start_token, end_token, wrapper_function = nil)
+  def compile_echos!(tokens, start_token, end_token, wrapper_function = nil)
     tokens.map! do |token|
       next(token) if token.type != :unprocessed
 
@@ -53,5 +53,4 @@ class CompilesEchos
       segments
     end.flatten!
   end
-  private_class_method :compile_echos!
 end

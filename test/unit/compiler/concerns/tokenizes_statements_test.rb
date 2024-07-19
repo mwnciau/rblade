@@ -5,7 +5,7 @@ require_relative "../../../../lib/compiler/concerns/tokenizes_statements"
 class TokenizesStatementsTest < TestCase
   def assert_tokenizes_to template, expected
     tokens = [Token.new(:unprocessed, template)]
-    TokenizesStatements.tokenize!(tokens)
+    TokenizesStatements.new.tokenize!(tokens)
 
     expected.each.with_index do |expected_item, i|
       assert_equal expected_item, tokens[i].value

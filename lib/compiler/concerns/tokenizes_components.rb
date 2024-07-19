@@ -1,7 +1,7 @@
 require "ripper"
 
 class TokenizesComponents
-  def self.tokenize!(tokens)
+  def tokenize!(tokens)
     tokens.map! do |token|
       next(token) if token.type != :unprocessed
 
@@ -46,7 +46,9 @@ class TokenizesComponents
     end.flatten!
   end
 
-  def self.processAttributes rawAttributes
+  private
+
+  def processAttributes rawAttributes
     attributes = []
     i = 0
     while i < rawAttributes.count
@@ -93,9 +95,8 @@ class TokenizesComponents
 
     attributes
   end
-  private_class_method :processAttributes
 
-  def self.tokenizeComponentOpeningTags value
+  def tokenizeComponentOpeningTags value
     value.split(%r/
       # Opening and self-closing tags
       (?:
@@ -147,9 +148,8 @@ class TokenizesComponents
       )
     /x)
   end
-  private_class_method :tokenizeComponentOpeningTags
 
-  def self.tokenizeAttributes segment
+  def tokenizeAttributes segment
     segment.scan(%r/
       (?<=\s|^)
       (?:
@@ -182,5 +182,4 @@ class TokenizesComponents
       (?=\s|$)
     /x).flatten.compact
   end
-  private_class_method :tokenizeAttributes
 end

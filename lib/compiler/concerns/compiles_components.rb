@@ -2,7 +2,7 @@ require_relative "../component_store"
 require_relative "statements/compiles_conditionals"
 
 class CompilesComponents
-  def self.compile!(tokens)
+  def compile!(tokens)
     tokens.each do |token|
       if [:component, :component_start, :component_end].none? token.type
         next
@@ -22,24 +22,24 @@ class CompilesComponents
     end
   end
 
-  def self.compile_token_start token
+  private
+
+  def compile_token_start token
     attributes = compile_attributes token
     code = "def _component(attributes={#{attributes[:arguments].join(',')}});#{attributes[:assignments].join}_out='';"
 
     code
   end
-  private_class_method :compile_token_start
 
-  def self.compile_token_end token
+  def compile_token_end token
     code = "slot=_out;_out='';"
     code << ComponentStore.fetchComponent(token.value[:name])
     code << "_out;end;_out<<_component();"
 
     code
   end
-  private_class_method :compile_token_end
 
-  def self.compile_attributes token
+  def compile_attributes token
     attribute_arguments = []
     attribute_assignments = []
 
@@ -77,5 +77,4 @@ class CompilesComponents
 
     ({arguments: attribute_arguments, assignments: attribute_assignments})
   end
-  private_class_method :compile_attributes
 end

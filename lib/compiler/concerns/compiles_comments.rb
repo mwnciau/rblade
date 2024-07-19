@@ -1,5 +1,5 @@
 class CompilesComments
-  def self.compile!(tokens)
+  def compile!(tokens)
     tokens.each do |token|
       next if token.type != :unprocessed
 

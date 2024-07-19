@@ -1,5 +1,5 @@
 class CompilesInlineRuby
-  def self.compile args
+  def compile args
     if args&.count != 1
       raise Exception.new "Ruby statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end

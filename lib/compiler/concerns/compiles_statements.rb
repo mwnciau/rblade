@@ -2,7 +2,7 @@ require_relative "statements/compiles_conditionals"
 require_relative "statements/compiles_inline_ruby"
 
 class CompilesStatements
-  def self.compile!(tokens)
+  def compile!(tokens)
     token_index = 0
     while token_index < tokens.count
       token = tokens[token_index]
@@ -13,11 +13,7 @@ class CompilesStatements
 
       name = token.value[:name]
       arguments = token.value[:arguments]
-      handler = @@statementHandlers[name]
-
-      if handler.nil?
-        raise Exception.new "Unhandled statement: @#{name}"
-      end
+      handler = getHandler(name)
 
       handler_arguments = []
       handler.parameters.each do |parameter|
@@ -36,26 +32,46 @@ class CompilesStatements
     end
   end
 
-  def self.compileEnd
+  def compileEnd
     "end;"
   end
 
+  private
+
+  def getHandler(name)
+    handlerClass, handlerMethod = @@statementHandlers[name]
+
+    if !handlerClass&.method_defined?(handlerMethod)
+      raise Exception.new "Unhandled statement: @#{name}"
+    end
+
+    if handlerClass == CompilesStatements
+      @@handlerInstances[handlerClass] = self
+    else
+      @@handlerInstances[handlerClass] ||= handlerClass.new
+    end
+
+    @@handlerInstances[handlerClass].method(handlerMethod)
+  end
+
+  @@handlerInstances = {}
+
   @@statementHandlers = {
-    "case" => CompilesConditionals.method(:compileCase),
-    "checked" => CompilesConditionals.method(:compileChecked),
-    "disabled" => CompilesConditionals.method(:compileDisabled),
-    "else" => CompilesConditionals.method(:compileElse),
-    "elsif" => CompilesConditionals.method(:compileElsif),
-    "end" => CompilesStatements.method(:compileEnd),
-    "endcase" => CompilesStatements.method(:compileEnd),
-    "endif" => CompilesStatements.method(:compileEnd),
-    "endunless" => CompilesStatements.method(:compileEnd),
-    "if" => CompilesConditionals.method(:compileIf),
-    "readonly" => CompilesConditionals.method(:compileReadonly),
-    "required" => CompilesConditionals.method(:compileRequired),
-    "ruby" => CompilesInlineRuby.method(:compile),
-    "selected" => CompilesConditionals.method(:compileSelected),
-    "unless" => CompilesConditionals.method(:compileUnless),
-    "when" => CompilesConditionals.method(:compileWhen)
+    "case" => [CompilesConditionals, :compileCase],
+    "checked" => [CompilesConditionals, :compileChecked],
+    "disabled" => [CompilesConditionals, :compileDisabled],
+    "else" => [CompilesConditionals, :compileElse],
+    "elsif" => [CompilesConditionals, :compileElsif],
+    "end" => [CompilesStatements, :compileEnd],
+    "endcase" => [CompilesStatements, :compileEnd],
+    "endif" => [CompilesStatements, :compileEnd],
+    "endunless" => [CompilesStatements, :compileEnd],
+    "if" => [CompilesConditionals, :compileIf],
+    "readonly" => [CompilesConditionals, :compileReadonly],
+    "required" => [CompilesConditionals, :compileRequired],
+    "ruby" => [CompilesInlineRuby, :compile],
+    "selected" => [CompilesConditionals, :compileSelected],
+    "unless" => [CompilesConditionals, :compileUnless],
+    "when" => [CompilesConditionals, :compileWhen],
   }
 end

@@ -1,5 +1,5 @@
 class CompilesConditionals
-  def self.compileIf args
+  def compileIf args
     if args&.count != 1
       raise Exception.new "If statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
@@ -7,7 +7,7 @@ class CompilesConditionals
     "if(#{args[0]});"
   end
 
-  def self.compileElsif args
+  def compileElsif args
     if args&.count != 1
       raise Exception.new "Elsif statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
@@ -15,7 +15,7 @@ class CompilesConditionals
     "elsif(#{args[0]});"
   end
 
-  def self.compileElse args
+  def compileElse args
     if !args.nil?
       raise Exception.new "Else statement: wrong number of arguments (given #{args&.count || 0}, expecting 0)"
     end
@@ -23,7 +23,7 @@ class CompilesConditionals
     "else;"
   end
 
-  def self.compileUnless args
+  def compileUnless args
     if args&.count != 1
       raise Exception.new "Unless statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
@@ -31,7 +31,7 @@ class CompilesConditionals
     "unless(#{args[0]});"
   end
 
-  def self.compileCase args
+  def compileCase args
     if args&.count != 1
       raise Exception.new "Case statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
@@ -39,7 +39,7 @@ class CompilesConditionals
     "case(#{args[0]});"
   end
 
-  def self.compileWhen args
+  def compileWhen args
     if args.nil? || args.count == 0
       raise Exception.new "When statement: wrong number of arguments (given #{args&.count || 0}, expecting at least 1)"
     end
@@ -47,7 +47,7 @@ class CompilesConditionals
     "when #{args.join ","};"
   end
 
-  def self.compileChecked args
+  def compileChecked args
     if args&.count != 1
       raise Exception.new "Checked statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
@@ -55,7 +55,7 @@ class CompilesConditionals
     "if(#{args[0]});_out<<'checked';end;"
   end
 
-  def self.compileDisabled args
+  def compileDisabled args
     if args&.count != 1
       raise Exception.new "Disabled statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
@@ -63,7 +63,7 @@ class CompilesConditionals
     "if(#{args[0]});_out<<'disabled';end;"
   end
 
-  def self.compileReadonly args
+  def compileReadonly args
     if args&.count != 1
       raise Exception.new "Readonly statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
@@ -71,7 +71,7 @@ class CompilesConditionals
     "if(#{args[0]});_out<<'readonly';end;"
   end
 
-  def self.compileRequired args
+  def compileRequired args
     if args&.count != 1
       raise Exception.new "Required statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
@@ -79,7 +79,7 @@ class CompilesConditionals
     "if(#{args[0]});_out<<'required';end;"
   end
 
-  def self.compileSelected args
+  def compileSelected args
     if args&.count != 1
       raise Exception.new "Selected statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end

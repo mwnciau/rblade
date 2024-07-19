@@ -1,7 +1,7 @@
 require "ripper"
 
 class TokenizesStatements
-  def self.tokenize!(tokens)
+  def tokenize!(tokens)
     tokens.map! do |token|
       next(token) if token.type != :unprocessed
 
@@ -11,7 +11,9 @@ class TokenizesStatements
     end.flatten!
   end
 
-  def self.parseSegments! segments
+  private
+
+  def parseSegments! segments
     i = 0
     while i < segments.count
       segment = segments[i]
@@ -37,9 +39,8 @@ class TokenizesStatements
 
     segments
   end
-  private_class_method :parseSegments!
 
-  def self.tokenizeStatement!(segments, i)
+  def tokenizeStatement!(segments, i)
     statementData = {name: segments[i + 1]}
     segments.delete_at i + 1
 
@@ -53,9 +54,8 @@ class TokenizesStatements
 
     segments[i] = Token.new(type: :statement, value: statementData)
   end
-  private_class_method :tokenizeStatement!
 
-  def self.tokenizeArguments!(segments, segmentIndex)
+  def tokenizeArguments!(segments, segmentIndex)
     success = expandSegmentToEndParenthesis! segments, segmentIndex
 
     # If no matching parentheses were found, so we combine the argument string with the next segment
@@ -73,9 +73,8 @@ class TokenizesStatements
 
     arguments
   end
-  private_class_method :tokenizeArguments!
 
-  def self.expandSegmentToEndParenthesis! segments, segmentIndex
+  def expandSegmentToEndParenthesis! segments, segmentIndex
     parenthesesDifference = 0
     tokens = nil
 
@@ -99,9 +98,8 @@ class TokenizesStatements
 
     parenthesesDifference.zero?
   end
-  private_class_method :expandSegmentToEndParenthesis!
 
-  def self.extractArguments(segment)
+  def extractArguments(segment)
     # Add a comma to the end to delimit the end of the last argument
     segment = segment[1..-2] + ","
     segmentLines = segment.lines
@@ -135,5 +133,4 @@ class TokenizesStatements
 
     arguments
   end
-  private_class_method :extractArguments
 end
