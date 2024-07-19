@@ -24,8 +24,8 @@ def h string
 end
 
 class BladeCompiler
-  def self.compileString(stringTemplate)
-    tokens = [Token.new(:unprocessed, stringTemplate)]
+  def self.compileString(string_template)
+    tokens = [Token.new(:unprocessed, string_template)]
 
     CompilesComments.new.compile! tokens
     CompilesEchos.new.compile! tokens
@@ -38,8 +38,8 @@ class BladeCompiler
     compileTokens tokens
   end
 
-  def self.compileAttributeString(stringTemplate)
-    tokens = [Token.new(:unprocessed, stringTemplate)]
+  def self.compileAttributeString(string_template)
+    tokens = [Token.new(:unprocessed, string_template)]
 
     CompilesRuby.compile! tokens
     CompilesComments.compile!(tokens)

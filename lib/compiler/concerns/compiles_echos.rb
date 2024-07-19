@@ -33,12 +33,12 @@ class CompilesEchos
         elsif segments[i] == start_token
           segments.delete_at i
           segments.delete_at i + 1
-          segmentValue = "_out<<"
+          segment_value = "_out<<"
           if !wrapper_function.nil?
-            segmentValue <<= wrapper_function
+            segment_value <<= wrapper_function
           end
-          segmentValue <<= "(" + segments[i] + ");"
-          segments[i] = Token.new(:echo, segmentValue)
+          segment_value <<= "(" + segments[i] + ");"
+          segments[i] = Token.new(:echo, segment_value)
 
           i += 1
         elsif !segments[i].nil? && segments[i] != ""

@@ -27,12 +27,12 @@ class CompilesEchoTest < TestCase
   def test_expression
     assert_compiles_to "{{ foo + bar << 'BAZ' }}", "_out<<h(foo + bar << 'BAZ');", "FOOBARBAZ"
     assert_compiles_to %q({{ "foo" + 'bar' }}), %q[_out<<h("foo" + 'bar');], "foobar"
-    assert_compiles_to %q({{ "#{foo}" }}), %q[_out<<h("#{foo}");], "FOO"
+    assert_compiles_to %q({{ "#{foo}" }}), %q[_out<<h("#{foo}");], "FOO" # standard:disable Lint/InterpolationCheck
     assert_compiles_to "{{ 'a' * 3 }}", "_out<<h('a' * 3);", "aaa"
 
     assert_compiles_to "{!! foo + bar << 'BAZ' !!}", "_out<<(foo + bar << 'BAZ');", "FOOBARBAZ"
     assert_compiles_to %q({!! "foo" + 'bar' !!}), %q[_out<<("foo" + 'bar');], "foobar"
-    assert_compiles_to %q({!! "#{foo}" !!}), %q[_out<<("#{foo}");], "FOO"
+    assert_compiles_to %q({!! "#{foo}" !!}), %q[_out<<("#{foo}");], "FOO" # standard:disable Lint/InterpolationCheck
     assert_compiles_to "{!! 'a' * 3 !!}", "_out<<('a' * 3);", "aaa"
   end
 

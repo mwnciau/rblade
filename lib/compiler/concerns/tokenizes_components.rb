@@ -16,11 +16,11 @@ class TokenizesComponents
           i += 1
         elsif segments[i] == "<" && segments[i + 1]&.match(/x[-:]/)
           name = segments[i + 1][2..]
-          rawAttributes = (segments[i + 2] != ">") ? tokenizeAttributes(segments[i + 2]) : nil
+          raw_attributes = (segments[i + 2] != ">") ? tokenizeAttributes(segments[i + 2]) : nil
 
-          attributes = processAttributes rawAttributes
+          attributes = processAttributes raw_attributes
 
-          if rawAttributes.nil?
+          if raw_attributes.nil?
             segments.delete_at i + 1
           else
             while segments[i + 1] != ">" && segments[i + 1] != "/>"
@@ -48,22 +48,22 @@ class TokenizesComponents
 
   private
 
-  def processAttributes rawAttributes
+  def processAttributes raw_attributes
     attributes = []
     i = 0
-    while i < rawAttributes.count
-      name = rawAttributes[i]
+    while i < raw_attributes.count
+      name = raw_attributes[i]
       if name == "@class" || name == "@style"
-        attributes.push({type: name[1..], value: rawAttributes[i + 1][1..-2]})
+        attributes.push({type: name[1..], value: raw_attributes[i + 1][1..-2]})
         i += 2
       elsif name[0..1] == "{{"
-        attributes.push({type: "attributes", value: rawAttributes[i + 1][2..-2]})
+        attributes.push({type: "attributes", value: raw_attributes[i + 1][2..-2]})
         i += 1
       else
         attribute = {name:}
 
-        if rawAttributes[i + 1] == "="
-          attribute[:value] = rawAttributes[i + 2]
+        if raw_attributes[i + 1] == "="
+          attribute[:value] = raw_attributes[i + 2]
           i += 3
         else
           i += 1

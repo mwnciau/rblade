@@ -40,24 +40,24 @@ class CompilesStatements
   private
 
   def getHandler(name)
-    handlerClass, handlerMethod = @@statementHandlers[name]
+    handler_class, handler_method = @@statement_handlers[name]
 
-    if !handlerClass&.method_defined?(handlerMethod)
+    if !handler_class&.method_defined?(handler_method)
       raise StandardError.new "Unhandled statement: @#{name}"
     end
 
-    if handlerClass == CompilesStatements
-      @@handlerInstances[handlerClass] = self
+    if handler_class == CompilesStatements
+      @@handler_instances[handler_class] = self
     else
-      @@handlerInstances[handlerClass] ||= handlerClass.new
+      @@handler_instances[handler_class] ||= handler_class.new
     end
 
-    @@handlerInstances[handlerClass].method(handlerMethod)
+    @@handler_instances[handler_class].method(handler_method)
   end
 
-  @@handlerInstances = {}
+  @@handler_instances = {}
 
-  @@statementHandlers = {
+  @@statement_handlers = {
     "break" => [CompilesLoops, :compileBreak],
     "case" => [CompilesConditionals, :compileCase],
     "checked" => [CompilesConditionals, :compileChecked],
