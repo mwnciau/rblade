@@ -5,7 +5,13 @@ class TokenizesStatements
     tokens.map! do |token|
       next(token) if token.type != :unprocessed
 
-      segments = token.value.split(/(?:^|[\b\s])(@@?)(\w+(?:::\w+)?)(?:[ \t]*(\(.*?\)))?/m)
+      segments = token.value.split(/
+        (?:^|[\b\s])
+        (@@?)
+        (\w+(?:::\w+)?)
+        (?:[ \t]*
+          (\(.*?\))
+        )?/mx)
 
       parseSegments! segments
     end.flatten!
@@ -26,6 +32,11 @@ class TokenizesStatements
         i += 1
       elsif segment == "@"
         tokenizeStatement! segments, i
+
+        # Remove trailing whitespace if it exists, but don't double dip when another statement follows
+        if !segments[i + 1].nil? && segments[i + 1].match(/^\s/) && (segments[i + 1].length > 1 || segments[i + 2].nil?)
+          segments[i + 1].slice! 0, 1
+        end
 
         i += 1
       elsif !segments[i].nil? && segments[i] != ""

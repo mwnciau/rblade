@@ -1,5 +1,6 @@
 require_relative "statements/compiles_conditionals"
 require_relative "statements/compiles_inline_ruby"
+require_relative "statements/compiles_loops"
 
 class CompilesStatements
   def compile!(tokens)
@@ -57,21 +58,32 @@ class CompilesStatements
   @@handlerInstances = {}
 
   @@statementHandlers = {
+    "break" => [CompilesLoops, :compileBreak],
     "case" => [CompilesConditionals, :compileCase],
     "checked" => [CompilesConditionals, :compileChecked],
     "disabled" => [CompilesConditionals, :compileDisabled],
     "else" => [CompilesConditionals, :compileElse],
     "elsif" => [CompilesConditionals, :compileElsif],
+    "empty" => [CompilesLoops, :compileEndForElse],
     "end" => [CompilesStatements, :compileEnd],
     "endcase" => [CompilesStatements, :compileEnd],
+    "endfor" => [CompilesStatements, :compileEnd],
+    "endforelse" => [CompilesLoops, :compileEndForElse],
     "endif" => [CompilesStatements, :compileEnd],
     "endunless" => [CompilesStatements, :compileEnd],
+    "enduntil" => [CompilesStatements, :compileEnd],
+    "endwhile" => [CompilesStatements, :compileEnd],
+    "for" => [CompilesLoops, :compileFor],
+    "forelse" => [CompilesLoops, :compileForElse],
     "if" => [CompilesConditionals, :compileIf],
+    "next" => [CompilesLoops, :compileNext],
     "readonly" => [CompilesConditionals, :compileReadonly],
     "required" => [CompilesConditionals, :compileRequired],
     "ruby" => [CompilesInlineRuby, :compile],
     "selected" => [CompilesConditionals, :compileSelected],
     "unless" => [CompilesConditionals, :compileUnless],
+    "until" => [CompilesLoops, :compileUntil],
     "when" => [CompilesConditionals, :compileWhen],
+    "while" => [CompilesLoops, :compileWhile],
   }
 end

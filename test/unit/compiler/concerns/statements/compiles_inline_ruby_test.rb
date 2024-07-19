@@ -7,7 +7,7 @@ class CompilesInlineRubyTest < TestCase
     assert_compiles_to "@ruby ( _out = 'cake'; )", "_out = 'cake';", "cake"
 
     assert_compiles_to "foo @ruby(_out << 'bar')baz", nil, "foobarbaz"
-    assert_compiles_to "foo  @ruby(_out << 'bar') baz", nil, "foo bar baz"
+    assert_compiles_to "foo  @ruby(_out << 'bar')  baz", nil, "foo bar baz"
 
     assert_compiles_to "foo @ruby(
       _out << 'bar'
