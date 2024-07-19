@@ -12,7 +12,7 @@ class CompilesLoops
       raise StandardError.new "For statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    "for(#{args[0]});"
+    "for #{args[0]};"
   end
 
   def compileNext args
@@ -21,7 +21,7 @@ class CompilesLoops
     end
 
     if args.nil?
-      "next"
+      "next;"
     else
       "next #{args[0]};"
     end
@@ -32,7 +32,7 @@ class CompilesLoops
       raise StandardError.new "Until statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    "until(#{args[0]});"
+    "until #{args[0]};"
   end
 
   def compileWhile args
@@ -40,6 +40,6 @@ class CompilesLoops
       raise StandardError.new "While statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
-    "while(#{args[0]});"
+    "while #{args[0]};"
   end
 end
