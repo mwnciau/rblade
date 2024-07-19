@@ -8,7 +8,13 @@ class TokenizesStatementsTest < TestCase
     TokenizesStatements.new.tokenize!(tokens)
 
     expected.each.with_index do |expected_item, i|
-      assert_equal expected_item, tokens[i].value
+      actual = tokens[i].value
+      if expected_item.is_a? Hash
+        assert_equal expected_item[:name], actual[:name]
+        assert_equal expected_item[:arguments], actual[:arguments]
+      else
+        assert_equal expected_item, actual
+      end
     end
   end
 
@@ -60,5 +66,11 @@ class TokenizesStatementsTest < TestCase
     assert_tokenizes_to "@foo)", [{name: "foo"}, ")"]
     assert_tokenizes_to "@foo(", [{name: "foo"}, "("]
     assert_tokenizes_to "@foo(()(()", [{name: "foo"}, "(()(()"]
+  end
+
+  def test_commas_in_brackets
+    assert_tokenizes_to "@foo([1, 2, 3])", [{name: "foo", arguments: ["[1, 2, 3]"]}]
+    assert_tokenizes_to "@foo([1, {2, 3}])", [{name: "foo", arguments: ["[1, {2, 3}]"]}]
+    assert_tokenizes_to "@foo([1], ([{2, 3}]))", [{name: "foo", arguments: ["[1]", "([{2, 3}])"]}]
   end
 end

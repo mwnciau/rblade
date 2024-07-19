@@ -120,8 +120,30 @@ class TokenizesStatements
 
     current_line = 1
     current_index = 0
+    bracket_count = {
+      '[]': 0,
+      '{}': 0,
+      '()': 0,
+    }
     tokens.each do |token|
-      if token[1] == :on_comma
+      case token[1]
+      when :on_lbracket
+        bracket_count[:'[]'] += 1
+      when :on_rbracket
+        bracket_count[:'[]'] -= 1
+      when :on_lbrace
+        bracket_count[:'{}'] += 1
+      when :on_rbrace
+        bracket_count[:'{}'] -= 1
+      when :on_lparen
+        bracket_count[:'()'] += 1
+      when :on_rparen
+        bracket_count[:'()'] -= 1
+      when :on_comma
+        if bracket_count[:'[]'] != 0 || bracket_count[:'{}'] != 0 || bracket_count[:'()'] != 0
+          next
+        end
+
         argument = ""
 
         # Concatenate all lines up to this token's line, including the tail end of the current line
