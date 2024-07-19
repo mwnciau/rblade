@@ -19,6 +19,16 @@ class CompilesLoops
     "if #{args[0]};break;end;"
   end
 
+  def compileEach args
+    if args&.count != 1
+      raise StandardError.new "For statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+    end
+
+    variables, collection = args[0].split(" in ")
+
+    "#{collection}.each do |#{variables}|;"
+  end
+
   def compileFor args
     if args&.count != 1
       raise StandardError.new "For statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"

@@ -61,4 +61,10 @@ class CompilesLoopsTest < TestCase
       "_fe_empty_1=true;for i in 1..1;_fe_empty_1=false;_fe_empty_2=true;for i in [];_fe_empty_2=false;_out<<h(i);end;if _fe_empty_2;_out<<'8';end;end;if _fe_empty_1;_out<<'9';end;",
       "8"
   end
+
+  def test_each
+    assert_compiles_to "@each(a in [1, 2, 3]) {{ a }} @endeach",
+      "[1, 2, 3].each do |a|;_out<<'a';end;",
+      "123"
+  end
 end
