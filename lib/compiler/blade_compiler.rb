@@ -1,6 +1,7 @@
 require_relative "concerns/compiles_comments"
 require_relative "concerns/compiles_components"
 require_relative "concerns/compiles_echos"
+require_relative "concerns/compiles_ruby"
 require_relative "concerns/compiles_statements"
 require_relative "concerns/tokenizes_components"
 require_relative "concerns/tokenizes_statements"
@@ -16,7 +17,7 @@ def dd(*)
 end
 
 def escape_quotes string
-  string.gsub(/['"\\\x0]/, '\\\\\0')
+  string.gsub(/['\\\x0]/, '\\\\\0')
 end
 
 def h string
@@ -27,6 +28,7 @@ class BladeCompiler
   def self.compileString(stringTemplate)
     tokens = [Token.new(:unprocessed, stringTemplate)]
 
+    CompilesRuby.compile! tokens
     CompilesComments.compile! tokens
     TokenizesComponents.tokenize! tokens
     TokenizesStatements.tokenize! tokens
@@ -40,6 +42,7 @@ class BladeCompiler
   def self.compileAttributeString(stringTemplate)
     tokens = [Token.new(:unprocessed, stringTemplate)]
 
+    CompilesRuby.compile! tokens
     CompilesComments.compile!(tokens)
     CompilesEchos.compile!(tokens)
 

@@ -68,14 +68,14 @@ class TokenizesComponents
         end
 
         # The "::" at the start of attributes is used to escape attribute names beginning with ":"
-        if name [0..1] == "::"
+        if name[0..1] == "::"
           attribute[:type] = "string"
           attribute[:name].delete_prefix! ":"
           attributes.push(attribute)
           next
         end
 
-        if name [0] == ":"
+        if name[0] == ":"
           attribute[:type] = attribute[:value].nil? ? "pass_through" : "ruby"
           attribute[:name].delete_prefix! ":"
           attributes.push(attribute)

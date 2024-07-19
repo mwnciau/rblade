@@ -75,7 +75,7 @@ class CompilesEchoTest < TestCase
   def test_echo_dangerous_strings
     assert_compiles_to %q({{ '"\'\\\\\\'' }}), %q[_out<<h('"\'\\\\\\'');], "&quot;&apos;\\&apos;"
     assert_compiles_to %q({{ '<&"\'>' }}), %q[_out<<h('<&"\'>');], "&lt;&amp;&quot;&apos;&gt;"
-    assert_compiles_to %q(@{{ '"\'\\\\\\'' }}), nil, %q({{ '\"\\'\\\\\\'' }})
+    assert_compiles_to %q(@{{ '"\'\\\\\\'' }}), nil, %q({{ '"\\'\\\\\\'' }})
 
     assert_compiles_to %q({!! '"\'\\\\\\'' !!}), %q[_out<<('"\'\\\\\\'');], %q("'\\')
     assert_compiles_to %q({!! '<&"\'>' !!}), %q[_out<<('<&"\'>');], "<&\"'>"

@@ -15,7 +15,8 @@ class TokenizesStatementsTest < TestCase
   def test_tokenize
     assert_tokenizes_to "@foo", [{name: "foo"}]
     assert_tokenizes_to "@foo::bar", [{name: "foo::bar"}]
-    assert_tokenizes_to "@foo @bar", [{name: "foo"}, " ", {name: "bar"}]
+    assert_tokenizes_to "@foo @bar", [{name: "foo"}, {name: "bar"}]
+    assert_tokenizes_to "@foo  @bar", [{name: "foo"}, " ", {name: "bar"}]
     assert_tokenizes_to "@foo()", [{name: "foo"}]
     assert_tokenizes_to "@foo(1, 2, 3)", [{name: "foo", arguments: ["1", "2", "3"]}]
     assert_tokenizes_to "@foo   (1, 2, 3)", [{name: "foo", arguments: ["1", "2", "3"]}]
@@ -28,10 +29,7 @@ class TokenizesStatementsTest < TestCase
     assert_tokenizes_to "@foo(@bar)", [{name: "foo", arguments: ["@bar"]}]
     assert_tokenizes_to "@foo(@@bar)", [{name: "foo", arguments: ["@@bar"]}]
     assert_tokenizes_to "@@foo(@bar)", ["@foo", "(@bar)"]
-
-    # The following is a deviation from how Illuminate's blade compiler handles this edge case,
-    # it would be expecting ["@foo", "(()@bar)"].
-    assert_tokenizes_to "@@foo(()@bar)", ["@foo", "(()", {name: "bar"}, ")"]
+    assert_tokenizes_to "@@foo(()@bar)", ["@foo", "(()", "@bar)"]
   end
 
   def test_skip_statement
@@ -56,9 +54,9 @@ class TokenizesStatementsTest < TestCase
 , 2)", [{name: "foo", arguments: ["1", "2"]}]
     assert_tokenizes_to "@foo(1,
     (2 + (3)),
-    4) @bar()", [{name: "foo", arguments: ["1", "(2 + (3))", "4"]}, " ", {name: "bar"}]
+    4) @bar()", [{name: "foo", arguments: ["1", "(2 + (3))", "4"]}, {name: "bar"}]
 
-    assert_tokenizes_to "(@foo())", ["(", {name: "foo"}, ")"]
+    assert_tokenizes_to "( @foo())", ["(", {name: "foo"}, ")"]
     assert_tokenizes_to "@foo)", [{name: "foo"}, ")"]
     assert_tokenizes_to "@foo(", [{name: "foo"}, "("]
     assert_tokenizes_to "@foo(()(()", [{name: "foo"}, "(()(()"]

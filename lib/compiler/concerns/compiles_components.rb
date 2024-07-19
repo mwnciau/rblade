@@ -1,3 +1,4 @@
+require_relative "../component_store"
 require_relative "statements/compiles_conditionals"
 
 class CompilesComponents
@@ -10,22 +11,33 @@ class CompilesComponents
       name = token.value[:name]
       attributes = token.value[:attributes]
 
-      compile_token_start token
-      if token.type == :component
+
+      if token.type == :component_start
+        token.value = compile_token_start token
+      elsif token.type == :component_end
+        token.value = compile_token_end token
+      else
+        token.value = compile_token_start(token) + compile_token_end(token)
       end
-
-
-      dd token, token.type, name, attributes
     end
   end
 
   def self.compile_token_start token
     attributes = compile_attributes token
-    code = "def method({#{attributes[:arguments].join(',')}});#{attributes[:assignments].join}"
+    code = "def _component(attributes={#{attributes[:arguments].join(',')}});#{attributes[:assignments].join}_out='';"
 
-    dd code
+    code
   end
   private_class_method :compile_token_start
+
+  def self.compile_token_end token
+    code = "slot=_out;_out='';"
+    code << ComponentStore.fetchComponent(token.value[:name])
+    code << "_out;end;_out<<_component();"
+
+    code
+  end
+  private_class_method :compile_token_end
 
   def self.compile_attributes token
     attribute_arguments = []
@@ -43,7 +55,7 @@ class CompilesComponents
       end
 
       if attribute[:type] == 'ruby'
-        attribute_arguments.push "'attribute[:name]': (#{attribute[:value]})'"
+        attribute_arguments.push "'#{attribute[:name]}': (#{attribute[:value]})'"
       end
 
       if attribute[:type] == 'pass_through'
@@ -56,7 +68,7 @@ class CompilesComponents
 
       variableName = attribute[:name]&.gsub(/-/, "_")
       if !variableName.nil? && variableName.match(/^[A-Za-z_][A-Za-z0-9_]*$/)
-        keywords = %w{__FILE__ __LINE__ alias and begin BEGIN break case class def defined? do else elsif end END ensure false for if in module next nil not or redo rescue retry return self super then true undef unless until when while yield}
+        keywords = %w{__FILE__ __LINE__ alias and begin BEGIN break case class def defined? do else elsif end END ensure false for if in module next nil not or redo rescue retry return self super then true undef unless until when while yield attributes _out slot}
         next if keywords.include? variableName
 
         attribute_assignments.push "#{variableName} = attributes[:'#{attribute[:name]}'];"
@@ -66,8 +78,4 @@ class CompilesComponents
     ({arguments: attribute_arguments, assignments: attribute_assignments})
   end
   private_class_method :compile_attributes
-
-  def self.compile_token_end token
-  end
-  private_class_method :compile_token_end
 end

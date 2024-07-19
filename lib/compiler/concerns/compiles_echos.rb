@@ -20,7 +20,7 @@ class CompilesEchos
 
       start_token_escaped = Regexp.escape start_token
       end_token_escaped = Regexp.escape end_token
-      segments = token.value.split(/(?:(@)(#{start_token_escaped}.+?#{end_token_escaped})?|(#{start_token_escaped})\s*(.+?)\s*(#{end_token_escaped}))/m)
+      segments = token.value.split(/(?:(@)(#{start_token_escaped}.+?#{end_token_escaped})|(#{start_token_escaped})\s*(.+?)\s*(#{end_token_escaped}))/m)
 
       i = 0
       while i < segments.count

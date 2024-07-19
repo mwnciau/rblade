@@ -5,7 +5,7 @@ class TokenizesStatements
     tokens.map! do |token|
       next(token) if token.type != :unprocessed
 
-      segments = token.value.split(/\B(@@?)(\w+(?:::\w+)?)(?:[ \t]*(\(.*?\)))?/m)
+      segments = token.value.split(/(?:^|[\b\s])(@@?)(\w+(?:::\w+)?)(?:[ \t]*(\(.*?\)))?/m)
 
       parseSegments! segments
     end.flatten!
