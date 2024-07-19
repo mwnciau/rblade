@@ -26,7 +26,7 @@ class TokenizesStatements
 
       # The @ symbol is used to escape blade directives so we return it unprocessed
       if segment == "@@"
-        segments[i] = Token.new(type: :unprocessed, value: segment[1..-1] + segments[i + 1])
+        segments[i] = Token.new(type: :unprocessed, value: segment[1..] + segments[i + 1])
         segments.delete_at i + 1
 
         i += 1
@@ -126,7 +126,7 @@ class TokenizesStatements
 
         # Concatenate all lines up to this token's line, including the tail end of the current line
         if token[0][0] != currentLine
-          for i in currentLine...token[0][0]
+          (currentLine...token[0][0]).each do |i|
             argument << (segmentLines[i - 1].slice(currentIndex..-1) || "")
             currentIndex = 0
           end

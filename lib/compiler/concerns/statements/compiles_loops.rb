@@ -1,7 +1,7 @@
 class CompilesLoops
   def compileBreak args
     if !args.nil?
-      raise Exception.new "Break statement: wrong number of arguments (given #{args&.count}, expecting 0)"
+      raise StandardError.new "Break statement: wrong number of arguments (given #{args&.count}, expecting 0)"
     end
 
     "break;"
@@ -9,7 +9,7 @@ class CompilesLoops
 
   def compileFor args
     if args&.count != 1
-      raise Exception.new "For statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+      raise StandardError.new "For statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
     "for(#{args[0]});"
@@ -17,7 +17,7 @@ class CompilesLoops
 
   def compileNext args
     if args&.count&.> 1
-      raise Exception.new "For statement: wrong number of arguments (given #{args&.count || 0}, expecting 0 or 1)"
+      raise StandardError.new "For statement: wrong number of arguments (given #{args&.count || 0}, expecting 0 or 1)"
     end
 
     if args.nil?
@@ -29,7 +29,7 @@ class CompilesLoops
 
   def compileUntil args
     if args&.count != 1
-      raise Exception.new "Until statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+      raise StandardError.new "Until statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
     "until(#{args[0]});"
@@ -37,7 +37,7 @@ class CompilesLoops
 
   def compileWhile args
     if args&.count != 1
-      raise Exception.new "While statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+      raise StandardError.new "While statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
     "while(#{args[0]});"

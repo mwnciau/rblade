@@ -6,7 +6,6 @@ require_relative "concerns/compiles_statements"
 require_relative "concerns/tokenizes_components"
 require_relative "concerns/tokenizes_statements"
 require "htmlentities"
-require "pp"
 
 Token = Struct.new(:type, :value)
 

@@ -43,7 +43,7 @@ class CompilesStatements
     handlerClass, handlerMethod = @@statementHandlers[name]
 
     if !handlerClass&.method_defined?(handlerMethod)
-      raise Exception.new "Unhandled statement: @#{name}"
+      raise StandardError.new "Unhandled statement: @#{name}"
     end
 
     if handlerClass == CompilesStatements

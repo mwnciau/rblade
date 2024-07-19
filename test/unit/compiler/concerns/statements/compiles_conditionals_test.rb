@@ -20,7 +20,7 @@ class CompilesConditionalsTest < TestCase
     assert_compiles_to "@if ( true ) hi @endif", "if(true);_out<<'hi';end;", "hi"
     assert_compiles_to "@if(true) hi @endif", "if(true);_out<<'hi';end;", "hi"
     assert_compiles_to "@if(false) hi @endif", "if(false);_out<<'hi';end;", ""
-    assert_compiles_to "@if(true) #{MULTILINE_STRING} @endif", "if(true);_out<<'#{MULTILINE_STRING}';end;", "#{MULTILINE_STRING}"
+    assert_compiles_to "@if(true) #{MULTILINE_STRING} @endif", "if(true);_out<<'#{MULTILINE_STRING}';end;", MULTILINE_STRING
     assert_compiles_to "@if ( foo == 'FOO' ){{bar}} @endif", "if(foo == 'FOO');_out<<h(bar);end;", "BAR"
   end
 
@@ -28,7 +28,7 @@ class CompilesConditionalsTest < TestCase
     assert_compiles_to "@if(false) @elsif ( true ) hi @endif", "if(false);elsif(true);_out<<'hi';end;", "hi"
     assert_compiles_to "@if(false) @elsif(true) hi @endif", "if(false);elsif(true);_out<<'hi';end;", "hi"
     assert_compiles_to "@if(false) @elsif(false) hi @endif", "if(false);elsif(false);_out<<'hi';end;", ""
-    assert_compiles_to "@if(false) @elsif(true) #{MULTILINE_STRING} @endif", "if(false);elsif(true);_out<<'#{MULTILINE_STRING}';end;", "#{MULTILINE_STRING}"
+    assert_compiles_to "@if(false) @elsif(true) #{MULTILINE_STRING} @endif", "if(false);elsif(true);_out<<'#{MULTILINE_STRING}';end;", MULTILINE_STRING
     assert_compiles_to "@if(false) @elsif ( foo == 'FOO' ){{bar}} @endif", "if(false);elsif(foo == 'FOO');_out<<h(bar);end;", "BAR"
   end
 
@@ -36,7 +36,7 @@ class CompilesConditionalsTest < TestCase
     assert_compiles_to "@if ( false ) @else hi @endif", "if(false);else;_out<<'hi';end;", "hi"
     assert_compiles_to "@if(false) @else hi @endif", "if(false);else;_out<<'hi';end;", "hi"
     assert_compiles_to "@if(true) @else hi @endif", "if(true);else;_out<<'hi';end;", ""
-    assert_compiles_to "@if(false) @else #{MULTILINE_STRING} @endif", "if(false);else;_out<<'#{MULTILINE_STRING}';end;", "#{MULTILINE_STRING}"
+    assert_compiles_to "@if(false) @else #{MULTILINE_STRING} @endif", "if(false);else;_out<<'#{MULTILINE_STRING}';end;", MULTILINE_STRING
     assert_compiles_to "@if ( foo == 'BAR' ) @else{{bar}} @endif", "if(foo == 'BAR');else;_out<<h(bar);end;", "BAR"
   end
 
@@ -44,7 +44,7 @@ class CompilesConditionalsTest < TestCase
     assert_compiles_to "@unless ( false ) hi @endunless", "unless(false);_out<<'hi';end;", "hi"
     assert_compiles_to "@unless(false) hi @endunless", "unless(false);_out<<'hi';end;", "hi"
     assert_compiles_to "@unless(true) hi @endunless", "unless(true);_out<<'hi';end;", ""
-    assert_compiles_to "@unless(false) #{MULTILINE_STRING} @endunless", "unless(false);_out<<'#{MULTILINE_STRING}';end;", "#{MULTILINE_STRING}"
+    assert_compiles_to "@unless(false) #{MULTILINE_STRING} @endunless", "unless(false);_out<<'#{MULTILINE_STRING}';end;", MULTILINE_STRING
     assert_compiles_to "@unless( foo == 'BAR' ){{bar}} @endif", "unless(foo == 'BAR');_out<<h(bar);end;", "BAR"
   end
 
@@ -78,7 +78,7 @@ class CompilesConditionalsTest < TestCase
 
   ["checked", "disabled", "required", "selected", "readonly"].each do |statement|
     define_method(:"test_#{statement}") do
-      assert_compiles_to "@#{statement}(true)", "if(true);_out<<'#{statement}';end;", "#{statement}"
+      assert_compiles_to "@#{statement}(true)", "if(true);_out<<'#{statement}';end;", statement
       assert_compiles_to "@#{statement}(false)", "if(false);_out<<'#{statement}';end;", ""
     end
   end

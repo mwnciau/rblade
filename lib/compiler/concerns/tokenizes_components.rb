@@ -10,12 +10,12 @@ class TokenizesComponents
       i = 0
       while i < segments.count
         if segments[i] == "</" && segments[i + 1]&.match(/x[-:]/)
-          segments[i] = Token.new(type: :component_end, value: {name: segments[i + 1][2..-1]})
+          segments[i] = Token.new(type: :component_end, value: {name: segments[i + 1][2..]})
 
           segments.delete_at i + 1
           i += 1
         elsif segments[i] == "<" && segments[i + 1]&.match(/x[-:]/)
-          name = segments[i + 1][2..-1]
+          name = segments[i + 1][2..]
           rawAttributes = (segments[i + 2] != ">") ? tokenizeAttributes(segments[i + 2]) : nil
 
           attributes = processAttributes rawAttributes
@@ -54,7 +54,7 @@ class TokenizesComponents
     while i < rawAttributes.count
       name = rawAttributes[i]
       if name == "@class" || name == "@style"
-        attributes.push({type: name[1..-1], value: rawAttributes[i + 1][1..-2]})
+        attributes.push({type: name[1..], value: rawAttributes[i + 1][1..-2]})
         i += 2
       elsif name[0..1] == "{{"
         attributes.push({type: "attributes", value: rawAttributes[i + 1][2..-2]})

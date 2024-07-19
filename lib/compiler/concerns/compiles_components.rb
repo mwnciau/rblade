@@ -8,9 +8,6 @@ class CompilesComponents
         next
       end
 
-      name = token.value[:name]
-      attributes = token.value[:attributes]
-
       token.value = if token.type == :component_start
         compile_token_start token
       elsif token.type == :component_end
@@ -63,12 +60,12 @@ class CompilesComponents
         attribute_arguments.push "'#{attribute[:name]}': true"
       end
 
-      variableName = attribute[:name]&.tr("-", "_")
-      if !variableName.nil? && variableName.match(/^[A-Za-z_][A-Za-z0-9_]*$/)
+      variable_name = attribute[:name]&.tr("-", "_")
+      if !variable_name.nil? && variable_name.match(/^[A-Za-z_][A-Za-z0-9_]*$/)
         keywords = %w[__FILE__ __LINE__ alias and begin BEGIN break case class def defined? do else elsif end END ensure false for if in module next nil not or redo rescue retry return self super then true undef unless until when while yield attributes _out slot]
-        next if keywords.include? variableName
+        next if keywords.include? variable_name
 
-        attribute_assignments.push "#{variableName} = attributes[:'#{attribute[:name]}'];"
+        attribute_assignments.push "#{variable_name} = attributes[:'#{attribute[:name]}'];"
       end
     end
 
