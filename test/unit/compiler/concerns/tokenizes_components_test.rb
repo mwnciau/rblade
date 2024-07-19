@@ -64,9 +64,9 @@ class TokenizesComponentsTest < TestCase
     assert_tokenizes_to '<x-a b="{{ c }}">', [{name: "a", attributes: [{name: "b", value: "{{ c }}", type: "string"}]}]
     assert_tokenizes_to '<x-a :b="c">', [{name: "a", attributes: [{name: "b", value: "c", type: "ruby"}]}]
     assert_tokenizes_to '<x-a ::b="c">', [{name: "a", attributes: [{name: ":b", value: "c", type: "string"}]}]
-    assert_tokenizes_to '<x-a b=c>', [{name: "a", attributes: [{name: "b", value: "c", type: "string"}]}]
-    assert_tokenizes_to '<x-a :b>', [{name: "a", attributes: [{name: "b", type: "pass_through"}]}]
-    assert_tokenizes_to '<x-a b>', [{name: "a", attributes: [{name: "b", type: "empty"}]}]
+    assert_tokenizes_to "<x-a b=c>", [{name: "a", attributes: [{name: "b", value: "c", type: "string"}]}]
+    assert_tokenizes_to "<x-a :b>", [{name: "a", attributes: [{name: "b", type: "pass_through"}]}]
+    assert_tokenizes_to "<x-a b>", [{name: "a", attributes: [{name: "b", type: "empty"}]}]
 
     assert_tokenizes_to '<x-a      b="c"    >', [{name: "a", attributes: [{name: "b", value: "c", type: "string"}]}]
     assert_tokenizes_to '<x-a

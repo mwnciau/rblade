@@ -10,13 +10,13 @@ class TokenizesComponents
       i = 0
       while i < segments.count
         if segments[i] == "</" && segments[i + 1]&.match(/x[-:]/)
-          segments[i] = Token.new(type: :component_end, value: {name: segments[i+1][2..-1]})
+          segments[i] = Token.new(type: :component_end, value: {name: segments[i + 1][2..-1]})
 
           segments.delete_at i + 1
           i += 1
-        elsif segments[i] == '<' && segments[i + 1]&.match(/x[-:]/)
-          name = segments[i+1][2..-1]
-          rawAttributes = segments[i + 2] != '>' ? tokenizeAttributes(segments[i + 2]) : nil
+        elsif segments[i] == "<" && segments[i + 1]&.match(/x[-:]/)
+          name = segments[i + 1][2..-1]
+          rawAttributes = (segments[i + 2] != ">") ? tokenizeAttributes(segments[i + 2]) : nil
 
           attributes = processAttributes rawAttributes
 
@@ -28,7 +28,7 @@ class TokenizesComponents
             end
           end
 
-          token_type = segments[i + 1] == "/>" ? :component : :component_start
+          token_type = (segments[i + 1] == "/>") ? :component : :component_start
           segments[i] = Token.new(type: token_type, value: {name:, attributes:})
           segments.delete_at i + 1
 
@@ -56,13 +56,13 @@ class TokenizesComponents
       if name == "@class" || name == "@style"
         attributes.push({type: name[1..-1], value: rawAttributes[i + 1][1..-2]})
         i += 2
-      elsif name[0..1] == '{{'
-        attributes.push({type: 'attributes', value: rawAttributes[i + 1][2..-2]})
+      elsif name[0..1] == "{{"
+        attributes.push({type: "attributes", value: rawAttributes[i + 1][2..-2]})
         i += 1
       else
         attribute = {name:}
 
-        if rawAttributes[i + 1] == '='
+        if rawAttributes[i + 1] == "="
           attribute[:value] = rawAttributes[i + 2]
           i += 3
         else
@@ -84,10 +84,10 @@ class TokenizesComponents
           next
         end
 
-        if attribute[:value].nil?
-          attribute[:type] = "empty";
+        attribute[:type] = if attribute[:value].nil?
+          "empty"
         else
-          attribute[:type] = "string";
+          "string"
         end
         attributes.push(attribute)
       end

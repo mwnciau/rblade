@@ -1,6 +1,6 @@
 class CompilesLoops
   def compileBreak args
-    if args != nil
+    if !args.nil?
       raise Exception.new "Break statement: wrong number of arguments (given #{args&.count}, expecting 0)"
     end
 
@@ -16,12 +16,12 @@ class CompilesLoops
   end
 
   def compileNext args
-    if args&.count > 1
+    if args&.count&.> 1
       raise Exception.new "For statement: wrong number of arguments (given #{args&.count || 0}, expecting 0 or 1)"
     end
 
     if args.nil?
-      "next";
+      "next"
     else
       "next #{args[0]};"
     end

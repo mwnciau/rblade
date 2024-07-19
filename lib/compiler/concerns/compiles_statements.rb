@@ -84,6 +84,6 @@ class CompilesStatements
     "unless" => [CompilesConditionals, :compileUnless],
     "until" => [CompilesLoops, :compileUntil],
     "when" => [CompilesConditionals, :compileWhen],
-    "while" => [CompilesLoops, :compileWhile],
+    "while" => [CompilesLoops, :compileWhile]
   }
 end

@@ -5,7 +5,7 @@ class BladeTemplatingTest < TestCase
   def test_strings_are_escaped
     compiledString = BladeCompiler.compileString(%(\\'))
 
-    assert_equal "_out<<'\\\\\\\'';", compiledString
+    assert_equal "_out<<'\\\\\\'';", compiledString
 
     result = eval "_out='';#{compiledString}_out"
     expected = %(\\')
