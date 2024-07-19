@@ -1,6 +1,6 @@
 class CompilesLoops
   def initialize
-    @forElseCounter = 0
+    @loopElseCounter = 0
   end
 
   def compileBreak args
@@ -21,12 +21,23 @@ class CompilesLoops
 
   def compileEach args
     if args&.count != 1
-      raise StandardError.new "For statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+      raise StandardError.new "Each statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
 
     variables, collection = args[0].split(" in ")
 
     "#{collection}.each do |#{variables}|;"
+  end
+
+  def compileEachElse args
+    if args&.count != 1
+      raise StandardError.new "Each else statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+    end
+    @loopElseCounter += 1
+
+    variables, collection = args[0].split(" in ")
+
+    "_looped_#{@loopElseCounter}=true;#{collection}.each do |#{variables}|;_looped_#{@loopElseCounter}=false;"
   end
 
   def compileFor args
@@ -39,17 +50,17 @@ class CompilesLoops
 
   def compileForElse args
     if args&.count != 1
-      raise StandardError.new "For statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+      raise StandardError.new "For else statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
     end
-    @forElseCounter += 1
+    @loopElseCounter += 1
 
-    "_fe_empty_#{@forElseCounter}=true;for #{args[0]};_fe_empty_#{@forElseCounter}=false;"
+    "_looped_#{@loopElseCounter}=true;for #{args[0]};_looped_#{@loopElseCounter}=false;"
   end
 
   def compileEmpty
-    @forElseCounter -= 1
+    @loopElseCounter -= 1
 
-    "end;if _fe_empty_#{@forElseCounter + 1};"
+    "end;if _looped_#{@loopElseCounter + 1};"
   end
 
   def compileNext args
