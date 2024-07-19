@@ -1,4 +1,5 @@
 require_relative "statements/compiles_conditionals"
+require_relative "statements/compiles_inline_ruby"
 
 class CompilesStatements
   def self.compile!(tokens)
@@ -52,6 +53,7 @@ class CompilesStatements
     "if" => CompilesConditionals.method(:compileIf),
     "readonly" => CompilesConditionals.method(:compileReadonly),
     "required" => CompilesConditionals.method(:compileRequired),
+    "ruby" => CompilesInlineRuby.method(:compile),
     "selected" => CompilesConditionals.method(:compileSelected),
     "unless" => CompilesConditionals.method(:compileUnless),
     "when" => CompilesConditionals.method(:compileWhen)
