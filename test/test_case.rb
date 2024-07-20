@@ -1,5 +1,6 @@
 require "minitest/autorun"
 require "minitest/reporters"
+require_relative "../lib/helpers/stack_manager"
 
 class TestCase < Minitest::Test
   def assert_compiles_to template, expected_code = nil, expected_result = nil
@@ -10,7 +11,10 @@ class TestCase < Minitest::Test
     end
 
     if expected_result
-      result = eval "foo = 'FOO';bar = 'BAR';_out='';" + compiled_string + "_out" # standard:disable Security/Eval
+      RBlade::StackManager.clear
+      setup = "foo = 'FOO';bar = 'BAR';_out='';_stacks=[];"
+      setdown = "RBlade::StackManager.get(_stacks) + _out"
+      result = eval setup + compiled_string + setdown # standard:disable Security/Eval
 
       assert_equal expected_result, result
     end

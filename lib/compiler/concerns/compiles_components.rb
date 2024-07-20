@@ -26,9 +26,9 @@ class CompilesComponents
   end
 
   def compile_token_end token
-    code = "slot=_out;_out='';"
+    code = "slot=_out;_out='';_stacks=[];"
     code << ComponentStore.fetchComponent(token.value[:name])
-    code << "_out;end;_out<<_component();"
+    code << "RBlade::StackManager.get(_stacks) + _out;end;_out<<_component();"
 
     code
   end

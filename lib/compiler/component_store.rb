@@ -11,7 +11,11 @@ class ComponentStore
     end
 
     if name == "profile"
-      BladeCompiler.compileString '<div class="profile"><h2>{{ name.capitalize }}</h2>{{ slot }}<x-button>View</x-button></div>'
+      return BladeCompiler.compileString '<div class="profile"><h2>{{ name.capitalize }}</h2>{{ slot }}<x-button>View</x-button></div>'
+    end
+
+    if name == "stack"
+      return BladeCompiler.compileString "@stack('stack') @push('other_stack', '123')"
     end
   end
 end

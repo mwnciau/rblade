@@ -1,6 +1,7 @@
 require_relative "statements/compiles_conditionals"
 require_relative "statements/compiles_inline_ruby"
 require_relative "statements/compiles_loops"
+require_relative "statements/compiles_stacks"
 
 class CompilesStatements
   def compile!(tokens)
@@ -75,6 +76,8 @@ class CompilesStatements
     "endfor" => [CompilesStatements, :compileEnd],
     "endforelse" => [CompilesStatements, :compileEnd],
     "endif" => [CompilesStatements, :compileEnd],
+    "endprepend" => [CompilesStacks, :compileEndPrepend],
+    "endpush" => [CompilesStacks, :compileEndPush],
     "endunless" => [CompilesStatements, :compileEnd],
     "enduntil" => [CompilesStatements, :compileEnd],
     "endwhile" => [CompilesStatements, :compileEnd],
@@ -83,10 +86,13 @@ class CompilesStatements
     "if" => [CompilesConditionals, :compileIf],
     "next" => [CompilesLoops, :compileNext],
     "nextif" => [CompilesLoops, :compileNextIf],
+    "prepend" => [CompilesStacks, :compilePrepend],
+    "push" => [CompilesStacks, :compilePush],
     "readonly" => [CompilesConditionals, :compileReadonly],
     "required" => [CompilesConditionals, :compileRequired],
     "ruby" => [CompilesInlineRuby, :compile],
     "selected" => [CompilesConditionals, :compileSelected],
+    "stack" => [CompilesStacks, :compileStack],
     "unless" => [CompilesConditionals, :compileUnless],
     "until" => [CompilesLoops, :compileUntil],
     "when" => [CompilesConditionals, :compileWhen],
