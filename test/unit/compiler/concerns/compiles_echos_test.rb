@@ -88,4 +88,14 @@ class CompilesEchoTest < TestCase
       foo
       %>", "_out<<h(foo);", "FOO"
   end
+
+  def test_limitations
+    # The end tag cannot appear within the echo
+    assert_compiles_to "{{ 'foo}}' }}", "_out<<h('foo);_out<<'\\' }}';"
+    assert_compiles_to "<%= 'foo%>' %>", "_out<<h('foo);_out<<'\\' %>';"
+
+    # A workaround to this is using the alternative syntax
+    assert_compiles_to "<%= 'foo}}' %>", "_out<<h('foo}}');", "foo}}"
+    assert_compiles_to "{{ 'foo%>' }}", "_out<<h('foo%>');", "foo%&gt;"
+  end
 end
