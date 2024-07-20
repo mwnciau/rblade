@@ -11,7 +11,11 @@ class TokenizesStatementsTest < TestCase
       actual = tokens[i].value
       if expected_item.is_a? Hash
         assert_equal expected_item[:name], actual[:name]
-        assert_equal expected_item[:arguments], actual[:arguments]
+        if (expected_item[:arguments].nil?)
+          assert_nil actual[:arguments]
+        else
+          assert_equal expected_item[:arguments], actual[:arguments]
+        end
       else
         assert_equal expected_item, actual
       end

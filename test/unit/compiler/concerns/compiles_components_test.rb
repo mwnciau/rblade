@@ -8,6 +8,6 @@ class CompilesComponentsTest < TestCase
     assert_compiles_to "<x-link href=#>visit</x-link>", nil, '<a href="#">visit</a>'
     assert_compiles_to "<x-profile name='bob'>Bob's name is Bob</x-profile>",
       nil,
-      '<div class="profile"><h2>Bob</h2>Bob&apos;s name is Bob<button class="button">View</button></div>'
+      '<div class="profile"><h2>Bob</h2>Bob&#39;s name is Bob<button class="button">View</button></div>'
   end
 end

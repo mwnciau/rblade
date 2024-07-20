@@ -5,7 +5,6 @@ require_relative "concerns/compiles_ruby"
 require_relative "concerns/compiles_statements"
 require_relative "concerns/tokenizes_components"
 require_relative "concerns/tokenizes_statements"
-require "htmlentities"
 
 Token = Struct.new(:type, :value)
 
@@ -19,8 +18,9 @@ def escape_quotes string
   string.gsub(/['\\\x0]/, '\\\\\0')
 end
 
-def h string
-  HTMLEntities.new.encode string
+if !defined?(h)
+  require 'erb/escape'
+  define_method(:h, ERB::Escape.instance_method(:html_escape))
 end
 
 class BladeCompiler
