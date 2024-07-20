@@ -15,7 +15,7 @@ class ComponentStore
     end
 
     if name == "stack"
-      return BladeCompiler.compileString "@stack('stack') @push('other_stack', '123')"
+      BladeCompiler.compileString "@stack('stack') @push('other_stack', '123')"
     end
   end
 end

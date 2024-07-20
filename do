@@ -62,6 +62,13 @@ then
     exit 0
 fi
 
+if [ "$1" == "cs:fix" ]
+then
+    echo Running: ${DOCKER_COMPOSE_COMMAND} run blade rake standard:fix "${@:2}"
+    ${DOCKER_COMPOSE_COMMAND} run blade rake standard:fix "${@:2}"
+    exit 0
+fi
+
 if [ "$1" == "test" ] || [ "$1" == "t" ]
 then
     echo Running: ${DOCKER_COMPOSE_COMMAND} run blade rake test "${@:2}"

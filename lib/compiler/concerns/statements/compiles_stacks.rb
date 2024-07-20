@@ -30,7 +30,7 @@ class CompilesStacks
       raise StandardError.new "End prepend statement: wrong number of arguments (given #{args&.count}, expecting 0)"
     end
 
-      @push_counter -= 1
+    @push_counter -= 1
 
     "RBlade::StackManager.prepend(_push_#{@push_counter + 1}_name, _out);_out=_push_#{@push_counter + 1}_buffer;"
   end
@@ -54,7 +54,7 @@ class CompilesStacks
       raise StandardError.new "End push statement: wrong number of arguments (given #{args&.count}, expecting 0)"
     end
 
-      @push_counter -= 1
+    @push_counter -= 1
 
     "RBlade::StackManager.push(_push_#{@push_counter + 1}_name, _out);_out=_push_#{@push_counter + 1}_buffer;"
   end
