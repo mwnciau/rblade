@@ -8,22 +8,16 @@ require "rblade/compiler/tokenizes_statements"
 
 Token = Struct.new(:type, :value)
 
-def dd(*)
-  print "\n\ndd output:\n"
-  pp(*)
-  exit 0
-end
-
-def escape_quotes string
-  string.gsub(/['\\\x0]/, '\\\\\0')
-end
-
 if !defined?(h)
   require 'erb/escape'
   define_method(:h, ERB::Escape.instance_method(:html_escape))
 end
 
 module RBlade
+  def self.escape_quotes string
+    string.gsub(/['\\\x0]/, '\\\\\0')
+  end
+
   class Compiler
     def self.compileString(string_template)
       tokens = [Token.new(:unprocessed, string_template)]
@@ -54,7 +48,7 @@ module RBlade
 
       tokens.each do |token, cake|
         if token.type == :unprocessed || token.type == :raw_text
-          output << "_out<<'" << escape_quotes(token.value) << "';"
+          output << "_out<<'" << RBlade::escape_quotes(token.value) << "';"
         else
           output << token.value
         end
