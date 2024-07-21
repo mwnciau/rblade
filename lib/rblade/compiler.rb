@@ -9,7 +9,7 @@ require "rblade/compiler/tokenizes_statements"
 Token = Struct.new(:type, :value)
 
 if !defined?(h)
-  require 'erb/escape'
+  require "erb/escape"
   define_method(:h, ERB::Escape.instance_method(:html_escape))
 end
 
@@ -48,7 +48,7 @@ module RBlade
 
       tokens.each do |token, cake|
         if token.type == :unprocessed || token.type == :raw_text
-          output << "_out<<'" << RBlade::escape_quotes(token.value) << "';"
+          output << "_out<<'" << RBlade.escape_quotes(token.value) << "';"
         else
           output << token.value
         end

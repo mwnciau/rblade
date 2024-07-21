@@ -45,7 +45,7 @@ module RBlade
         end
 
         if attribute[:type] == "string"
-          attribute_arguments.push "'#{attribute[:name]}': '#{RBlade::escape_quotes(attribute[:value])}'"
+          attribute_arguments.push "'#{attribute[:name]}': '#{RBlade.escape_quotes(attribute[:value])}'"
         end
 
         if attribute[:type] == "ruby"
