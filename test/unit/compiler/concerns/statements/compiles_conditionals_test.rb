@@ -1,5 +1,4 @@
-require_relative "../../../../test_case"
-require_relative "../../../../../lib/compiler/blade_compiler"
+require "test_case"
 
 class CompilesConditionalsTest < TestCase
   MULTILINE_STRING = "
@@ -86,7 +85,7 @@ class CompilesConditionalsTest < TestCase
   ["if", "unless", "checked", "disabled", "required", "selected", "readonly"].each do |statement|
     define_method(:"test_#{statement}_with_no_arguments") do
       exception = assert_raises Exception do
-        BladeCompiler.compileString("@#{statement}()")
+        RBlade::Compiler.compileString("@#{statement}()")
       end
 
       assert_equal "#{statement.capitalize} statement: wrong number of arguments (given 0, expecting 1)", exception.to_s
@@ -94,7 +93,7 @@ class CompilesConditionalsTest < TestCase
 
     define_method(:"test_#{statement}_with_too_many_arguments") do
       exception = assert_raises Exception do
-        BladeCompiler.compileString("@#{statement}(1, 2)")
+        RBlade::Compiler.compileString("@#{statement}(1, 2)")
       end
 
       assert_equal "#{statement.capitalize} statement: wrong number of arguments (given 2, expecting 1)", exception.to_s

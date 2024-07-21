@@ -1,11 +1,9 @@
-require_relative "../../../test_case"
-require_relative "../../../../lib/compiler/blade_compiler"
-require_relative "../../../../lib/compiler/concerns/tokenizes_components"
+require "test_case"
 
 class TokenizesComponentsTest < TestCase
   def assert_tokenizes_to template, expected
     tokens = [Token.new(:unprocessed, template)]
-    TokenizesComponents.new.tokenize!(tokens)
+    RBlade::TokenizesComponents.new.tokenize!(tokens)
 
     expected.each.with_index do |expected_item, i|
       if expected_item.is_a?(Hash) && !expected_item[:token_type].nil?

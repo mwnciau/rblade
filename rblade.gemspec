@@ -12,5 +12,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "minitest"
   s.add_development_dependency "minitest-reporters"
   s.add_development_dependency "standard"
-  s.add_development_dependency "rails", ">= 7.0"
+  s.add_development_dependency "rails", "~> 7.0"
 end

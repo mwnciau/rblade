@@ -1,5 +1,4 @@
-require_relative "../../../test_case"
-require_relative "../../../../lib/compiler/blade_compiler"
+require "test_case"
 
 class CompilesRubyTest < TestCase
   def test_block_ruby
