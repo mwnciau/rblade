@@ -2,6 +2,11 @@ require "rblade/component_store"
 
 module RBlade
   class CompilesComponents
+    def initialize
+      @component_count = 0
+      @component_stack = []
+    end
+
     def compile!(tokens)
       tokens.each do |token|
         if [:component, :component_start, :component_end].none? token.type
@@ -21,23 +26,40 @@ module RBlade
     private
 
     def compile_token_start token
-      attributes = compile_attributes token
-      "def _component(attributes={#{attributes[:arguments].join(",")}});#{attributes[:assignments].join}_out='';"
+      @component_count += 1
+
+      @component_stack << {
+        name: token.value[:name],
+        attributes: token.value[:attributes],
+        index: @component_count
+      }
+
+      "_comp_#{@component_count}_out=_out;_out='';"
     end
 
     def compile_token_end token
-      code = "slot=_out;_out='';_stacks=[];"
+      component = @component_stack.pop
+      if token.value[:name] != component[:name]
+        raise StandardError.new "Unexpected closing tag (#{token.value[:name]}) expecting #{component[:name]}"
+      end
+
+      attributes = compile_attributes component[:attributes]
+
+      code = "def _component(slot,attributes={#{attributes[:arguments].join}});#{attributes[:assignments].join}_out='';"
+      code << "_stacks=[];"
       code << ComponentStore.fetchComponent(token.value[:name])
-      code << "RBlade::StackManager.get(_stacks) + _out;end;_out<<_component();"
+      code << "RBlade::StackManager.get(_stacks) + _out;end;"
+      code << "_slot=_out;_out=_comp_#{component[:index]}_out;"
+      code << "_out<<_component(_slot);"
 
       code
     end
 
-    def compile_attributes token
+    def compile_attributes attributes
       attribute_arguments = []
       attribute_assignments = []
 
-      token.value[:attributes].each do |attribute|
+      attributes.each do |attribute|
         if attribute[:type] == "class" || attribute[:type] == "style"
           attribute_arguments.push "'#{attribute[:type]}': #{attribute[:value]}'"
 
