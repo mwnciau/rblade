@@ -47,4 +47,8 @@ class BladeTemplatingTest < TestCase
       nil,
       '<div class="font-bold" style="font-size: 10px;font-weight: bold" a="cake"></div>'
   end
+
+  def test_chain
+    assert_compiles_to "<x-attributes_chain a=A c=C/>", nil, '<div a="A" c="d"></div>'
+  end
 end
