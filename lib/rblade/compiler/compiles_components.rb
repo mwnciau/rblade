@@ -34,7 +34,7 @@ module RBlade
         index: @component_count
       }
 
-      "_comp_#{@component_count}_out=_out;_out='';"
+      "_comp_#{@component_count}_swap=_out;_out='';"
     end
 
     def compile_token_end token
@@ -45,12 +45,12 @@ module RBlade
 
       attributes = compile_attributes component[:attributes]
 
-      code = "def _component(slot,attributes={#{attributes[:arguments].join}});#{attributes[:assignments].join}_out='';"
+      code = "def _component(slot,attributes);#{attributes[:assignments].join}_out='';"
       code << "_stacks=[];"
       code << ComponentStore.fetchComponent(token.value[:name])
       code << "RBlade::StackManager.get(_stacks) + _out;end;"
-      code << "_slot=_out;_out=_comp_#{component[:index]}_out;"
-      code << "_out<<_component(_slot);"
+      code << "_slot=_out;_out=_comp_#{component[:index]}_swap;"
+      code << "_out<<_component(_slot,{#{attributes[:arguments].join}});"
 
       code
     end
