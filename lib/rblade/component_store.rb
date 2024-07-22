@@ -1,23 +1,41 @@
 require "rblade/compiler"
 
 module RBlade
+  FILE_EXTENSIONS = [".blade", ".html.blade"]
+
   class ComponentStore
     def self.fetchComponent name
-      if name == "button"
-        return RBlade::Compiler.compileString '<button class="button">{{ slot }}</button>'
+      namespace = nil
+      path = name
+
+      if name.match '::'
+        namespace, path = name.split('::')
       end
 
-      if name == "link"
-        return RBlade::Compiler.compileString '<a href="{{ href }}">{{ slot }}</a>'
+      path.gsub! '.', '/'
+
+      @@templatePaths[namespace]&.each do |base_path|
+        FILE_EXTENSIONS.each do |extension|
+          if File.exist? base_path + path + extension
+            return RBlade::Compiler.compileString File.read(base_path + path + extension)
+          end
+        end
       end
 
-      if name == "profile"
-        return RBlade::Compiler.compileString '<div class="profile"><h2>{{ name.capitalize }}</h2>{{ slot }}<x-button>View</x-button></div>'
-      end
-
-      if name == "stack"
-        RBlade::Compiler.compileString "@stack('stack') @push('other_stack', '123')"
-      end
+      raise StandardError.new "Unknown component #{name}"
     end
+
+    def self.add_path path, namespace = nil
+      if !path.end_with? "/"
+        path = path + "/"
+      end
+
+      @@templatePaths[namespace] ||= []
+      @@templatePaths[namespace] << path
+    end
+
+    private
+
+    @@templatePaths = {}
   end
 end
