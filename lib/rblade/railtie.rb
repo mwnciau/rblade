@@ -7,7 +7,8 @@ module RBlade
     initializer :rblade, before: :load_config_initializers do |app|
       ActionView::Template.register_template_handler(:blade, RBlade::RailsTemplate.new)
 
-      RBlade::ComponentStore
+      RBlade::ComponentStore.add_path(Rails.root.join("app", "views", "components"))
+      RBlade::ComponentStore.add_path(Rails.root.join("app", "views", "layouts"), "layout")
     end
   end
 end
