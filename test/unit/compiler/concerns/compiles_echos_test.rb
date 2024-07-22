@@ -17,9 +17,11 @@ class CompilesEchoTest < TestCase
 
   def test_string
     assert_compiles_to "{{ 'foo' }}", "_out<<h('foo');", "foo"
+    assert_compiles_to "{{ 1 }}", "_out<<h(1);", "1"
     assert_compiles_to "{{ 'hello dear reader' }}", "_out<<h('hello dear reader');", "hello dear reader"
 
     assert_compiles_to "{!! 'foo' !!}", "_out<<('foo').to_s;", "foo"
+    assert_compiles_to "{!! 1 !!}", "_out<<(1).to_s;", "1"
     assert_compiles_to "{!! 'hello dear reader' !!}", "_out<<('hello dear reader').to_s;", "hello dear reader"
   end
 
