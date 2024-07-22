@@ -26,6 +26,7 @@ module RBlade
     end
 
     def self.add_path path, namespace = nil
+      path = path.to_s
       if !path.end_with? "/"
         path = path + "/"
       end
