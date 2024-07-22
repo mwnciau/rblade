@@ -1,11 +1,12 @@
 Gem::Specification.new do |s|
-  s.name = "RBlade"
+  s.name = "rblade"
   s.version = "0.0.0"
   s.summary = "A port of the Laravel blade templating engine to ruby"
   s.description = "A port of the Laravel blade templating engine to ruby"
   s.authors = ["Simon J"]
   s.email = "2857218+mwnciau@users.noreply.github.com"
-  s.files = ["lib/rblade.rb"]
+  s.files = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|storage)/}) }
+  s.require_paths = ['lib']
   s.homepage = "https://rubygems.org/gems/rblade"
   s.license = "MIT"
 
