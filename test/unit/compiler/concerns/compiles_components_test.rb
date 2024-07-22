@@ -10,10 +10,6 @@ class CompilesComponentsTest < TestCase
       '<div class="profile"><h2>Bob</h2>Bob\'s name is Bob<button class="button">View</button></div>'
   end
 
-  def test_slot_html
-    assert_compiles_to "<x-button><b>hello</b></x-button>", nil, '<button class="button"><b>hello</b></button>'
-  end
-
   def test_nested_components
     assert_compiles_to "<x-profile name='bob'><x-button>hello</x-button></x-profile>",
       nil,
@@ -24,5 +20,40 @@ class CompilesComponentsTest < TestCase
     assert_compiles_to "@ruby(label = 'hello')<x-button>{{label}}</x-button>",
       nil,
       '<button class="button">hello</button>'
+    assert_compiles_to "<x-button><b>hello</b></x-button>", nil, '<button class="button"><b>hello</b></button>'
+  end
+
+  def test_attributes_and_props
+    exception = assert_raises Exception do
+      assert_compiles_to "<x-folder.props/>",
+        nil,
+        ''
+    end
+    assert_equal "Props statement: firstName is not defined", exception.to_s
+
+    assert_compiles_to "<x-folder.props firstName=\"bob\"/>",
+      nil,
+      'bob'
+
+    assert_compiles_to "<x-folder.props firstName=\"bob\" :visible=false/>",
+      nil,
+      ''
+  end
+
+  def test_attributes_and_props
+    exception = assert_raises Exception do
+      assert_compiles_to "<x-folder.props/>",
+        nil,
+        ''
+    end
+    assert_equal "Props statement: firstName is not defined", exception.to_s
+
+    assert_compiles_to "<x-folder.props firstName=\"bob\"/>",
+      nil,
+      'bob'
+
+    assert_compiles_to "<x-folder.props firstName=\"bob\" :visible=false/>",
+      nil,
+      ''
   end
 end

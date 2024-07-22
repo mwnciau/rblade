@@ -1,5 +1,6 @@
 require "rails"
 require "rblade/compiler"
+require "rblade/helpers/attributes_manager"
 require "rblade/helpers/stack_manager"
 
 module RBlade

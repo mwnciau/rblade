@@ -47,10 +47,11 @@ module RBlade
 
       code = "def _component(slot,attributes);#{attributes[:assignments].join}_out='';"
       code << "_stacks=[];"
+      code << "attributes=RBlade::AttributesManager.new(attributes);"
       code << ComponentStore.fetchComponent(token.value[:name])
       code << "RBlade::StackManager.get(_stacks) + _out;end;"
       code << "_slot=_out;_out=_comp_#{component[:index]}_swap;"
-      code << "_out<<_component(_slot,{#{attributes[:arguments].join}});"
+      code << "_out<<_component(_slot,{#{attributes[:arguments].join(',')}});"
 
       code
     end
@@ -71,7 +72,7 @@ module RBlade
         end
 
         if attribute[:type] == "ruby"
-          attribute_arguments.push "'#{attribute[:name]}': (#{attribute[:value]})'"
+          attribute_arguments.push "'#{attribute[:name]}': (#{attribute[:value]})"
         end
 
         if attribute[:type] == "pass_through"

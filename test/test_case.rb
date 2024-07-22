@@ -1,6 +1,7 @@
 require "minitest/autorun"
 require "minitest/reporters"
 require "rblade/component_store"
+require "rblade/helpers/attributes_manager"
 require "rblade/helpers/stack_manager"
 
 class TestCase < Minitest::Test
