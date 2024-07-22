@@ -35,7 +35,8 @@ module RBlade
             segments.delete_at i
             segments.delete_at i + 1
             segment_value = "_out<<"
-            if !wrapper_function.nil?
+            # Special case for slot - we want this to be able to output HTML
+            if !wrapper_function.nil? && segments[i] != "slot"
               segment_value <<= wrapper_function
             end
             segment_value <<= "(" + segments[i] + ");"
