@@ -1,6 +1,7 @@
 require "rblade/compiler/statements/compiles_conditionals"
 require "rblade/compiler/statements/compiles_inline_ruby"
 require "rblade/compiler/statements/compiles_loops"
+require "rblade/compiler/statements/compiles_props"
 require "rblade/compiler/statements/compiles_stacks"
 
 module RBlade
@@ -88,6 +89,7 @@ module RBlade
       "next" => [CompilesLoops, :compileNext],
       "nextif" => [CompilesLoops, :compileNextIf],
       "prepend" => [CompilesStacks, :compilePrepend],
+      "props" => [CompilesProps, :compileProps],
       "push" => [CompilesStacks, :compilePush],
       "readonly" => [CompilesConditionals, :compileReadonly],
       "required" => [CompilesConditionals, :compileRequired],
