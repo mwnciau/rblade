@@ -5,6 +5,10 @@ module RBlade
       @attributes = attributes
     end
 
+    def to_h
+      @attributes
+    end
+
     def to_s attributes = nil
       attributes ||= @attributes
 

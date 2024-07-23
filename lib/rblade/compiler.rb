@@ -22,11 +22,11 @@ module RBlade
     def self.compileString(string_template)
       tokens = [Token.new(:unprocessed, string_template)]
 
-      CompilesComments.new.compile! tokens
-      CompilesEchos.new.compile! tokens
       CompilesRuby.new.compile! tokens
       TokenizesComponents.new.tokenize! tokens
       TokenizesStatements.new.tokenize! tokens
+      CompilesComments.new.compile! tokens
+      CompilesEchos.new.compile! tokens
       CompilesStatements.new.compile! tokens
       CompilesComponents.new.compile! tokens
 

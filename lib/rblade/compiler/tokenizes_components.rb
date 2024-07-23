@@ -57,9 +57,9 @@ module RBlade
         if name == "@class" || name == "@style"
           attributes.push({type: name[1..], value: raw_attributes[i + 1][1..-2]})
           i += 2
-        elsif name[0..1] == "{{"
-          attributes.push({type: "attributes", value: raw_attributes[i + 1][2..-2]})
-          i += 1
+        elsif name == "{{"
+          attributes.push({type: "attributes", value: raw_attributes[i + 1]})
+          i += 3
         else
           attribute = {name:}
 
@@ -116,7 +116,7 @@ module RBlade
                 )
                 |
                 (
-                  \{\{\s*attributes(?:[^}]+?)?\s*\}\}
+                  \{\{\s*attributes.*?\s*\}\}
                 )
                 |
                 (?:
@@ -163,7 +163,7 @@ module RBlade
           )
           |
           (?:
-            (\{\{)\s*attributes([^}]+?)?\s*(\}\})
+            (\{\{)\s*(attributes.*?)\s*(\}\})
           )
           |
           (?:

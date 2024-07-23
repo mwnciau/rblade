@@ -39,6 +39,9 @@ module RBlade
 
     def compile_token_end token
       component = @component_stack.pop
+      if component.nil?
+        raise StandardError.new "Unexpected closing tag (#{token.value[:name]})"
+      end
       if token.value[:name] != component[:name]
         raise StandardError.new "Unexpected closing tag (#{token.value[:name]}) expecting #{component[:name]}"
       end
@@ -69,6 +72,12 @@ module RBlade
         end
         if attribute[:type] == "style"
           attribute_arguments.push "'style': RBlade::StyleManager.new(#{attribute[:value]})"
+          attribute_assignments.push "_style = attributes[:style];"
+
+          next
+        end
+        if attribute[:type] == "attributes"
+          attribute_arguments.push "**attributes.to_h"
           attribute_assignments.push "_style = attributes[:style];"
 
           next
