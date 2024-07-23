@@ -1,3 +1,6 @@
+## 0.2.4 [2024-07-23]
+- Improve merging of classes
+
 ## 0.2.3 [2024-07-23]
 - Fix attributes in components that have multiple lines
 
