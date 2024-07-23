@@ -1,3 +1,6 @@
+## 0.2.5 [2024-07-23]
+- Improve how @props sets local variables
+
 ## 0.2.4 [2024-07-23]
 - Improve merging of classes
 
