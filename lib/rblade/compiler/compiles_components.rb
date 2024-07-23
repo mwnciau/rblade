@@ -77,8 +77,7 @@ module RBlade
           next
         end
         if attribute[:type] == "attributes"
-          attribute_arguments.push "**attributes.to_h"
-          attribute_assignments.push "_style = attributes[:style];"
+          attribute_arguments.push "**(#{attribute[:value]}).to_h"
 
           next
         end

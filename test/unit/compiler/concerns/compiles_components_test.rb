@@ -17,15 +17,15 @@ class CompilesComponentsTest < TestCase
 
     assert_compiles_to "<x-nested_button type=button>hello</x-nested_button>",
       nil,
-      '<button class="button block" type="button">hello</button>'
+      '<button class="button mx-2 block" type="button">hello</button>'
 
     assert_compiles_to "<x-nested_button type=submit>hello</x-nested_button>",
       nil,
-      '<button class="button block" type="button">hello</button>'
+      '<button class="button mx-2 block" type="button">hello</button>'
 
     assert_compiles_to "<x-nested_button class=hidden>hello</x-nested_button>",
       nil,
-      '<button class="button hidden" type="button">hello</button>'
+      '<button class="button mx-2 block hidden" type="button">hello</button>'
   end
 
   def test_slots
