@@ -11,7 +11,19 @@ module RBlade
         @attributes[:style] = mergeClasses(@attributes[:style], @attributes.delete(:_style))
       end
 
-      @attributes.freeze
+      @attributes
+    end
+
+    def default(key, default = nil)
+      if @attributes[key].nil? && !default.nil?
+        @attributes[key] = default
+      end
+
+      @attributes[key]
+    end
+
+    def has?(key)
+      !@attributes[key].nil?
     end
 
     def to_h
