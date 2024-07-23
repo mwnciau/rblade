@@ -1,1 +1,5 @@
-<x-button class="block" {{ attributes }} type="button">{{ slot }}</x-button>
+<x-button class="block" {{
+  attributes.merge({
+    "class": "block"
+  })
+}} type="button">{{ slot }}</x-button>

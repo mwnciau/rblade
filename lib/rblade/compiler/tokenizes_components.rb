@@ -147,7 +147,7 @@ module RBlade
             \s*
           >
         )
-      /x)
+      /xm)
     end
 
     def tokenizeAttributes segment
@@ -181,7 +181,7 @@ module RBlade
           )
         )
         (?=\s|$)
-      /x).flatten.compact
+      /xm).flatten.compact
     end
   end
 end
