@@ -50,14 +50,4 @@ class BladeTemplatingTest < TestCase
     manager = RBlade::ClassManager.new({some: true, classes: true})
     assert_equal "some classes", manager.to_s
   end
-
-  def test_component_class
-    assert_compiles_to "<x-attributes_merge @class({})/>",
-      nil,
-      '<div class="font-bold " style="font-size: 10px" a="cake"></div>'
-
-    assert_compiles_to "<x-attributes_merge @class({'some': true, 'class': false})/>",
-      nil,
-      '<div class="font-bold some" style="font-size: 10px" a="cake"></div>'
-  end
 end

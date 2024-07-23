@@ -38,12 +38,18 @@ module RBlade
 
       @attributes.each do |key, value|
         if key == :class && !new_attributes[key].nil?
-          new_attributes[key] << " " + value.to_s
+          unless new_attributes[key].end_with? " "
+            new_attributes[key] << " "
+          end
+          new_attributes[key] << value.to_s
           next
         end
 
         if key == :style && !new_attributes[key].nil?
-          new_attributes[key] << ";" + value
+          unless new_attributes[key].end_with? ";"
+            new_attributes[key] << ";"
+          end
+          new_attributes[key] << value.to_s
           next
         end
 

@@ -51,4 +51,56 @@ class BladeTemplatingTest < TestCase
   def test_chain
     assert_compiles_to "<x-attributes_chain a=A c=C/>", nil, '<div a="A" c="d"></div>'
   end
+
+  def test_class
+    assert_compiles_to "<x-attributes @class({'abc': false})/>",
+      nil,
+      '<div class=""></div>'
+
+    assert_compiles_to "<x-attributes @class({'abc': true})/>",
+      nil,
+      '<div class="abc"></div>'
+
+    assert_compiles_to "<x-attributes_merge @class({})/>",
+      nil,
+      '<div class="font-bold " style="font-size: 10px" a="cake"></div>'
+
+    assert_compiles_to "<x-attributes_merge @class({'some': true, 'class': false})/>",
+      nil,
+      '<div class="font-bold some" style="font-size: 10px" a="cake"></div>'
+
+    assert_compiles_to "<x-attributes_empty_merge @class({})/>",
+      nil,
+      '<div class=""></div>'
+
+    assert_compiles_to "<x-attributes_empty_merge @class({'some': true, 'class': false})/>",
+      nil,
+      '<div class="some"></div>'
+  end
+
+  def test_style
+    assert_compiles_to "<x-attributes @style({'abc': false})/>",
+      nil,
+      '<div style=""></div>'
+
+    assert_compiles_to "<x-attributes @style({'abc': true})/>",
+      nil,
+      '<div style="abc;"></div>'
+
+    assert_compiles_to "<x-attributes_merge @style({})/>",
+      nil,
+      '<div class="font-bold" style="font-size: 10px;" a="cake"></div>'
+
+    assert_compiles_to "<x-attributes_merge @style({'color: red': true, 'font-weight: bold;': false})/>",
+      nil,
+      '<div class="font-bold" style="font-size: 10px;color: red;" a="cake"></div>'
+
+    assert_compiles_to "<x-attributes_empty_merge @style({})/>",
+      nil,
+      '<div style=""></div>'
+
+    assert_compiles_to "<x-attributes_empty_merge @style({'some': true, 'style': false})/>",
+      nil,
+      '<div style="some;"></div>'
+  end
 end
