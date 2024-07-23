@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "rblade"
-  s.version = "0.2.0"
+  s.version = "0.2.1"
   s.summary = "Blade templates for ruby"
   s.description = "A port of the Laravel blade templating engine to ruby"
   s.authors = ["Simon J"]
