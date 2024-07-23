@@ -1,4 +1,4 @@
-## 0.1.1
+## 0.2.0 [2024-07-23]
 - Fix slots being calculated without parent's context
 - Add @props statement
 - Add attributes, class and style manager
