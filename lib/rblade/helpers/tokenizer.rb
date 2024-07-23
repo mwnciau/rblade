@@ -1,7 +1,7 @@
 module RBlade
   class Tokenizer
     def self.extractCommaSeparatedValues segment
-      unless segment.match /,\s*\z/
+      unless segment.match?(/,\s*\z/)
         # Add a comma to the end to delimit the end of the last argument
         segment += ","
       end

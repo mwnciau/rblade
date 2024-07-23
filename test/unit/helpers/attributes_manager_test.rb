@@ -3,7 +3,7 @@ require "rblade/compiler"
 
 class BladeTemplatingTest < TestCase
   def test_attributes_to_s
-    assert_compiles_to "<x-attributes/>", nil, '<div ></div>'
+    assert_compiles_to "<x-attributes/>", nil, "<div ></div>"
     assert_compiles_to "<x-attributes a=b/>", nil, '<div a="b"></div>'
     assert_compiles_to "@ruby(name='bob')<x-attributes a=b :c=name/>",
       nil,
@@ -11,7 +11,7 @@ class BladeTemplatingTest < TestCase
   end
 
   def test_only
-    assert_compiles_to "<x-attributes_only/>", nil, '<div ></div>'
+    assert_compiles_to "<x-attributes_only/>", nil, "<div ></div>"
     assert_compiles_to "<x-attributes_only a=b/>", nil, '<div a="b"></div>'
     assert_compiles_to "@ruby(name='bob')<x-attributes_only a=b :c=name/>",
       nil,
@@ -19,8 +19,8 @@ class BladeTemplatingTest < TestCase
   end
 
   def test_except
-    assert_compiles_to "<x-attributes_except/>", nil, '<div ></div>'
-    assert_compiles_to "<x-attributes_except a=b/>", nil, '<div ></div>'
+    assert_compiles_to "<x-attributes_except/>", nil, "<div ></div>"
+    assert_compiles_to "<x-attributes_except a=b/>", nil, "<div ></div>"
     assert_compiles_to "@ruby(name='bob')<x-attributes_except a=b :c=name/>",
       nil,
       '<div c="bob"></div>'

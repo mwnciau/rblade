@@ -36,10 +36,10 @@ module RBlade
             segments.delete_at i + 1
             segment_value = "_out<<"
             # Special case for slot and attributes - we want this to be able to output HTML
-            if !wrapper_function.nil? && segments[i] != "slot" && !segments[i].start_with?('attributes')
-              segment_value <<= wrapper_function + "(" + segments[i] + ");"
+            segment_value <<= if !wrapper_function.nil? && segments[i] != "slot" && !segments[i].start_with?("attributes")
+              wrapper_function + "(" + segments[i] + ");"
             else
-              segment_value <<= "(" + segments[i] + ").to_s;"
+              "(" + segments[i] + ").to_s;"
             end
             segments[i] = Token.new(:echo, segment_value)
 

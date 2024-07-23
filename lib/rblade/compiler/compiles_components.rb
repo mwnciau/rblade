@@ -51,7 +51,7 @@ module RBlade
       code << ComponentStore.fetchComponent(token.value[:name])
       code << "RBlade::StackManager.get(_stacks) + _out;end;"
       code << "_slot=_out;_out=_comp_#{component[:index]}_swap;"
-      code << "_out<<_component(_slot,{#{attributes[:arguments].join(',')}});"
+      code << "_out<<_component(_slot,{#{attributes[:arguments].join(",")}});"
 
       code
     end
@@ -62,8 +62,8 @@ module RBlade
 
       attributes.each do |attribute|
         if attribute[:type] == "class" || attribute[:type] == "style"
-          attribute_arguments.push "'#{attribute[:type]}': RBlade.ClassManager.new(#{attribute[:value]})"
-          attribute_assignments.push "_#{variable_name} = attributes[:'#{attribute[:name]}'];"
+          attribute_arguments.push "'#{attribute[:type]}': RBlade::ClassManager.new(#{attribute[:value]})"
+          attribute_assignments.push "_#{attribute[:type]} = attributes[:'#{attribute[:name]}'];"
 
           next
         end

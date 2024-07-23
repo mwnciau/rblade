@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.authors = ["Simon J"]
   s.email = "2857218+mwnciau@users.noreply.github.com"
   s.files = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|storage)/}) }
-  s.require_paths = ['lib']
+  s.require_paths = ["lib"]
   s.homepage = "https://rubygems.org/gems/rblade"
   s.license = "MIT"
   s.required_ruby_version = ">= 3.0.0"

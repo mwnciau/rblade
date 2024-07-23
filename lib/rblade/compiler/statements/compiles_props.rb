@@ -10,7 +10,7 @@ module RBlade
 
         props = extractProps args[0]
         props.map do |key, value|
-          if value == '_required'
+          if value == "_required"
             "if !defined?(#{key});raise \"Props statement: #{key} is not defined\";end;"
           else
             "if !defined?(#{key});#{key}=#{value};end;"
@@ -18,15 +18,15 @@ module RBlade
         end.join
       end
 
-      def extractProps propString
-        if !propString.start_with?('{') || !propString.end_with?('}')
-            raise StandardError.new "Props statement: expecting hash as parameter"
+      def extractProps prop_string
+        if !prop_string.start_with?("{") || !prop_string.end_with?("}")
+          raise StandardError.new "Props statement: expecting hash as parameter"
         end
 
         props = {}
-        propStrings = Tokenizer.extractCommaSeparatedValues propString[1..-2]
+        prop_strings = Tokenizer.extractCommaSeparatedValues prop_string[1..-2]
 
-        propStrings.each do |prop|
+        prop_strings.each do |prop|
           prop.strip!
 
           key, value = prop.split(/^

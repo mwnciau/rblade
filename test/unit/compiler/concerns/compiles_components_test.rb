@@ -27,33 +27,16 @@ class CompilesComponentsTest < TestCase
     exception = assert_raises Exception do
       assert_compiles_to "<x-folder.props/>",
         nil,
-        ''
+        ""
     end
     assert_equal "Props statement: firstName is not defined", exception.to_s
 
     assert_compiles_to "<x-folder.props firstName=\"bob\"/>",
       nil,
-      'bob'
+      "bob"
 
     assert_compiles_to "<x-folder.props firstName=\"bob\" :visible=false/>",
       nil,
-      ''
-  end
-
-  def test_attributes_and_props
-    exception = assert_raises Exception do
-      assert_compiles_to "<x-folder.props/>",
-        nil,
-        ''
-    end
-    assert_equal "Props statement: firstName is not defined", exception.to_s
-
-    assert_compiles_to "<x-folder.props firstName=\"bob\"/>",
-      nil,
-      'bob'
-
-    assert_compiles_to "<x-folder.props firstName=\"bob\" :visible=false/>",
-      nil,
-      ''
+      ""
   end
 end

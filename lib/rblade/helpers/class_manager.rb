@@ -6,7 +6,7 @@ module RBlade
       elsif classes.is_a? Array
         @classes = classes.join " "
       elsif classes.is_a? Hash
-        @classes = ''
+        @classes = ""
         classes.map do |value, predicate|
           if predicate
             @classes << "#{value} "
@@ -17,7 +17,7 @@ module RBlade
     end
 
     def to_s
-      return @classes
+      @classes
     end
   end
 end

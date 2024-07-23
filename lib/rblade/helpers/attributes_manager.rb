@@ -14,43 +14,43 @@ module RBlade
     end
 
     def only(keys)
-      if keys.is_a? Array
-        keys = keys.map(&:to_sym)
+      keys = if keys.is_a? Array
+        keys.map(&:to_sym)
       else
-        keys = [keys.to_sym]
+        [keys.to_sym]
       end
 
       self.class.new @attributes.slice(*keys)
     end
 
     def except(keys)
-      if keys.is_a? Array
-        keys = keys.map(&:to_sym)
+      keys = if keys.is_a? Array
+        keys.map(&:to_sym)
       else
-        keys = [keys.to_sym]
+        [keys.to_sym]
       end
 
       self.class.new @attributes.except(*keys)
     end
 
-    def merge(defaultAttributes)
-      newAttributes = defaultAttributes
+    def merge(default_attributes)
+      new_attributes = default_attributes
 
       @attributes.each do |key, value|
-        if key == :class && !newAttributes[key].nil?
-          newAttributes[key] << ' ' + value
+        if key == :class && !new_attributes[key].nil?
+          new_attributes[key] << " " + value.to_s
           next
         end
 
-        if key == :style && !newAttributes[key].nil?
-          newAttributes[key] << ';' + value
+        if key == :style && !new_attributes[key].nil?
+          new_attributes[key] << ";" + value
           next
         end
 
-        newAttributes[key] = value
+        new_attributes[key] = value
       end
 
-      self.class.new newAttributes
+      self.class.new new_attributes
     end
   end
 end
