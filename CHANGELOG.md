@@ -1,3 +1,6 @@
+## 0.2.3 [2024-07-23]
+- Fix attributes in components that have multiple lines
+
 ## 0.2.2 [2024-07-23]
 - Change comments to be compiled first
 
