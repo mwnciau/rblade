@@ -1,8 +1,6 @@
 require "minitest/autorun"
 require "minitest/reporters"
-require "rblade/component_store"
-require "rblade/helpers/attributes_manager"
-require "rblade/helpers/stack_manager"
+require "rblade/rails_template"
 
 class TestCase < Minitest::Test
   def setup
@@ -19,10 +17,9 @@ class TestCase < Minitest::Test
     end
 
     if expected_result
-      RBlade::StackManager.clear
-      setup = "foo = 'FOO';bar = 'BAR';_out='';_stacks=[];"
-      setdown = "RBlade::StackManager.get(_stacks) + _out"
-      result = eval setup + compiled_string + setdown # standard:disable Security/Eval
+      foo = 'FOO'
+      bar = 'BAR'
+      result = eval RBlade::RailsTemplate.new.call(nil, template) # standard:disable Security/Eval
 
       assert_equal expected_result, result
     end

@@ -62,7 +62,8 @@ module RBlade
 
       attributes.each do |attribute|
         if attribute[:type] == "class" || attribute[:type] == "style"
-          attribute_arguments.push "'#{attribute[:type]}': #{attribute[:value]}'"
+          attribute_arguments.push "'#{attribute[:type]}': RBlade.ClassManager.new(#{attribute[:value]})"
+          attribute_assignments.push "_#{variable_name} = attributes[:'#{attribute[:name]}'];"
 
           next
         end
