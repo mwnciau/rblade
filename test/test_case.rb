@@ -17,8 +17,8 @@ class TestCase < Minitest::Test
     end
 
     if expected_result
-      #foo = "FOO" # standard:disable Lint/UselessAssignment
-      #bar = "BAR" # standard:disable Lint/UselessAssignment
+      foo = "FOO" # standard:disable Lint/UselessAssignment
+      bar = "BAR" # standard:disable Lint/UselessAssignment
       result = eval RBlade::RailsTemplate.new.call(nil, template) # standard:disable Security/Eval
 
       assert_equal expected_result, result
