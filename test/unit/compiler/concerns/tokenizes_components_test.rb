@@ -93,8 +93,8 @@ class TokenizesComponentsTest < TestCase
   end
 
   def test_attributes
-    assert_tokenizes_to '<x-a {{ attributes }}>', [{name: "a", attributes: [{type: "attributes", value: "attributes"}]}]
-    assert_tokenizes_to '<x-a {{ attributes.merge({}) }}>', [{name: "a", attributes: [{type: "attributes", value: "attributes.merge({})"}]}]
+    assert_tokenizes_to "<x-a {{ attributes }}>", [{name: "a", attributes: [{type: "attributes", value: "attributes"}]}]
+    assert_tokenizes_to "<x-a {{ attributes.merge({}) }}>", [{name: "a", attributes: [{type: "attributes", value: "attributes.merge({})"}]}]
   end
 
   def complex_component

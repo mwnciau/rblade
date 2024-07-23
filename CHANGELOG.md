@@ -1,3 +1,6 @@
+## 0.2.2 [2024-07-23]
+- Change comments to be compiled first
+
 ## 0.2.1 [2024-07-23]
 - Add support for attributes pass through in components
 
