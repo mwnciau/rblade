@@ -1,3 +1,7 @@
+## 0.2.6
+- Improve output of binary HTML attributes
+- Fix each statement with a key value pair
+
 ## 0.2.5 [2024-07-23]
 - Improve how @props sets local variables
 

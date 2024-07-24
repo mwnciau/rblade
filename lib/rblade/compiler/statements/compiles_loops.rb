@@ -22,9 +22,11 @@ module RBlade
       end
 
       def compileEach args
-        if args&.count != 1
+        if args.nil? || args&.count > 2
           raise StandardError.new "Each statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
+        # Allow variables to be a key, value pair
+        args = args.join ","
 
         variables, collection = args[0].split(" in ")
 
