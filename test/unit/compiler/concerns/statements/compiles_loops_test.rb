@@ -47,17 +47,17 @@ class CompilesLoopsTest < TestCase
 
   def test_for_else
     assert_compiles_to "@forelse(i in []) {{ i }} @empty 0 @endforelse",
-      "_looped_1=true;for i in [];_looped_1=false;_out<<h(i);end;if _looped_1;_out<<'0';end;",
+      "_looped_1=false;for i in [];_looped_1=true;_out<<h(i);end;if !_looped_1;_out<<'0';end;",
       "0"
 
     assert_compiles_to "@forelse(i in 1..1) {{ i }} @empty 0 @endforelse",
-      "_looped_1=true;for i in 1..1;_looped_1=false;_out<<h(i);end;if _looped_1;_out<<'0';end;",
+      "_looped_1=false;for i in 1..1;_looped_1=true;_out<<h(i);end;if !_looped_1;_out<<'0';end;",
       "1"
   end
 
   def test_nested_for_else
     assert_compiles_to "@forelse(i in 1..1) @forelse(i in []) {{ i }} @empty 8 @endforelse @empty 9 @endforelse",
-      "_looped_1=true;for i in 1..1;_looped_1=false;_looped_2=true;for i in [];_looped_2=false;_out<<h(i);end;if _looped_2;_out<<'8';end;end;if _looped_1;_out<<'9';end;",
+      "_looped_1=false;for i in 1..1;_looped_1=true;_looped_2=false;for i in [];_looped_2=true;_out<<h(i);end;if !_looped_2;_out<<'8';end;end;if !_looped_1;_out<<'9';end;",
       "8"
   end
 
@@ -69,7 +69,7 @@ class CompilesLoopsTest < TestCase
 
   def test_eachelse
     assert_compiles_to "@eachelse(a in []) {{ a }} @empty 0 @endeach",
-      "_looped_1=true;[].each do |a|;_looped_1=false;_out<<h(a);end;if _looped_1;_out<<'0';end;",
+      "_looped_1=false;[].each do |a|;_looped_1=true;_out<<h(a);end;if !_looped_1;_out<<'0';end;",
       "0"
   end
 end
