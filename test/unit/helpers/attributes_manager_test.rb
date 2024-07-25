@@ -1,5 +1,6 @@
 require "test_case"
 require "rblade/compiler"
+require "rblade/helpers/attributes_manager"
 
 class BladeTemplatingTest < TestCase
   def test_attributes_to_s
@@ -102,5 +103,15 @@ class BladeTemplatingTest < TestCase
     assert_compiles_to "<x-attributes_empty_merge @style({'some': true, 'style': false})/>",
       nil,
       '<div style="some;"></div>'
+  end
+
+  def test_missing_method
+    attributes = RBlade::AttributesManager.new({a: "1", b: "2"})
+
+    assert_equal "1", attributes[:a]
+    attributes[:c] = "3"
+    attributes.delete :b
+
+    assert_equal "13", (attributes.compact.map(&:last)).join
   end
 end
