@@ -3,15 +3,6 @@ module RBlade
     @attributes = {}
     def initialize attributes
       @attributes = attributes
-
-      if !@attributes[:_class].nil?
-        @attributes[:class] = mergeClasses(@attributes[:class], @attributes.delete(:_class))
-      end
-      if !@attributes[:_style].nil?
-        @attributes[:style] = mergeClasses(@attributes[:style], @attributes.delete(:_style))
-      end
-
-      @attributes
     end
 
     def default(key, default = nil)
