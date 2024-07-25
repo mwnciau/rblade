@@ -26,16 +26,8 @@ module RBlade
       !@attributes[key].nil?
     end
 
-    def to_h
-      attributes = @attributes.dup
-      if !attributes[:class].nil?
-        attributes[:_class] = attributes.delete :class
-      end
-      if !attributes[:style].nil?
-        attributes[:_style] = attributes.delete :style
-      end
-
-      attributes
+    def method_missing method, *args
+      @attributes.send(method, *args)
     end
 
     def to_s attributes = nil
