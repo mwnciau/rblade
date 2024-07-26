@@ -1,6 +1,10 @@
 ## 0.2.6
-- Improve output of binary HTML attributes
+- Add support for index component files
+- Allow direct access to attributes underlying hash
 - Fix each statement with a key value pair
+- Improve output of binary HTML attributes
+- Improve performance of components
+- Switch to .rblade file extensions
 
 ## 0.2.5 [2024-07-23]
 - Improve how @props sets local variables

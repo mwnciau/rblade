@@ -28,8 +28,23 @@ class BladeTemplatingTest < TestCase
     assert !RBlade::ComponentStore.get.match("def _c1")
   end
 
-  def test_extensions
+  def test_extensions_index
     RBlade::ComponentStore.component "component_store_test_extensions"
     assert RBlade::ComponentStore.get.match("index.rblade")
+  end
+
+  def test_extensions_html
+    RBlade::ComponentStore.component "component_store_test_extensions.html"
+    assert RBlade::ComponentStore.get.match("html.html.rblade")
+  end
+
+  def test_extensions_rblade
+    RBlade::ComponentStore.component "component_store_test_extensions.rblade"
+    assert RBlade::ComponentStore.get.match("rblade.rblade")
+  end
+
+  def test_extensions_clashing
+    RBlade::ComponentStore.component "component_store_test_extensions.clashing"
+    assert RBlade::ComponentStore.get.match("clashing.rblade")
   end
 end

@@ -52,7 +52,10 @@ module RBlade
       @@template_paths[namespace]&.each do |base_path|
         FILE_EXTENSIONS.each do |extension|
           if File.exist? base_path + file_path + extension
-            return base_path + file_path + extension
+            return "#{base_path}#{file_path}#{extension}"
+          end
+          if File.exist? base_path + file_path + "/index" + extension
+            return "#{base_path}#{file_path}/index#{extension}"
           end
         end
       end
