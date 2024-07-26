@@ -52,4 +52,10 @@ class CompilesComponentsTest < TestCase
       nil,
       ""
   end
+
+  def test_relative_names
+    assert_compiles_to "<x-compiles_components_test_relative_names.component/>",
+      nil,
+      "success!"
+  end
 end

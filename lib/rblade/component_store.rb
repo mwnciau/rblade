@@ -11,6 +11,12 @@ module RBlade
         return @@component_method_names[full_name]
       end
 
+      # If this is a relative path, prepend with the previous component name's base
+      if full_name.start_with? "."
+        full_name = @@component_name_stack.last.gsub(/\.[^\.]+$/, "") + full_name
+      end
+      @@component_name_stack << full_name
+
       namespace = nil
       name = full_name
 
@@ -18,7 +24,10 @@ module RBlade
         namespace, name = full_name.split("::")
       end
 
-      compile_component full_name, File.read(find_component_file(namespace, name))
+      method_name = compile_component full_name, File.read(find_component_file(namespace, name))
+      @@component_name_stack.pop
+
+      method_name
     end
 
     def self.add_path path, namespace = nil
@@ -49,6 +58,8 @@ module RBlade
             return "#{base_path}#{file_path}#{extension}"
           end
           if File.exist? base_path + file_path + "/index" + extension
+            # Account for index files for relative components
+            @@component_name_stack.last += '.index'
             return "#{base_path}#{file_path}/index#{extension}"
           end
         end
@@ -75,6 +86,7 @@ module RBlade
     private
 
     @@component_definitions = ""
+    @@component_name_stack = []
     @@component_method_names = {}
     @@template_paths = {}
   end
