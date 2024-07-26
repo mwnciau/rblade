@@ -41,6 +41,10 @@ module RBlade
       @@template_paths[namespace] << path
     end
 
+    def self.view_name view_name
+      @@component_name_stack.push view_name
+    end
+
     def self.get
       @@component_definitions
     end
