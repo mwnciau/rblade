@@ -53,12 +53,6 @@ class CompilesComponentsTest < TestCase
       ""
   end
 
-  def test_relative_names
-    assert_compiles_to "<x-compiles_components_test_relative_names.component/>",
-      nil,
-      "success!"
-  end
-
   def test_unsafe_close
     assert_compiles_to "<x-button>hello<//>", nil, '<button class="button">hello</button>'
   end

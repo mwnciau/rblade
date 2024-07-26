@@ -12,9 +12,11 @@ class BladeTemplatingTest < TestCase
     assert_equal "_c1", component_method2
     assert_equal "_c0", component_method3
 
-    assert RBlade::ComponentStore.get.match("def _c0")
-    assert RBlade::ComponentStore.get.match("def _c1")
-    assert !RBlade::ComponentStore.get.match("def _c2")
+    compiled_code = RBlade::ComponentStore.get
+
+    assert compiled_code.match("def _c0")
+    assert compiled_code.match("def _c1")
+    assert !compiled_code.match("def _c2")
   end
 
   def test_clear
@@ -46,5 +48,24 @@ class BladeTemplatingTest < TestCase
   def test_extensions_clashing
     RBlade::ComponentStore.component "component_store_test_extensions.clashing"
     assert RBlade::ComponentStore.get.match("clashing.rblade")
+  end
+
+  def test_relative_names
+    assert_compiles_to "<x-component_store_test_relative_names.component/>",
+      nil,
+      "success!"
+  end
+
+  def test_relative_names_compiles_once
+    RBlade::ComponentStore.component "component_store_test_relative_names"
+    RBlade::ComponentStore.component "component_store_test_relative_names.component"
+    RBlade::ComponentStore.component "component_store_test_relative_names.success"
+
+    compiled_code = RBlade::ComponentStore.get
+
+    assert compiled_code.match("def _c0")
+    assert compiled_code.match("def _c1")
+    assert compiled_code.match("def _c2")
+    assert !compiled_code.match("def _c3")
   end
 end

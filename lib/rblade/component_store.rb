@@ -6,15 +6,16 @@ module RBlade
   class ComponentStore
     # Retrieve the method name for a component, and compile it if it hasn't already been compiled
     def self.component full_name
+      # If this is a relative path, prepend with the previous component name's base
+      if full_name.start_with? "."
+        full_name = @@component_name_stack.last.gsub(/\.[^\.]+$/, "") + full_name
+      end
+
       # Ensure each component is only compiled once
       unless @@component_method_names[full_name].nil?
         return @@component_method_names[full_name]
       end
 
-      # If this is a relative path, prepend with the previous component name's base
-      if full_name.start_with? "."
-        full_name = @@component_name_stack.last.gsub(/\.[^\.]+$/, "") + full_name
-      end
       @@component_name_stack << full_name
 
       namespace = nil
@@ -73,11 +74,13 @@ module RBlade
     def self.compile_component(name, code)
       @@component_method_names[name] = "_c#{@@component_method_names.count}"
 
+      compiled_component = RBlade::Compiler.compileString(code)
+
       @@component_definitions \
         << "def #{@@component_method_names[name]}(slot,attributes);_out='';" \
         << "_stacks=[];" \
         << "attributes=RBlade::AttributesManager.new(attributes);" \
-        << RBlade::Compiler.compileString(code) \
+        << compiled_component \
         << "RBlade::StackManager.get(_stacks) + _out;end;"
 
       @@component_method_names[name]
