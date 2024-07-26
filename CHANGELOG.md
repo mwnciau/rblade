@@ -1,4 +1,4 @@
-## 0.2.6
+## 0.3.0 [2024-07-26]
 - Add support for index component files
 - Add support for relative components
 - Add support for unsafe closing tags
