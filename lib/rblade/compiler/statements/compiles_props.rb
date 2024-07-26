@@ -11,9 +11,9 @@ module RBlade
         props = extractProps args[0]
         props.map do |key, value|
           if value == "_required"
-            "if !defined?(#{key})&&!attributes.has?(:'#{RBlade::escape_quotes(key)}');raise \"Props statement: #{key} is not defined\";end;#{key.sub /[^a-zA-Z0-9_]/, '_'}=attributes.default(:'#{RBlade::escape_quotes(key)}');"
+            "if !defined?(#{key})&&!attributes.has?(:'#{RBlade.escape_quotes(key)}');raise \"Props statement: #{key} is not defined\";end;#{key.sub(/[^a-zA-Z0-9_]/, "_")}=attributes.default(:'#{RBlade.escape_quotes(key)}');"
           else
-            "#{key.sub /[^a-zA-Z0-9_]/, '_'}=attributes.default(:'#{RBlade::escape_quotes(key)}',#{value});"
+            "#{key.sub(/[^a-zA-Z0-9_]/, "_")}=attributes.default(:'#{RBlade.escape_quotes(key)}',#{value});"
           end
         end.join
       end

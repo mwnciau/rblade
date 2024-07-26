@@ -58,7 +58,7 @@ module RBlade
     end
 
     def get_method_name name
-      name.gsub(/[^a-zA-Z0-9_]/, '_')
+      name.gsub(/[^a-zA-Z0-9_]/, "_")
     end
 
     def compile_attributes attributes

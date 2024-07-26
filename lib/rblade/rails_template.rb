@@ -9,12 +9,12 @@ require "rblade/helpers/style_manager"
 module RBlade
   class RailsTemplate
     def call(template, source = nil)
-      RBlade::ComponentStore::clear
+      RBlade::ComponentStore.clear
       RBlade::StackManager.clear
       setup = "_out='';_stacks=[];"
       code = RBlade::Compiler.compileString(source || template.source)
       setdown = "RBlade::StackManager.get(_stacks) + _out"
-      setup + ComponentStore.get() + code + setdown
+      setup + ComponentStore.get + code + setdown
     end
   end
 end

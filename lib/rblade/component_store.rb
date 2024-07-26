@@ -18,7 +18,7 @@ module RBlade
         namespace, name = full_name.split("::")
       end
 
-      return compile_component full_name, File.read(find_component_file(namespace, name))
+      compile_component full_name, File.read(find_component_file(namespace, name))
     end
 
     def self.add_path path, namespace = nil
@@ -36,15 +36,9 @@ module RBlade
     end
 
     def self.clear
-      @@component_definitions = ''
+      @@component_definitions = ""
       @@component_method_names = {}
     end
-
-    private
-
-    @@component_definitions = ''
-    @@component_method_names = {}
-    @@template_paths = {}
 
     def self.find_component_file namespace, name
       file_path = name.tr ".", "/"
@@ -62,18 +56,26 @@ module RBlade
 
       raise StandardError.new "Unknown component #{namespace}::#{name}"
     end
+    private_class_method :find_component_file
 
     def self.compile_component(name, code)
       @@component_method_names[name] = "_c#{@@component_method_names.count}"
 
-      @@component_definitions <<
-        "def #{@@component_method_names[name]}(slot,attributes);_out='';" <<
-        "_stacks=[];" <<
-        "attributes=RBlade::AttributesManager.new(attributes);" <<
-        RBlade::Compiler.compileString(code) <<
-        "RBlade::StackManager.get(_stacks) + _out;end;"
+      @@component_definitions \
+        << "def #{@@component_method_names[name]}(slot,attributes);_out='';" \
+        << "_stacks=[];" \
+        << "attributes=RBlade::AttributesManager.new(attributes);" \
+        << RBlade::Compiler.compileString(code) \
+        << "RBlade::StackManager.get(_stacks) + _out;end;"
 
       @@component_method_names[name]
     end
+    private_class_method :compile_component
+
+    private
+
+    @@component_definitions = ""
+    @@component_method_names = {}
+    @@template_paths = {}
   end
 end

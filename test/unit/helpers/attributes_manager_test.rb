@@ -112,6 +112,6 @@ class BladeTemplatingTest < TestCase
     attributes[:c] = "3"
     attributes.delete :b
 
-    assert_equal "13", (attributes.compact.map(&:last)).join
+    assert_equal "13", attributes.compact.map(&:last).join
   end
 end

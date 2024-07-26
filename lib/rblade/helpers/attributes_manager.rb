@@ -17,15 +17,19 @@ module RBlade
       !@attributes[key].nil?
     end
 
-    def method_missing method, *args
-      @attributes.send(method, *args)
+    def method_missing(method, *)
+      @attributes.send(method, *)
+    end
+
+    def respond_to_missing?(method_name, *args)
+      @attributes.respond_to?(method_name) || super
     end
 
     def to_s attributes = nil
       attributes ||= @attributes
 
       attributes.map do |key, value|
-        "#{key}=\"#{value == true ? key : h(value)}\""
+        "#{key}=\"#{(value == true) ? key : h(value)}\""
       end.join " "
     end
 

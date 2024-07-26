@@ -8,7 +8,7 @@ class TestCase < Minitest::Test
   def setup
     super
 
-    RBlade::ComponentStore::clear
+    RBlade::ComponentStore.clear
     RBlade::StackManager.clear
   end
 

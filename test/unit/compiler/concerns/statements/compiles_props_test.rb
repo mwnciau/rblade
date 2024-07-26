@@ -9,7 +9,7 @@ class CompilesPropsTest < TestCase
     end
 
     if expected_result
-      attributes = RBlade::AttributesManager.new({a: 'A'}) # standard:disable Lint/UselessAssignment
+      attributes = RBlade::AttributesManager.new({a: "A"}) # standard:disable Lint/UselessAssignment
       result = eval RBlade::RailsTemplate.new.call(nil, template) # standard:disable Security/Eval
 
       assert_equal expected_result, result
