@@ -47,6 +47,7 @@ module RBlade
     def self.clear
       @@component_definitions = ""
       @@component_method_names = {}
+      @@component_name_stack = []
     end
 
     def self.find_component_file namespace, name
@@ -59,7 +60,7 @@ module RBlade
           end
           if File.exist? base_path + file_path + "/index" + extension
             # Account for index files for relative components
-            @@component_name_stack.last += '.index'
+            @@component_name_stack << @@component_name_stack.pop + ".index"
             return "#{base_path}#{file_path}/index#{extension}"
           end
         end

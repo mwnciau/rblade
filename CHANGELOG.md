@@ -1,6 +1,7 @@
 ## 0.2.6
 - Add support for index component files
 - Add support for relative components
+- Add support for unsafe closing tags
 - Allow direct access to attributes underlying hash
 - Fix each statement with a key value pair
 - Improve output of binary HTML attributes

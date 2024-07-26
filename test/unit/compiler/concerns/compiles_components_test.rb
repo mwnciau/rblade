@@ -58,4 +58,8 @@ class CompilesComponentsTest < TestCase
       nil,
       "success!"
   end
+
+  def test_unsafe_close
+    assert_compiles_to "<x-button>hello<//>", nil, '<button class="button">hello</button>'
+  end
 end

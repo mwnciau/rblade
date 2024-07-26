@@ -9,13 +9,13 @@ module RBlade
 
     def compile!(tokens)
       tokens.each do |token|
-        if [:component, :component_start, :component_end].none? token.type
+        if [:component, :component_start, :component_end, :component_unsafe_end].none? token.type
           next
         end
 
         token.value = if token.type == :component_start
           compile_token_start token
-        elsif token.type == :component_end
+        elsif token.type == :component_end || token.type == :component_unsafe_end
           compile_token_end token
         else
           compile_token_start(token) + compile_token_end(token)
@@ -46,7 +46,7 @@ module RBlade
       if component.nil?
         raise StandardError.new "Unexpected closing tag (#{token.value[:name]})"
       end
-      if token.value[:name] != component[:name]
+      if token.type == :component_end && token.value[:name] != component[:name]
         raise StandardError.new "Unexpected closing tag (#{token.value[:name]}) expecting #{component[:name]}"
       end
 
