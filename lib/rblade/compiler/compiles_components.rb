@@ -30,11 +30,15 @@ module RBlade
 
       @component_stack << {
         name: token.value[:name],
-        attributes: token.value[:attributes],
         index: @component_count
       }
 
-      "_comp_#{@component_count}_swap=_out;_out='';"
+      attributes = compile_attributes token.value[:attributes]
+
+      code = "_c#{@component_count}_swap=_out;_out='';"
+      code << "_c#{@component_count}_attr={#{attributes.join(",")}};"
+
+      code
     end
 
     def compile_token_end token
@@ -46,68 +50,38 @@ module RBlade
         raise StandardError.new "Unexpected closing tag (#{token.value[:name]}) expecting #{component[:name]}"
       end
 
-      attributes = compile_attributes component[:attributes]
-
-      code = "def _component(slot,attributes);#{attributes[:assignments].join}_out='';"
-      code << "_stacks=[];"
-      code << "attributes=RBlade::AttributesManager.new(attributes);"
-      code << ComponentStore.fetchComponent(token.value[:name])
-      code << "RBlade::StackManager.get(_stacks) + _out;end;"
-      code << "_slot=_out;_out=_comp_#{component[:index]}_swap;"
-      code << "_out<<_component(_slot,{#{attributes[:arguments].join(",")}});"
+      code = "_slot=_out;_out=_c#{component[:index]}_swap;"
+      code << "_out<<#{ComponentStore.component(component[:name])}(_slot,_c#{component[:index]}_attr);"
+      code << "_slot=nil;_c#{component[:index]}_swap=nil;"
 
       code
     end
 
+    def get_method_name name
+      name.gsub(/[^a-zA-Z0-9_]/, '_')
+    end
+
     def compile_attributes attributes
-      attribute_arguments = []
-      attribute_assignments = []
-
-      attributes.each do |attribute|
-        if attribute[:type] == "class"
-          attribute_arguments.push "'class': RBlade::ClassManager.new(#{attribute[:value]})"
-          attribute_assignments.push "_class = attributes[:class];"
-
-          next
-        end
-        if attribute[:type] == "style"
-          attribute_arguments.push "'style': RBlade::StyleManager.new(#{attribute[:value]})"
-          attribute_assignments.push "_style = attributes[:style];"
-
-          next
-        end
-        if attribute[:type] == "attributes"
-          attribute_arguments.push "**(#{attribute[:value]})"
-
-          next
-        end
-
-        if attribute[:type] == "string"
-          attribute_arguments.push "'#{attribute[:name]}': '#{RBlade.escape_quotes(attribute[:value])}'"
-        end
-
-        if attribute[:type] == "ruby"
-          attribute_arguments.push "'#{attribute[:name]}': (#{attribute[:value]})"
-        end
-
-        if attribute[:type] == "pass_through"
-          attribute_arguments.push "#{attribute[:name]}:"
-        end
-
-        if attribute[:type] == "empty"
-          attribute_arguments.push "'#{attribute[:name]}': true"
-        end
-
-        variable_name = attribute[:name]&.tr("-", "_")
-        if !variable_name.nil? && variable_name.match(/^[A-Za-z_][A-Za-z0-9_]*$/)
-          keywords = %w[__FILE__ __LINE__ alias and begin BEGIN break case class def defined? do else elsif end END ensure false for if in module next nil not or redo rescue retry return self super then true undef unless until when while yield attributes _out slot]
-          next if keywords.include? variable_name
-
-          attribute_assignments.push "#{variable_name} = attributes[:'#{attribute[:name]}'];"
+      attributes.map do |attribute|
+        case attribute[:type]
+        when "class"
+          "'class': RBlade::ClassManager.new(#{attribute[:value]})"
+        when "style"
+          "'style': RBlade::StyleManager.new(#{attribute[:value]})"
+        when "attributes"
+          "**(#{attribute[:value]})"
+        when "string"
+          "'#{attribute[:name]}': '#{RBlade.escape_quotes(attribute[:value])}'"
+        when "ruby"
+          "'#{attribute[:name]}': (#{attribute[:value]})"
+        when "pass_through"
+          "#{attribute[:name]}:"
+        when "empty"
+          "'#{attribute[:name]}': true"
+        else
+          raise StandardError.new "Component compiler: unexpected attribute type (#{attribute[:type]})"
         end
       end
-
-      {arguments: attribute_arguments, assignments: attribute_assignments}
     end
   end
 end
