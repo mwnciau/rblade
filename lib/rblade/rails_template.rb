@@ -9,6 +9,9 @@ require "rblade/helpers/style_manager"
 module RBlade
   class RailsTemplate
     def call(template, source = nil)
+      RBlade::ComponentStore.clear
+      RBlade::StackManager.clear
+
       unless template.nil?
         view_name = template.short_identifier
           .delete_prefix('app/views/')

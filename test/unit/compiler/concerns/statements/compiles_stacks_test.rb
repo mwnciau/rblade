@@ -64,14 +64,14 @@ class CompilesStacksTest < TestCase
   end
 
   def test_component
-    assert_compiles_to "@push('stack', '456') 123<x-stack/>789", nil, "123456789"
-    assert_compiles_to "<x-stack/> @stack('other_stack')", nil, "123"
-    assert_compiles_to "@stack('other_stack') <x-stack/>", nil, "123"
+    assert_compiles_to "@push('stack', '456') 123<x-compiles_stacks_test_stack/>789", nil, "123456789"
+    assert_compiles_to "<x-compiles_stacks_test_stack/> @stack('other_stack')", nil, "123"
+    assert_compiles_to "@stack('other_stack') <x-compiles_stacks_test_stack/>", nil, "123"
   end
 
   def test_limitations
     # We cannot push to a component stack after the component has been rendered
-    assert_compiles_to "123<x-stack/>789 @push('stack', '456')", nil, "123789"
+    assert_compiles_to "123<x-compiles_stacks_test_stack/>789 @push('stack', '456')", nil, "123789"
 
     # Stacks can only be output once
     assert_compiles_to "@push('stack', '123') @stack('stack') @stack('stack')", nil, "123"

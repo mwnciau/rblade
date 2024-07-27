@@ -3,6 +3,12 @@ require "rblade/compiler"
 require "rblade/component_store"
 
 class BladeTemplatingTest < TestCase
+  def setup
+    super
+
+    RBlade::ComponentStore.clear
+  end
+
   def test_component_compiles_once
     component_method = RBlade::ComponentStore.component "button"
     component_method2 = RBlade::ComponentStore.component "link"

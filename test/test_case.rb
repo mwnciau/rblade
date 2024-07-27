@@ -5,13 +5,6 @@ require "rblade/rails_template"
 class TestCase < Minitest::Test
   RBlade::ComponentStore.add_path(File.join(File.dirname(__FILE__), "fixtures"))
 
-  def setup
-    super
-
-    RBlade::ComponentStore.clear
-    RBlade::StackManager.clear
-  end
-
   def assert_compiles_to template, expected_code = nil, expected_result = nil
     compiled_string = RBlade::Compiler.compileString(template)
 
