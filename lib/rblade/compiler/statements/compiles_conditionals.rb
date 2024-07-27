@@ -88,6 +88,24 @@ module RBlade
 
         "if #{args[0]};_out<<'selected';end;"
       end
+
+      def compileEnv args
+        if args&.count != 1
+          raise StandardError.new "Env statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+        end
+
+        environments = args[0].strip
+
+        "if Array.wrap(#{environments}).include?(Rails.env);"
+      end
+
+      def compileProduction args
+        unless args.nil?
+          raise StandardError.new "Production statement: wrong number of arguments (given #{args.count}, expecting 1)"
+        end
+
+        "if Rails.env.production?;"
+      end
     end
   end
 end

@@ -82,7 +82,7 @@ class CompilesConditionalsTest < TestCase
     end
   end
 
-  ["if", "unless", "checked", "disabled", "required", "selected", "readonly"].each do |statement|
+  ["if", "unless", "checked", "disabled", "required", "selected", "readonly", "env"].each do |statement|
     define_method(:"test_#{statement}_with_no_arguments") do
       exception = assert_raises Exception do
         RBlade::Compiler.compileString("@#{statement}()")
@@ -98,5 +98,33 @@ class CompilesConditionalsTest < TestCase
 
       assert_equal "#{statement.capitalize} statement: wrong number of arguments (given 2, expecting 1)", exception.to_s
     end
+  end
+
+  def test_env
+    Rails.env = "production"
+    assert_compiles_to "@env('production') production @endenv",
+      "if Array.wrap('production').include?(Rails.env);_out<<'production';end;",
+      "production"
+    assert_compiles_to "@env(['production']) production @endenv", nil, "production"
+    assert_compiles_to "@env(['production', 'development']) production @endenv", nil, "production"
+
+    Rails.env = "development"
+    assert_compiles_to "@env ( 'production' ) production @endenv",
+      "if Array.wrap('production').include?(Rails.env);_out<<'production';end;",
+      ""
+    assert_compiles_to "@env(['production']) production @endenv", nil, ""
+    assert_compiles_to "@env(['production', 'development']) production @endenv", nil, "production"
+  end
+
+  def test_production
+    Rails.env = "production"
+    assert_compiles_to "@production production @endenv",
+      "if Rails.env.production?;_out<<'production';end;",
+      "production"
+
+    Rails.env = "development"
+    assert_compiles_to "@production production @endenv",
+      "if Rails.env.production?;_out<<'production';end;",
+      ""
   end
 end
