@@ -45,7 +45,7 @@ module RBlade
     private
 
     def getHandler(name)
-      handler_class, handler_method = @@statement_handlers[name]
+      handler_class, handler_method = @@statement_handlers[name.tr('_', '').downcase]
 
       if !handler_class&.method_defined?(handler_method)
         raise StandardError.new "Unhandled statement: @#{name}"

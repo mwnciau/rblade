@@ -4,6 +4,7 @@
 - Add @once, @pushOnce and @prependOnce statements
 - Add @verbatim statement
 - Add readme and license
+- Make statements ignore underscore and case
 - Merge @break & @breakif and @next & @nextif
 
 ## 0.3.0 [2024-07-26]
