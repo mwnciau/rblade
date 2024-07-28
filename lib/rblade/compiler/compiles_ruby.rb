@@ -11,7 +11,7 @@ module RBlade
           # <%% and %%> are escape ERB style tags
           (<%%)(.+?)(%%>)
           |
-          (?:^|[\b\s])(@ruby)\s+(.+?)[\s;]*(@endruby)(?:$|[\b\s])
+          \s?(?<!\w)(@ruby)\s+(.+?)[\s;]*(@endruby)(?!\w)\s?
           |
           (<%)\s+(.+?)[\s;]*(%>)
         /xm)

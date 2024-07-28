@@ -4,7 +4,7 @@ module RBlade
       tokens.map! do |token|
         next(token) if token.type != :unprocessed
 
-        segments = token.value.split(/\s?(?<![a-zA-Z0-9])(@verbatim)(?=[^a-zA-Z0-9])\s?(.+?)\s?(?<![a-zA-Z0-9])@end_?verbatim(?![a-zA-Z0-9])\s?/mi)
+        segments = token.value.split(/\s?(?<!\w)(@verbatim)(?!\w)\s?(.+?)\s?(?<!\w)@end_?verbatim(?!\w)\s?/mi)
 
         i = 0
         while i < segments.count

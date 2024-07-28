@@ -56,4 +56,22 @@ class CompilesRubyTest < TestCase
       _out << 'bar'
     %> baz"
   end
+
+  def assert_ruby_found(template, expected = true)
+    tokens = [Token.new(:unprocessed, template)]
+    RBlade::CompilesRuby.new.compile!(tokens)
+
+    assert_equal expected, tokens.any?{|t| t.type == :raw_text}
+  end
+
+  def test_boundaries
+    assert_ruby_found "@rubyhi@endruby", false
+    assert_ruby_found "@ruby hi@endruby", false
+    assert_ruby_found "@rubyhi @endruby", false
+    assert_ruby_found "a@ruby @endruby", false
+
+    assert_compiles_to ">@ruby RUBY @endruby", "_out<<'>';RUBY;"
+    assert_compiles_to "'@ruby RUBY @endruby", "_out<<'\\\'';RUBY;"
+    assert_compiles_to ".@ruby RUBY @endruby", "_out<<'.';RUBY;"
+  end
 end

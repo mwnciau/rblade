@@ -24,8 +24,6 @@ class CompilesVerbatimTest < TestCase
     tokens = [Token.new(:unprocessed, template)]
     RBlade::CompilesVerbatim.new.compile!(tokens)
 
-    pp tokens
-    pp expected
     assert_equal expected, tokens.any?{|t| t.type == :raw_text}
   end
 
