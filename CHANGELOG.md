@@ -1,7 +1,9 @@
 ## 0.3.1
+- Add @class and @style statements
 - Add @env and @production statements
+- Add @once, @pushOnce and @prependOnce statements
 - Add readme and license
-- Merge break & breakif and next & nextif
+- Merge @break & @breakif and @next & @nextif
 
 ## 0.3.0 [2024-07-26]
 - Add support for index component files

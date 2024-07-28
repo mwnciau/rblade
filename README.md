@@ -8,6 +8,8 @@
  
 **TODO redo TOC**
 
+**TODO case sensitivity and underscores in statements**
+
 <a name="introduction"></a>
 ## Introduction
 
@@ -398,7 +400,7 @@ In addition, the `@required` directive may be used to indicate if a given elemen
 
 <a name="the-once-directive"></a>
 ### The `@once` Directive
-**TODO add this?**
+
 The `@once` directive allows you to define a portion of the template that will only be evaluated once per rendering cycle. This may be useful for pushing a given piece of JavaScript into the page's header using [stacks](#stacks). For example, if you are rendering a given [component](#components) within a loop, you may wish to only push the JavaScript to the header the first time the component is rendered:
 
 ```rblade
@@ -407,8 +409,8 @@ The `@once` directive allows you to define a portion of the template that will o
         <script>
             // Your custom JavaScript...
         </script>
-    @endpush
-@endonce
+    @endPush
+@endOnce
 ```
 
 Since the `@once` directive is often used in conjunction with the `@push` or `@prepend` directives, the `@pushOnce` and `@prependOnce` directives are available for your convenience:
@@ -416,10 +418,26 @@ Since the `@once` directive is often used in conjunction with the `@push` or `@p
 ```rblade
 @pushOnce('scripts')
     <script>
-        // Your custom JavaScript...
+        {{-- Your javascript --}}
     </script>
 @endPushOnce
 ```
+
+Additionally, you can pass an argument to the `@once` directive, or a second argument to the `@pushonce` and `@prependonce` directives to set the key that is used to determine if that block has already been output: 
+
+```rblade
+@once(:heading)
+    <h1>Home page</h1>
+@endOnce
+
+{{-- This block will not be output --}}
+@once(:heading)
+    <h1>Some other title</h1>
+@endOnce
+```
+
+> [!NOTE]  
+> The keys you use for `@once`, `@pushOnce` and `@prependOnce` are shared.
 
 <a name="raw-ruby"></a>
 ### Raw Ruby

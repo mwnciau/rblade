@@ -106,6 +106,14 @@ module RBlade
 
         "if Rails.env.production?;"
       end
+
+      def compileOnce args
+        if args&.count&.> 1
+          raise StandardError.new "Production statement: wrong number of arguments (given #{args.count}, expecting 0 or 1)"
+        end
+
+        args[0].nil? ? "" : args[0]
+      end
     end
   end
 end

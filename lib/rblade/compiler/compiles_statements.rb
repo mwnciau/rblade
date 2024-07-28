@@ -2,6 +2,7 @@ require "rblade/compiler/statements/compiles_conditionals"
 require "rblade/compiler/statements/compiles_html_attributes"
 require "rblade/compiler/statements/compiles_inline_ruby"
 require "rblade/compiler/statements/compiles_loops"
+require "rblade/compiler/statements/compiles_once"
 require "rblade/compiler/statements/compiles_props"
 require "rblade/compiler/statements/compiles_stacks"
 
@@ -81,9 +82,12 @@ module RBlade
       "endfor" => [CompilesStatements, :compileEnd],
       "endforelse" => [CompilesStatements, :compileEnd],
       "endif" => [CompilesStatements, :compileEnd],
+      "endonce" => [CompilesStatements, :compileEnd],
       "endprepend" => [CompilesStacks, :compileEndPrepend],
+      "endprependonce" => [CompilesOnce, :compileEndPrependOnce],
       "endproduction" => [CompilesStatements, :compileEnd],
       "endpush" => [CompilesStacks, :compileEndPush],
+      "endpushonce" => [CompilesOnce, :compileEndPushOnce],
       "endunless" => [CompilesStatements, :compileEnd],
       "enduntil" => [CompilesStatements, :compileEnd],
       "endwhile" => [CompilesStatements, :compileEnd],
@@ -93,10 +97,13 @@ module RBlade
       "if" => [CompilesConditionals, :compileIf],
       "next" => [CompilesLoops, :compileNext],
       "nextif" => [CompilesLoops, :compileNextIf],
+      "once" => [CompilesOnce, :compileOnce],
       "prepend" => [CompilesStacks, :compilePrepend],
+      "prependonce" => [CompilesOnce, :compilePrependOnce],
       "production" => [CompilesConditionals, :compileProduction],
       "props" => [CompilesProps, :compileProps],
       "push" => [CompilesStacks, :compilePush],
+      "pushonce" => [CompilesOnce, :compilePushOnce],
       "readonly" => [CompilesConditionals, :compileReadonly],
       "required" => [CompilesConditionals, :compileRequired],
       "ruby" => [CompilesInlineRuby, :compile],

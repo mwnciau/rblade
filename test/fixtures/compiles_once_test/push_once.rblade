@@ -1,0 +1,1 @@
+@pushonce(:stack) hi @endpushonce

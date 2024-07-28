@@ -23,7 +23,7 @@ module RBlade
         else
           @push_counter += 1
 
-          "_push_#{@push_counter}_name=#{args[0]};_push_#{@push_counter}_buffer=_out;_out='';"
+          "_p_#{@push_counter}=#{args[0]};_p_#{@push_counter}_b=_out;_out='';"
         end
       end
 
@@ -34,7 +34,7 @@ module RBlade
 
         @push_counter -= 1
 
-        "RBlade::StackManager.prepend(_push_#{@push_counter + 1}_name, _out);_out=_push_#{@push_counter + 1}_buffer;"
+        "RBlade::StackManager.prepend(_p_#{@push_counter + 1}, _out);_out=_p_#{@push_counter + 1}_b;"
       end
 
       def compilePush args
@@ -47,7 +47,7 @@ module RBlade
         else
           @push_counter += 1
 
-          "_push_#{@push_counter}_name=#{args[0]};_push_#{@push_counter}_buffer=_out;_out='';"
+          "_p_#{@push_counter}=#{args[0]};_p_#{@push_counter}_b=_out;_out='';"
         end
       end
 
@@ -58,7 +58,7 @@ module RBlade
 
         @push_counter -= 1
 
-        "RBlade::StackManager.push(_push_#{@push_counter + 1}_name, _out);_out=_push_#{@push_counter + 1}_buffer;"
+        "RBlade::StackManager.push(_p_#{@push_counter + 1}, _out);_out=_p_#{@push_counter + 1}_b;"
       end
     end
   end

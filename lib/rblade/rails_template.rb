@@ -24,7 +24,7 @@ module RBlade
           "view::#{view_name}"
         )
       end
-      setup = "_out='';_stacks=[];"
+      setup = "_out='';_stacks=[];$_once_tokens=[];"
       code = RBlade::Compiler.compileString(source || template.source)
       setdown = "RBlade::StackManager.get(_stacks) + _out"
       setup + ComponentStore.get + code + setdown
