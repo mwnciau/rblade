@@ -1,4 +1,5 @@
 require "rblade/compiler/statements/compiles_conditionals"
+require "rblade/compiler/statements/compiles_html_attributes"
 require "rblade/compiler/statements/compiles_inline_ruby"
 require "rblade/compiler/statements/compiles_loops"
 require "rblade/compiler/statements/compiles_props"
@@ -65,6 +66,7 @@ module RBlade
       "breakif" => [CompilesLoops, :compileBreakIf],
       "case" => [CompilesConditionals, :compileCase],
       "checked" => [CompilesConditionals, :compileChecked],
+      "class" => [CompilesHtmlAttributes, :compileClass],
       "disabled" => [CompilesConditionals, :compileDisabled],
       "else" => [CompilesConditionals, :compileElse],
       "elsif" => [CompilesConditionals, :compileElsif],
@@ -100,6 +102,7 @@ module RBlade
       "ruby" => [CompilesInlineRuby, :compile],
       "selected" => [CompilesConditionals, :compileSelected],
       "stack" => [CompilesStacks, :compileStack],
+      "style" => [CompilesHtmlAttributes, :compileStyle],
       "unless" => [CompilesConditionals, :compileUnless],
       "until" => [CompilesLoops, :compileUntil],
       "when" => [CompilesConditionals, :compileWhen],

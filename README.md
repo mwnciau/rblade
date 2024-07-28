@@ -312,25 +312,23 @@ The `$loop` variable also contains a variety of other useful properties:
 
 </div>
 
-** TODO from here **
-
 <a name="conditional-classes"></a>
 ### Conditional Classes & Styles
-** TODO add this **
-The `@class` directive conditionally compiles a CSS class string. The directive accepts an array of classes where the array key contains the class or classes you wish to add, while the value is a boolean expression. If the array element has a numeric key, it will always be included in the rendered class list:
+
+The `@class` directive conditionally adds CSS classes. The directive accepts a `Hash` of classes where the key contains the class or classes you wish to add, and the value is a boolean expression:
 
 ```rblade
-@php
-    $isActive = false;
-    $hasError = true;
-@endphp
+@ruby
+    isActive = false;
+    hasError = true;
+@endruby
 
-<span @class([
-    'p-4',
-    'font-bold' => $isActive,
-    'text-gray-500' => ! $isActive,
-    'bg-red' => $hasError,
-])></span>
+<span @class({
+    "p-4": true,
+    "font-bold": isActive,
+    "text-gray-500": !isActive,
+    "bg-red": hasError,
+})></span>
 
 <span class="p-4 text-gray-500 bg-red"></span>
 ```
@@ -338,14 +336,14 @@ The `@class` directive conditionally compiles a CSS class string. The directive 
 Likewise, the `@style` directive may be used to conditionally add inline CSS styles to an HTML element:
 
 ```rblade
-@php
-    $isActive = true;
-@endphp
+@ruby
+    isActive = true;
+@endruby
 
-<span @style([
-    'background-color: red',
-    'font-weight: bold' => $isActive,
-])></span>
+<span @style({
+    "background-color: red": true,
+    "font-weight: bold" => isActive,
+})></span>
 
 <span style="background-color: red; font-weight: bold;"></span>
 ```

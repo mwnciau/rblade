@@ -19,5 +19,9 @@ module RBlade
     def to_s
       @classes
     end
+
+    def to_str
+      to_s
+    end
   end
 end

@@ -33,5 +33,9 @@ module RBlade
     def to_s
       @styles
     end
+
+    def to_str
+      to_s
+    end
   end
 end
