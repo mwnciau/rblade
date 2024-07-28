@@ -2,6 +2,7 @@
 - Add @class and @style statements
 - Add @env and @production statements
 - Add @once, @pushOnce and @prependOnce statements
+- Add @verbatim statement
 - Add readme and license
 - Merge @break & @breakif and @next & @nextif
 

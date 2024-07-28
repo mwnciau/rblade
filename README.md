@@ -8,8 +8,6 @@
  
 **TODO redo TOC**
 
-**TODO case sensitivity and underscores in statements**
-
 <a name="introduction"></a>
 ## Introduction
 
@@ -79,8 +77,6 @@ The `@` symbol may also be used to escape RBlade directives:
 <a name="the-at-verbatim-directive"></a>
 #### The `@verbatim` Directive
 
-**TODO: Add verbatim directive**
-
 If you are displaying JavaScript variables in a large portion of your template, you may wrap the HTML in the `@verbatim` directive so that you do not have to prefix each Blade echo statement with an `@` symbol:
 
 ```rblade
@@ -92,9 +88,12 @@ If you are displaying JavaScript variables in a large portion of your template, 
 ```
 
 <a name="blade-directives"></a>
-## Blade Directives
+## RBlade Directives
 
-In addition to template inheritance and displaying data, Blade also provides convenient shortcuts for common Ruby control structures, such as conditional statements and loops. These shortcuts provide a very clean, terse way of working with PHP control structures while also remaining familiar to their ruby counterparts.
+In addition to template inheritance and displaying data, RBlade also provides convenient shortcuts for common Ruby control structures, such as conditional statements and loops. These shortcuts provide a very clean, terse way of working with Ruby control structures while also remaining familiar to their ruby counterparts.
+
+> [!NOTE]  
+> RBlade directives are case insensitive and ignore underscores, so depending on your preference, all of `@endif`, `@endIf` and `@end_if` are identical.
 
 <a name="if-statements"></a>
 ### If Statements

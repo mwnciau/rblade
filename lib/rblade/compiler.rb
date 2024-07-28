@@ -2,6 +2,7 @@ require "rblade/compiler/compiles_comments"
 require "rblade/compiler/compiles_components"
 require "rblade/compiler/compiles_echos"
 require "rblade/compiler/compiles_ruby"
+require "rblade/compiler/compiles_verbatim"
 require "rblade/compiler/compiles_statements"
 require "rblade/compiler/tokenizes_components"
 require "rblade/compiler/tokenizes_statements"
@@ -22,6 +23,7 @@ module RBlade
     def self.compileString(string_template)
       tokens = [Token.new(:unprocessed, string_template)]
 
+      CompilesVerbatim.new.compile! tokens
       CompilesComments.new.compile! tokens
       CompilesRuby.new.compile! tokens
       TokenizesComponents.new.tokenize! tokens
@@ -36,8 +38,8 @@ module RBlade
     def self.compileAttributeString(string_template)
       tokens = [Token.new(:unprocessed, string_template)]
 
-      CompilesRuby.compile! tokens
       CompilesComments.compile!(tokens)
+      CompilesRuby.compile! tokens
       CompilesEchos.compile!(tokens)
 
       compileTokens tokens
