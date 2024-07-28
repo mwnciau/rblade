@@ -6,7 +6,7 @@
     - [HTML Entity Encoding](#html-entity-encoding)
     - [Blade and JavaScript Frameworks](#blade-and-javascript-frameworks)
  
-**TODO rework this**
+**TODO redo TOC**
 
 <a name="introduction"></a>
 ## Introduction
@@ -152,7 +152,7 @@ If needed, you may specify the authentication guard that should be checked when 
 
 <a name="environment-directives"></a>
 #### Environment Directives
-**TODO add environment directives?**
+
 You may check if the application is running in the production environment using the `@production` directive:
 
 ```rblade
@@ -205,13 +205,14 @@ Case statements can be constructed using the `@case`, `@when`, `@else` and `@end
 <a name="loops"></a>
 ### Loops
 
-In addition to conditional statements, RBlade provides simple directives for working with Ruby's loop structures. Again, each of these directives functions identically to their Ruby counterparts:
+In addition to conditional statements, RBlade provides simple directives for working with Ruby's loop structures:
 
 ```rblade
 @for (i in 0...10)
     The current value is {{ i }}
 @endfor
 
+{{-- Compiles to users.each do |user| ... --}}
 @each (user in users)
     <p>This is user {{ user.id }}</p>
 @endeach
@@ -233,15 +234,12 @@ In addition to conditional statements, RBlade provides simple directives for wor
 @endwhile
 ```
 
-> [!NOTE]  
-> While iterating through a `foreach` loop, you may use the [loop variable](#the-loop-variable) to gain valuable information about the loop, such as whether you are in the first or last iteration through the loop.
-
-When using loops you may also skip the current iteration or end the loop using the `@next` and `@break` directives:
+When using loops you can also skip the current iteration or end the loop using the `@next` and `@break` directives:
 
 ```rblade
 for (user in users)
     @if (user.type == 1)
-        @continue
+        @next
     @endif
 
     <li>{{ user.name }}</li>
@@ -254,14 +252,13 @@ for (user in users)
 
 You may also include the continuation or break condition within the directive declaration:
 
-**TODO check this works with and without condition**
 ```rblade
-@foreach ($users as $user)
-    @continue($user->type == 1)
+@foreach (user in users)
+    @next(user.type == 1)
 
     <li>{{ $user->name }}</li>
 
-    @break($user->number == 5)
+    @break(user.number == 5)
 @endforeach
 ```
 

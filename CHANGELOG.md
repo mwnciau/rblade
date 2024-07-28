@@ -1,3 +1,8 @@
+## 0.3.1
+- Add @env and @production statements
+- Add readme and license
+- Merge break & breakif and next & nextif
+
 ## 0.3.0 [2024-07-26]
 - Add support for index component files
 - Add support for relative components

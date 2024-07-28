@@ -6,19 +6,15 @@ module RBlade
       end
 
       def compileBreak args
-        if !args.nil?
-          raise StandardError.new "Break statement: wrong number of arguments (given #{args&.count}, expecting 0)"
+        if args&.count&.> 1
+          raise StandardError.new "Break statement: wrong number of arguments (given #{args&.count}, expecting 0 or 1)"
         end
 
-        "break;"
-      end
-
-      def compileBreakIf args
-        if args&.count != 1
-          raise StandardError.new "Break statement: wrong number of arguments (given #{args&.count}, expecting 1)"
+        if args.nil?
+          "break;"
+        else
+          "if #{args[0]};break;end;"
         end
-
-        "if #{args[0]};break;end;"
       end
 
       def compileEach args
@@ -77,19 +73,7 @@ module RBlade
         if args.nil?
           "next;"
         else
-          "next #{args[0]};"
-        end
-      end
-
-      def compileNextIf args
-        if args.nil? || args.count > 2
-          raise StandardError.new "For statement: wrong number of arguments (given #{args&.count || 0}, expecting 1 or 2)"
-        end
-
-        if args.count == 1
           "if #{args[0]};next;end;"
-        else
-          "if #{args[0]};next #{args[1]};end;"
         end
       end
 
