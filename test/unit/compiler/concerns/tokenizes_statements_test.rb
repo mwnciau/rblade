@@ -36,8 +36,8 @@ class TokenizesStatementsTest < TestCase
   def test_nested_statements
     assert_tokenizes_to "@foo(@bar)", [{name: "foo", arguments: ["@bar"]}]
     assert_tokenizes_to "@foo(@@bar)", [{name: "foo", arguments: ["@@bar"]}]
-    assert_tokenizes_to "@@foo(@bar)", ["@foo", "(", {:name=>"bar"}, ")"]
-    assert_tokenizes_to "@@foo(()@bar)", ["@foo", "(()", {:name=>"bar"}, ")"]
+    assert_tokenizes_to "@@foo(@bar)", ["@foo", "(", {name: "bar"}, ")"]
+    assert_tokenizes_to "@@foo(()@bar)", ["@foo", "(()", {name: "bar"}, ")"]
   end
 
   def test_skip_statement
@@ -81,7 +81,7 @@ class TokenizesStatementsTest < TestCase
     assert_compiles_to "\n\n@end", "_out<<'\n';end;"
     assert_compiles_to "a @end", "_out<<'a';end;"
     assert_compiles_to ">@end", "_out<<'>';end;"
-    assert_compiles_to "'@end", "_out<<'\\\'';end;"
+    assert_compiles_to "'@end", "_out<<'\\'';end;"
 
     # Should not be compiled
     assert_compiles_to "a@end", "_out<<'a@end';"

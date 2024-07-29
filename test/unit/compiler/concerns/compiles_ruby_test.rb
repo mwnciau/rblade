@@ -61,7 +61,7 @@ class CompilesRubyTest < TestCase
     tokens = [Token.new(:unprocessed, template)]
     RBlade::CompilesRuby.new.compile!(tokens)
 
-    assert_equal expected, tokens.any?{|t| t.type == :raw_text}
+    assert_equal expected, tokens.any? { |t| t.type == :raw_text }
   end
 
   def test_boundaries
@@ -71,7 +71,7 @@ class CompilesRubyTest < TestCase
     assert_ruby_found "a@ruby @endruby", false
 
     assert_compiles_to ">@ruby RUBY @endruby", "_out<<'>';RUBY;"
-    assert_compiles_to "'@ruby RUBY @endruby", "_out<<'\\\'';RUBY;"
+    assert_compiles_to "'@ruby RUBY @endruby", "_out<<'\\'';RUBY;"
     assert_compiles_to ".@ruby RUBY @endruby", "_out<<'.';RUBY;"
   end
 end

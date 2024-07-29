@@ -4,6 +4,7 @@ module RBlade
       def initialize
         @once_counter = 0
       end
+
       def compileOnce args
         if args&.count&.> 1
           raise StandardError.new "Once statement: wrong number of arguments (given #{args.count}, expecting 0 or 1)"

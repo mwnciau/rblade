@@ -14,10 +14,10 @@ module RBlade
 
       unless template.nil?
         view_name = template.short_identifier
-          .delete_prefix('app/views/')
-          .delete_suffix('.rblade')
-          .delete_suffix('.html')
-          .tr('/', '.')
+          .delete_prefix("app/views/")
+          .delete_suffix(".rblade")
+          .delete_suffix(".html")
+          .tr("/", ".")
 
         # Let the component store know about the current view for relative components
         RBlade::ComponentStore.view_name(

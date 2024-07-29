@@ -8,8 +8,8 @@ class CompilesHtmlAttributesTest < TestCase
       "absolute": true
     }'
     assert_compiles_to '@class({"block w-full": true})', nil, 'class="block w-full"'
-    assert_compiles_to "@class(#{multiline_hash})", nil,'class="inline w-auto absolute"'
-    assert_compiles_to '@class({"block w-full": (true)})', nil,'class="block w-full"'
+    assert_compiles_to "@class(#{multiline_hash})", nil, 'class="inline w-auto absolute"'
+    assert_compiles_to '@class({"block w-full": (true)})', nil, 'class="block w-full"'
   end
 
   def test_style
