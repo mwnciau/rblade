@@ -31,9 +31,9 @@ Hello, {{ name }}.
 ```
 
 > [!NOTE]  
-> RBlade's `{{ }}` echo statements are automatically sent through Rails' `h` function to prevent XSS attacks.
+> RBlade's `{{ }}` print statements are automatically sent through Rails' `h` function to prevent XSS attacks.
 
-You are not limited to displaying the contents of the variables passed to the view. You may also print the results of any Ruby function. In fact, you can put any Ruby code you wish inside of a Blade echo statement:
+You are not limited to displaying the contents of the variables passed to the view. You may also print the results of any Ruby function. In fact, you can put any Ruby code you wish inside of a RBlade print directive:
 
 ```rblade
 The current UNIX timestamp is {{ Time.now.to_i }}.
@@ -77,7 +77,7 @@ The `@` symbol may also be used to escape RBlade directives:
 <a name="the-at-verbatim-directive"></a>
 #### The `@verbatim` Directive
 
-If you are displaying JavaScript variables in a large portion of your template, you may wrap the HTML in the `@verbatim` directive so that you do not have to prefix each Blade echo statement with an `@` symbol:
+If you are displaying JavaScript variables in a large portion of your template, you may wrap the HTML in the `@verbatim` directive so that you do not have to prefix each Blade print directive with an `@` symbol:
 
 ```rblade
 @verbatim
@@ -530,7 +530,7 @@ You can pass data to RBlade components using HTML attributes. Hard-coded strings
 
 #### Component Properties
 
-You can define a component's data properties using a `@props` statement at the top of the component. You can then reference these properties using local variables within the template:
+You can define a component's data properties using a `@props` directive at the top of the component. You can then reference these properties using local variables within the template:
 
 ```rblade
 {{-- alert.rblade --}}
@@ -538,25 +538,18 @@ You can define a component's data properties using a `@props` statement at the t
 <div class="{{ type }}">{{ message }}</div>
 ```
 
-The `@props` statement accepts a `Hash` where the key is the name of the attribute, and the value is the default value for the property. You can use the special `_required` value to represent a property with no default that must always be defined:
+The `@props` directive accepts a `Hash` where the key is the name of the attribute, and the value is the default value for the property. You can use the special `_required` value to represent a property with no default that must always be defined:
 
 ```rblade
 {{-- This will give an error because the alert component requires a message propery --}}
 <x-alert/>
 ```
 
-Kebab-case properties can be referenced using underscores in place of the dashes:
+All properties in the `@props` directive are automatically removed from `attributes`. Properties with names that aren't valid Ruby variable names or are Ruby reserved keywords are not created as local variables. However, you can reference them via the `attributes` local variable:
 
 ```rblade
-@props({"data-value": _required})
-<div>{{ data_value }}</div>
-```
-
-Properties that contain other non-alphanumeric characters or are Ruby reserved keywords are not created as local variables. However, you can reference them via the `attributes` local variable:
-
-```rblade
-@props({"for": _required})
-<div>{{ attributes[:for] }}</div>
+@props({"for": _required, "data-value": nil})
+<div>{{ attributes[:for] }} {{ attributes[:'data-value'] }}</div>
 ```
 
 <a name="short-attribute-syntax"></a>

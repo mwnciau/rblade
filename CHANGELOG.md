@@ -1,4 +1,8 @@
-## 0.4.0
+## 0.4.1
+- Change @props to only add valid variable names to global scope
+- Change @props to remove from attributes array
+
+## 0.4.0 [2024-07-29]
 - Add @class and @style statements
 - Add @env and @production statements
 - Add @once, @pushOnce and @prependOnce statements

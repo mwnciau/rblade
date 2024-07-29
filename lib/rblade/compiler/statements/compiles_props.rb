@@ -10,13 +10,22 @@ module RBlade
 
         props = extractProps args[0]
         props.map do |key, value|
+          compiledCode = ''
           if value == "_required"
-            "if !defined?(#{key})&&!attributes.has?(:'#{RBlade.escape_quotes(key)}');raise \"Props statement: #{key} is not defined\";end;#{key.sub(/[^a-zA-Z0-9_]/, "_")}=attributes.default(:'#{RBlade.escape_quotes(key)}');"
-          else
-            "#{key.sub(/[^a-zA-Z0-9_]/, "_")}=attributes.default(:'#{RBlade.escape_quotes(key)}',#{value});"
+            compiledCode << "if !attributes.has?(:'#{RBlade.escape_quotes(key)}');raise \"Props statement: #{key} is not defined\";end;"
           end
+          if isValidVariableName key
+            compiledCode << "#{key}=attributes[:'#{RBlade.escape_quotes(key)}'].nil? ? #{value} : attributes[:'#{RBlade.escape_quotes(key)}'];"
+            compiledCode << "attributes.delete :'#{RBlade.escape_quotes(key)}';"
+          else
+            compiledCode << "attributes.default(:'#{RBlade.escape_quotes(key)}', #{value});"
+          end
+
+          compiledCode
         end.join
       end
+
+      private
 
       def extractProps prop_string
         if !prop_string.start_with?("{") || !prop_string.end_with?("}")
@@ -31,9 +40,9 @@ module RBlade
 
           key, value = prop.split(/^
             (?:
-              ('.+'):
+              '(.+)':
               |
-              (".+"):
+              "(.+)":
               |
               ([^ :]+):
               |
@@ -55,6 +64,16 @@ module RBlade
         end
 
         props
+      end
+
+      RUBY_RESERVED_KEYWORDS = %w{__FILE__ __LINE__ alias and begin BEGIN break case class def defined? do else elsif end END ensure false for if in module next nil not or redo rescue retry return self super then true undef unless until when while yield}.freeze
+
+      def isValidVariableName key
+        return false unless key.match /^[a-zA-Z_][a-zA-Z0-9_]*$/
+
+        return false if RUBY_RESERVED_KEYWORDS.include? key
+
+        true
       end
     end
   end
