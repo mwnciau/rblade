@@ -1,4 +1,4 @@
-## 0.3.1
+## 0.4.0
 - Add @class and @style statements
 - Add @env and @production statements
 - Add @once, @pushOnce and @prependOnce statements
