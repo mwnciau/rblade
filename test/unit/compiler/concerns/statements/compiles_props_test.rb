@@ -48,12 +48,12 @@ class CompilesPropsTest < TestCase
   end
 
   def test_props_with_valid_names
-    assert_compiles_to "@props({a: nil, a_b: 'A'}) {{ a_b }}", nil, 'A'
-    assert_compiles_to "@props({a: nil, _a: 'A'}) {{ _a }}", nil, 'A'
-    assert_compiles_to "@props({a: nil, a1: 'A'}) {{ a1 }}", nil, 'A'
-    assert_compiles_to "@props({a: nil, :b => 'A'}) {{ b }}", nil, 'A'
-    assert_compiles_to "@props({a: nil, \"b\": 'A'}) {{ b }}", nil, 'A'
-    assert_compiles_to "@props({a: nil, 'b': 'A'}) {{ b }}", nil, 'A'
+    assert_compiles_to "@props({a: nil, a_b: 'A'}) {{ a_b }}", nil, "A"
+    assert_compiles_to "@props({a: nil, _a: 'A'}) {{ _a }}", nil, "A"
+    assert_compiles_to "@props({a: nil, a1: 'A'}) {{ a1 }}", nil, "A"
+    assert_compiles_to "@props({a: nil, :b => 'A'}) {{ b }}", nil, "A"
+    assert_compiles_to "@props({a: nil, \"b\": 'A'}) {{ b }}", nil, "A"
+    assert_compiles_to "@props({a: nil, 'b': 'A'}) {{ b }}", nil, "A"
   end
 
   def test_props_with_invalid_names

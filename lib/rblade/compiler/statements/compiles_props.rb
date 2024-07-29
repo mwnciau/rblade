@@ -10,18 +10,18 @@ module RBlade
 
         props = extractProps args[0]
         props.map do |key, value|
-          compiledCode = ''
+          compiled_code = ""
           if value == "_required"
-            compiledCode << "if !attributes.has?(:'#{RBlade.escape_quotes(key)}');raise \"Props statement: #{key} is not defined\";end;"
+            compiled_code << "if !attributes.has?(:'#{RBlade.escape_quotes(key)}');raise \"Props statement: #{key} is not defined\";end;"
           end
           if isValidVariableName key
-            compiledCode << "#{key}=attributes[:'#{RBlade.escape_quotes(key)}'].nil? ? #{value} : attributes[:'#{RBlade.escape_quotes(key)}'];"
-            compiledCode << "attributes.delete :'#{RBlade.escape_quotes(key)}';"
+            compiled_code << "#{key}=attributes[:'#{RBlade.escape_quotes(key)}'].nil? ? #{value} : attributes[:'#{RBlade.escape_quotes(key)}'];"
+            compiled_code << "attributes.delete :'#{RBlade.escape_quotes(key)}';"
           else
-            compiledCode << "attributes.default(:'#{RBlade.escape_quotes(key)}', #{value});"
+            compiled_code << "attributes.default(:'#{RBlade.escape_quotes(key)}', #{value});"
           end
 
-          compiledCode
+          compiled_code
         end.join
       end
 
@@ -66,10 +66,10 @@ module RBlade
         props
       end
 
-      RUBY_RESERVED_KEYWORDS = %w{__FILE__ __LINE__ alias and begin BEGIN break case class def defined? do else elsif end END ensure false for if in module next nil not or redo rescue retry return self super then true undef unless until when while yield}.freeze
+      RUBY_RESERVED_KEYWORDS = %w[__FILE__ __LINE__ alias and begin BEGIN break case class def defined? do else elsif end END ensure false for if in module next nil not or redo rescue retry return self super then true undef unless until when while yield].freeze
 
       def isValidVariableName key
-        return false unless key.match /^[a-zA-Z_][a-zA-Z0-9_]*$/
+        return false unless key.match?(/^[a-zA-Z_][a-zA-Z0-9_]*$/)
 
         return false if RUBY_RESERVED_KEYWORDS.include? key
 
