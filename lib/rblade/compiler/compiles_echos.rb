@@ -8,8 +8,8 @@ module RBlade
     private
 
     def compile_regular_echos!(tokens)
-      compile_echos! tokens, "{{", "}}", "h"
-      compile_echos! tokens, "<%=", "%>", "h"
+      compile_echos! tokens, "{{", "}}", "RBlade.e"
+      compile_echos! tokens, "<%=", "%>", "RBlade.e"
     end
 
     def compile_unsafe_echos!(tokens)
@@ -35,8 +35,8 @@ module RBlade
             segments.delete_at i
             segments.delete_at i + 1
             segment_value = "_out<<"
-            # Special case for slot and attributes - we want this to be able to output HTML
-            segment_value <<= if !wrapper_function.nil? && segments[i] != "slot" && !segments[i].start_with?("attributes")
+
+            segment_value <<= if !wrapper_function.nil?
               wrapper_function + "(" + segments[i] + ");"
             else
               "(" + segments[i] + ").to_s;"

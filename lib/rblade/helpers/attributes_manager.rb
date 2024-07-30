@@ -1,5 +1,7 @@
+require "rblade/helpers/html_string"
+
 module RBlade
-  class AttributesManager
+  class AttributesManager < HtmlString
     @attributes = {}
     def initialize attributes
       @attributes = attributes
@@ -31,6 +33,10 @@ module RBlade
       attributes.map do |key, value|
         "#{key}=\"#{(value == true) ? key : h(value)}\""
       end.join " "
+    end
+
+    def to_str
+      to_s
     end
 
     def only(keys)

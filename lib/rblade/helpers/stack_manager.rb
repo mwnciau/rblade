@@ -46,6 +46,10 @@ module RBlade
         "#{@before_stack}#{@prepends}#{@stack}"
       end
 
+      def to_str
+        to_s
+      end
+
       def push code
         @stack << code
       end

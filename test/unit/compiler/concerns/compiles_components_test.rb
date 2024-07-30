@@ -56,4 +56,14 @@ class CompilesComponentsTest < TestCase
   def test_unsafe_close
     assert_compiles_to "<x-button>hello<//>", nil, '<button class="button">hello</button>'
   end
+
+  def test_slots
+    assert_compiles_to "<x-compiles_components_test.slot><x-slot::title>TITLE<//>SLOT<//>",
+      nil,
+      'TITLE - SLOT'
+
+    assert_compiles_to "<x-compiles_components_test.slot><x-slot::title><strong>TITLE</strong><//>SLOT<//>",
+      nil,
+      '<strong>TITLE</strong> - SLOT'
+  end
 end

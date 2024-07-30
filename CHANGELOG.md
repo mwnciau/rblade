@@ -1,4 +1,5 @@
 ## 0.4.1
+- Add support for slots
 - Change @props to only add valid variable names to global scope
 - Change @props to remove from attributes array
 

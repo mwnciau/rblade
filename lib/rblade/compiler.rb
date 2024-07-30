@@ -6,6 +6,7 @@ require "rblade/compiler/compiles_verbatim"
 require "rblade/compiler/compiles_statements"
 require "rblade/compiler/tokenizes_components"
 require "rblade/compiler/tokenizes_statements"
+require "rblade/helpers/html_string"
 
 Token = Struct.new(:type, :value)
 
@@ -17,6 +18,14 @@ end
 module RBlade
   def self.escape_quotes string
     string.gsub(/['\\\x0]/, '\\\\\0')
+  end
+
+  def self.e string
+    if string.is_a? HtmlString
+      string
+    else
+      h(string)
+    end
   end
 
   class Compiler

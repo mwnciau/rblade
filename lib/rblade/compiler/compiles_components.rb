@@ -26,17 +26,17 @@ module RBlade
     private
 
     def compile_token_start token
-      @component_count += 1
-
-      @component_stack << {
+      component = {
         name: token.value[:name],
-        index: @component_count
+        index: @component_stack.count,
+        slots: []
       }
+      @component_stack << component
 
       attributes = compile_attributes token.value[:attributes]
 
-      code = "_c#{@component_count}_swap=_out;_out='';"
-      code << "_c#{@component_count}_attr={#{attributes.join(",")}};"
+      code = "_c#{component[:index]}_swap=_out;_out='';"
+      code << "_c#{component[:index]}_attr={#{attributes.join(",")}};"
 
       code
     end
@@ -50,15 +50,34 @@ module RBlade
         raise StandardError.new "Unexpected closing tag (#{token.value[:name]}) expecting #{component[:name]}"
       end
 
-      code = "_slot=_out;_out=_c#{component[:index]}_swap;"
-      code << "_out<<#{ComponentStore.component(component[:name])}(_slot,_c#{component[:index]}_attr);"
-      code << "_slot=nil;_c#{component[:index]}_swap=nil;"
+      namespace = nil
+      name = component[:name]
+      if name.match '::'
+        namespace, name = component[:name].split("::")
+      end
+
+      code = if namespace == 'slot'
+        compile_slot_end name, component
+      else
+        compile_component_end component
+      end
+    end
+
+    def compile_slot_end name, component
+      parent = @component_stack.last
+
+      code = "_c#{parent[:index]}_attr[:'#{RBlade.escape_quotes(name)}']=RBlade::SlotManager.new(_out,_c#{component[:index]}_attr);"
+      code << "_out=_c#{component[:index]}_swap;_c#{component[:index]}_swap=nil;_c#{component[:index]}_attr=nil;"
 
       code
     end
 
-    def get_method_name name
-      name.gsub(/[^a-zA-Z0-9_]/, "_")
+    def compile_component_end component
+      code = "_slot=RBlade::SlotManager.new(_out);_out=_c#{component[:index]}_swap;"
+      code << "_out<<#{ComponentStore.component(component[:name])}(_slot,_c#{component[:index]}_attr);"
+      code << "_slot=nil;_c#{component[:index]}_swap=nil;_c#{component[:index]}_attr=nil;"
+
+      code
     end
 
     def compile_attributes attributes

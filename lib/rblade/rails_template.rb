@@ -3,6 +3,7 @@ require "rblade/compiler"
 require "rblade/component_store"
 require "rblade/helpers/attributes_manager"
 require "rblade/helpers/class_manager"
+require "rblade/helpers/slot_manager"
 require "rblade/helpers/stack_manager"
 require "rblade/helpers/style_manager"
 

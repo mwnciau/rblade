@@ -18,11 +18,11 @@ class CompilesPropsTest < TestCase
 
   def test_props_hash
     assert_compiles_to "@props({b: 'default'}) {{ b }}",
-      "b=attributes[:'b'].nil? ? 'default' : attributes[:'b'];attributes.delete :'b';_out<<h(b);",
+      "b=attributes[:'b'].nil? ? 'default' : attributes[:'b'];attributes.delete :'b';_out<<RBlade.e(b);",
       "default"
 
     assert_compiles_to "@props({a: 'default'}) {{ a }}",
-      "a=attributes[:'a'].nil? ? 'default' : attributes[:'a'];attributes.delete :'a';_out<<h(a);",
+      "a=attributes[:'a'].nil? ? 'default' : attributes[:'a'];attributes.delete :'a';_out<<RBlade.e(a);",
       "A"
 
     assert_compiles_to "@props({a: 'default', b:false,}) {{ a }} {{ b }}", nil, "A false"
@@ -31,13 +31,13 @@ class CompilesPropsTest < TestCase
   def test_required
     exception = assert_raises Exception do
       assert_compiles_to "@props({b: _required}) {{ b }}",
-        "if !attributes.has?(:'b');raise \"Props statement: b is not defined\";end;b=attributes[:'b'].nil? ? _required : attributes[:'b'];attributes.delete :'b';_out<<h(b);",
+        "if !attributes.has?(:'b');raise \"Props statement: b is not defined\";end;b=attributes[:'b'].nil? ? _required : attributes[:'b'];attributes.delete :'b';_out<<RBlade.e(b);",
         ""
     end
     assert_equal "Props statement: b is not defined", exception.to_s
 
     assert_compiles_to "@props({a: _required}) {{ a }}",
-      "if !attributes.has?(:'a');raise \"Props statement: a is not defined\";end;a=attributes[:'a'].nil? ? _required : attributes[:'a'];attributes.delete :'a';_out<<h(a);",
+      "if !attributes.has?(:'a');raise \"Props statement: a is not defined\";end;a=attributes[:'a'].nil? ? _required : attributes[:'a'];attributes.delete :'a';_out<<RBlade.e(a);",
       "A"
   end
 
