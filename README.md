@@ -767,11 +767,11 @@ We may pass content to the `slot` by injecting content into the component:
 </x-alert>
 ```
 
-**TODO this**  
 Sometimes a component may need to render multiple different slots in different locations within the component. Let's modify our alert component to allow for the injection of a "title" slot:
 
 ```rblade
 {{-- /app/views/components/alert.rblade --}}
+@props({title: _required})
 <span class="alert-title">{{ title }}</span>
 <div class="alert alert-danger">
     {{ slot }}
@@ -789,7 +789,7 @@ You may define the content of the named slot using the `x-slot` tag. Any content
     <strong>Whoops!</strong> Something went wrong!
 </x-alert>
 ```
-
+**TODO this**
 You may invoke a slot's `isEmpty` method to determine if the slot contains content:
 
 ```rblade

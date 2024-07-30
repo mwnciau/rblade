@@ -28,8 +28,7 @@ module RBlade
     def compile_token_start token
       component = {
         name: token.value[:name],
-        index: @component_stack.count,
-        slots: []
+        index: @component_stack.count
       }
       @component_stack << component
 

@@ -65,5 +65,46 @@ class CompilesComponentsTest < TestCase
     assert_compiles_to "<x-compiles_components_test.slot><x-slot::title><strong>TITLE</strong><//>SLOT<//>",
       nil,
       '<strong>TITLE</strong> - SLOT'
+
+    assert_compiles_to "<x-compiles_components_test.slot>SLOT<x-slot::title>TITLE<//><//>",
+      nil,
+      'TITLE - SLOT'
+
+    assert_compiles_to "<x-compiles_components_test.slot>SL<x-slot::title>TITLE<//>OT<//>",
+      nil,
+      'TITLE - SLOT'
+  end
+
+  def test_slot_attributes
+    assert_compiles_to "<x-compiles_components_test.slot-attributes><x-slot::title>TITLE<//>SLOT<//>",
+      nil,
+      '<div ><h1 >TITLE</h1>SLOT</div>'
+
+    assert_compiles_to "<x-compiles_components_test.slot-attributes><x-slot::title a=b>TITLE<//>SLOT<//>",
+      nil,
+      '<div ><h1 a="b">TITLE</h1>SLOT</div>'
+
+    assert_compiles_to "<x-compiles_components_test.slot-attributes a=B><x-slot::title a=b>TITLE<//>SLOT<//>",
+      nil,
+      '<div a="B"><h1 a="b">TITLE</h1>SLOT</div>'
+
+    assert_compiles_to '
+      <x-compiles_components_test.slot-attributes
+        class="block mt-2"
+        id="container"
+        ><x-slot::title class="font-bold text-xl">TITLE</x-slot::title>
+        <p>This is my content</p>
+        <br>
+        <p>Some more content</p>
+      </x-compiles_components_test.slot-attributes>
+    ',
+      nil,
+      '
+      <div class="block mt-2" id="container"><h1 class="font-bold text-xl">TITLE</h1>
+        <p>This is my content</p>
+        <br>
+        <p>Some more content</p>
+      </div>
+    '
   end
 end
