@@ -1,4 +1,9 @@
-## 0.5.0
+## 0.5.1
+- Add attributes.class method
+- Add @method, @patch, @put, @delete
+- Add string methods to slots
+
+## 0.5.0 [2024-07-31]
 - Add support for slots
 - Change @props to only add valid variable names to global scope
 - Change @props to remove from attributes array

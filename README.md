@@ -825,7 +825,6 @@ Like RBlade components, you may assign additional [attributes](#component-attrib
 
 To interact with slot attributes, you may access the `attributes` property of the slot's variable. For more information on how to interact with attributes, please consult the documentation on [component attributes](#component-attributes):
 
-**TODO allow class to contain a string**  
 ```rblade
 @props({
     "heading": _required,
@@ -833,7 +832,7 @@ To interact with slot attributes, you may access the `attributes` property of th
 })
 
 <div {{ attributes.class('border') }}>
-    <h1 {{ heading.attributes->class('text-lg': true) }}>
+    <h1 {{ heading.attributes.class('text-lg') }}>
         {{ heading }}
     </h1>
 
@@ -843,16 +842,6 @@ To interact with slot attributes, you may access the `attributes` property of th
         {{ footer }}
     </footer>
 </div>
-```
-
-<a name="dynamic-components"></a>
-### Dynamic Components
-**TODO add this**
-Sometimes you may need to render a component without knowing which component should be rendered until runtime. In this situation, you may use RBlade's built-in `dynamic-component` component to render the component based on a runtime value or variable:
-
-```rblade
-@ruby(componentName = "secondary-button")
-<x-dynamic-component :component="componentName" class="mt-4" />
 ```
 
 <a name="registering-additional-component-directories"></a>
@@ -871,33 +860,6 @@ RBlade::ComponentStore.add_path(Rails.root.join("app", "views", "partials"), "pa
 ```
 
 If multiple directories are registered with the same namespace, RBlade will search for components in all the directories in the order they were registered.
-
-<a name="manually-registering-components"></a>
-### Manually Registering Components
-**TODO would this be useful? It'd be useful for testing...**
-> [!WARNING]  
-> The following documentation on manually registering components is primarily applicable to those who are writing Laravel packages that include view components. If you are not writing a package, this portion of the component documentation may not be relevant to you.
-
-When writing components for your own application, components are automatically discovered within the `app/View/Components` directory and `resources/views/components` directory.
-
-However, if you are building a package that utilizes Blade components or placing components in non-conventional directories, you will need to manually register your component class and its HTML tag alias so that Laravel knows where to find the component. You should typically register your components in the `boot` method of your package's service provider:
-
-    use Illuminate\Support\Facades\Blade;
-    use VendorPackage\View\Components\AlertComponent;
-
-    /**
-     * Bootstrap your package's services.
-     */
-    public function boot(): void
-    {
-        Blade::component('package-alert', AlertComponent::class);
-    }
-
-Once your component has been registered, it may be rendered using its tag alias:
-
-```rblade
-<x-package-alert/>
-```
 
 <a name="anonymous-index-components"></a>
 ### Index Components
@@ -926,60 +888,8 @@ However, when an `index.rblade` template exists in a directory, it will be rende
 /app/views/components/accordion/item.rblade
 ```
 
-<a name="accessing-parent-data"></a>
-### Accessing Parent Data
-**TODO this? It might be complicated**
-Sometimes you may want to access data from a parent component inside a child component. In these cases, you may use the `@aware` directive. For example, imagine we are building a complex menu component consisting of a parent `<x-menu>` and child `<x-menu.item>`:
-
-```rblade
-<x-menu color="purple">
-    <x-menu.item>...</x-menu.item>
-    <x-menu.item>...</x-menu.item>
-</x-menu>
-```
-
-The `<x-menu>` component may have an implementation like the following:
-
-```rblade
-<!-- /resources/views/components/menu/index.rblade -->
-
-@props(['color' => 'gray'])
-
-<ul {{ $attributes->merge(['class' => 'bg-'.$color.'-200']) }}>
-    {{ $slot }}
-</ul>
-```
-
-Because the `color` prop was only passed into the parent (`<x-menu>`), it won't be available inside `<x-menu.item>`. However, if we use the `@aware` directive, we can make it available inside `<x-menu.item>` as well:
-
-```rblade
-<!-- /resources/views/components/menu/item.rblade -->
-
-@aware(['color' => 'gray'])
-
-<li {{ $attributes->merge(['class' => 'text-'.$color.'-800']) }}>
-    {{ $slot }}
-</li>
-```
-
-> [!WARNING]  
-> The `@aware` directive can not access parent data that is not explicitly passed to the parent component via HTML attributes. Default `@props` values that are not explicitly passed to the parent component can not be accessed by the `@aware` directive.
-
 <a name="forms"></a>
 ## Forms
-
-<a name="csrf-field"></a>
-### CSRF Field
-**TODO I don't think we need this?**
-Anytime you define an HTML form in your application, you should include a hidden CSRF token field in the form so that [the CSRF protection](/docs/{{version}}/csrf) middleware can validate the request. You may use the `@csrf` Blade directive to generate the token field:
-
-```rblade
-<form method="POST" action="/profile">
-    @csrf
-
-    ...
-</form>
-```
 
 <a name="method-field"></a>
 ### Method Field
