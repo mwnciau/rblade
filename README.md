@@ -789,42 +789,19 @@ You may define the content of the named slot using the `x-slot` tag. Any content
     <strong>Whoops!</strong> Something went wrong!
 </x-alert>
 ```
-**TODO this**
-You may invoke a slot's `isEmpty` method to determine if the slot contains content:
+
+The slot object extends the String interface, so you can invoke a slot's `empty?` method to determine if the slot contains content:
 
 ```rblade
 <span class="alert-title">{{ title }}</span>
 
 <div class="alert alert-danger">
-    @if (slot.isEmpty)
+    @if (slot.empty?)
         This is default content if the slot is empty.
     @else
         {{ slot }}
     @endif
 </div>
-```
-
-Additionally, the `hasActualContent` method may be used to determine if the slot contains any "actual" content that is not an HTML comment:
-
-```rblade
-@if (slot.hasActualContent)
-    The scope has non-comment content.
-@endif
-```
-
-<a name="scoped-slots"></a>
-#### Scoped Slots
-**TODO can we do this easily?**  
-If you have used a JavaScript framework such as Vue, you may be familiar with "scoped slots", which allow you to access data or methods from the component within your slot. You may achieve similar behavior in Laravel by defining public methods or properties on your component and accessing the component within your slot via the `$component` variable. In this example, we will assume that the `x-alert` component has a public `formatAlert` method defined on its component class:
-
-```rblade
-<x-alert>
-    <x-slot:title>
-        {{ $component->formatAlert('Server Error') }}
-    </x-slot>
-
-    <strong>Whoops!</strong> Something went wrong!
-</x-alert>
 ```
 
 <a name="slot-attributes"></a>
@@ -855,7 +832,7 @@ To interact with slot attributes, you may access the `attributes` property of th
     "footer": _required,
 })
 
-<div {{ attributes.class(['border']) }}>
+<div {{ attributes.class('border') }}>
     <h1 {{ heading.attributes->class('text-lg': true) }}>
         {{ heading }}
     </h1>

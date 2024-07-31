@@ -16,6 +16,14 @@ module RBlade
       to_s
     end
 
+    def method_missing(method, *)
+      @content.send(method, *)
+    end
+
+    def respond_to_missing?(method_name, *args)
+      @content.respond_to?(method_name)
+    end
+
     def attributes
       @attributes
     end
