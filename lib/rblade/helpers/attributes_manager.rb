@@ -46,7 +46,7 @@ module RBlade
         [keys.to_sym]
       end
 
-      self.class.new @attributes.slice(*keys)
+      AttributesManager.new @attributes.slice(*keys)
     end
 
     def except(keys)
@@ -56,7 +56,7 @@ module RBlade
         [keys.to_sym]
       end
 
-      self.class.new @attributes.except(*keys)
+      AttributesManager.new @attributes.except(*keys)
     end
 
     def class(new_classes)
@@ -83,7 +83,7 @@ module RBlade
         new_attributes[key] = value
       end
 
-      self.class.new new_attributes
+      AttributesManager.new new_attributes
     end
 
     private
