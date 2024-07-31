@@ -24,7 +24,7 @@ module RBlade
     end
 
     def respond_to_missing?(method_name, *args)
-      @attributes.respond_to?(method_name) || super
+      @attributes.respond_to?(method_name)
     end
 
     def to_s attributes = nil
@@ -57,6 +57,13 @@ module RBlade
       end
 
       self.class.new @attributes.except(*keys)
+    end
+
+    def class(new_classes)
+      new_classes = ClassManager.new(new_classes).to_s
+      @attributes[:class] = mergeClasses @attributes[:class], new_classes
+
+      self
     end
 
     def merge(default_attributes)

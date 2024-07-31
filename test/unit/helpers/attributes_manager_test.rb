@@ -79,6 +79,16 @@ class BladeTemplatingTest < TestCase
       '<div class="some"></div>'
   end
 
+  def test_class_method
+    assert_equal 'class="block mt-2"', RBlade::AttributesManager.new({}).class("block mt-2").to_s
+    assert_equal 'class="block mt-2"', RBlade::AttributesManager.new({}).class(["block", "mt-2"]).to_s
+    assert_equal 'class="block mt-2"', RBlade::AttributesManager.new({}).class({"block": true, "mt-2": true, "mb-6": false}).to_s
+
+    assert_equal 'class="relative block mt-2"', RBlade::AttributesManager.new({class: "relative"}).class("block mt-2").to_s
+    assert_equal 'class="relative block mt-2"', RBlade::AttributesManager.new({class: "relative"}).class(["block", "mt-2"]).to_s
+    assert_equal 'class="relative block mt-2"', RBlade::AttributesManager.new({class: "relative"}).class({"block": true, "mt-2": true, "mb-6": false}).to_s
+  end
+
   def test_style
     assert_compiles_to "<x-attributes @style({'abc': false})/>",
       nil,
