@@ -3,6 +3,7 @@
 - Add @method, @patch, @put, @delete
 - Add string methods to slots
 - Fix whitespaces causing problems between case and when statements
+- Pass Rails `session`, `cookies`, `flash` and `params` variables into components
 
 ## 0.5.0 [2024-07-31]
 - Add support for slots

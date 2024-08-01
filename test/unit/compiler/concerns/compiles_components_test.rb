@@ -38,17 +38,17 @@ class CompilesComponentsTest < TestCase
 
   def test_props
     exception = assert_raises Exception do
-      assert_compiles_to "<x-compiles_components_test_props/>",
+      assert_compiles_to "<x-compiles_components_test.props/>",
         nil,
         ""
     end
     assert_equal "Props statement: firstName is not defined", exception.to_s
 
-    assert_compiles_to "<x-compiles_components_test_props firstName=\"bob\"/>",
+    assert_compiles_to "<x-compiles_components_test.props firstName=\"bob\"/>",
       nil,
       "bob"
 
-    assert_compiles_to "<x-compiles_components_test_props firstName=\"bob\" :visible=false/>",
+    assert_compiles_to "<x-compiles_components_test.props firstName=\"bob\" :visible=false/>",
       nil,
       ""
   end
@@ -106,5 +106,12 @@ class CompilesComponentsTest < TestCase
         <p>Some more content</p>
       </div>
     '
+  end
+
+  def test_rails_variables_are_passed
+    assert_compiles_to "<x-compiles_components_test.cookies/>", nil, "true"
+    assert_compiles_to "<x-compiles_components_test.flash/>", nil, "Request successful"
+    assert_compiles_to "<x-compiles_components_test.params/>", nil, "user@example.com"
+    assert_compiles_to "<x-compiles_components_test.session/>", nil, "4"
   end
 end

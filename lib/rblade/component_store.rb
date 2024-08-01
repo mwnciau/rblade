@@ -81,7 +81,7 @@ module RBlade
       compiled_component = RBlade::Compiler.compileString(code)
 
       @@component_definitions \
-        << "def #{@@component_method_names[name]}(slot,attributes);_out='';" \
+        << "def #{@@component_method_names[name]}(slot,attributes,params,session,flash,cookies);_out='';" \
         << "_stacks=[];" \
         << "attributes=RBlade::AttributesManager.new(attributes);" \
         << compiled_component \
