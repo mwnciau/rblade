@@ -15,6 +15,7 @@ class TestCase < Minitest::Test
     if expected_result
       foo = "FOO" # standard:disable Lint/UselessAssignment
       bar = "BAR" # standard:disable Lint/UselessAssignment
+      params = {email: "user@example.com"}
       result = eval RBlade::RailsTemplate.new.call(nil, template) # standard:disable Security/Eval
 
       assert_equal expected_result, result

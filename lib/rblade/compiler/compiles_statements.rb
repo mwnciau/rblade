@@ -1,5 +1,5 @@
 require "rblade/compiler/statements/compiles_conditionals"
-require "rblade/compiler/statements/compiles_helpers"
+require "rblade/compiler/statements/compiles_form"
 require "rblade/compiler/statements/compiles_html_attributes"
 require "rblade/compiler/statements/compiles_inline_ruby"
 require "rblade/compiler/statements/compiles_loops"
@@ -69,7 +69,7 @@ module RBlade
       "case" => [CompilesConditionals, :compileCase],
       "checked" => [CompilesConditionals, :compileChecked],
       "class" => [CompilesHtmlAttributes, :compileClass],
-      "delete" => [CompilesHelpers, :compileDelete],
+      "delete" => [CompilesForm, :compileDelete],
       "disabled" => [CompilesConditionals, :compileDisabled],
       "else" => [CompilesConditionals, :compileElse],
       "elsif" => [CompilesConditionals, :compileElsif],
@@ -97,18 +97,19 @@ module RBlade
       "for" => [CompilesLoops, :compileFor],
       "forelse" => [CompilesLoops, :compileForElse],
       "if" => [CompilesConditionals, :compileIf],
-      "method" => [CompilesHelpers, :compileMethod],
+      "method" => [CompilesForm, :compileMethod],
       "next" => [CompilesLoops, :compileNext],
       "nextif" => [CompilesLoops, :compileNextIf],
+      "old" => [CompilesForm, :compileOld],
       "once" => [CompilesOnce, :compileOnce],
-      "patch" => [CompilesHelpers, :compilePatch],
+      "patch" => [CompilesForm, :compilePatch],
       "prepend" => [CompilesStacks, :compilePrepend],
       "prependonce" => [CompilesOnce, :compilePrependOnce],
       "production" => [CompilesConditionals, :compileProduction],
       "props" => [CompilesProps, :compileProps],
       "push" => [CompilesStacks, :compilePush],
       "pushonce" => [CompilesOnce, :compilePushOnce],
-      "put" => [CompilesHelpers, :compilePut],
+      "put" => [CompilesForm, :compilePut],
       "readonly" => [CompilesConditionals, :compileReadonly],
       "required" => [CompilesConditionals, :compileRequired],
       "ruby" => [CompilesInlineRuby, :compile],

@@ -1,6 +1,6 @@
 module RBlade
   class CompilesStatements
-    class CompilesHelpers
+    class CompilesForm
       def compileMethod args
         if args&.count != 1
           raise StandardError.new "Once statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
@@ -32,6 +32,16 @@ module RBlade
         end
 
         compileMethod(['PUT'])
+      end
+
+      def compileOld args
+        if args.nil? || args.count > 2
+          raise StandardError.new "Once statement: wrong number of arguments (given #{args.count}, expecting 0)"
+        end
+
+        default_value = args[1] || "''"
+
+        "_out<<params.fetch(#{args[0]},#{default_value});"
       end
     end
   end

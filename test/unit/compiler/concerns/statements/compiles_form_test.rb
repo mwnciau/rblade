@@ -18,4 +18,12 @@ class CompilesHelpersTest < TestCase
   def test_put
     assert_compiles_to "@put", nil, '<input type="hidden" name="_method" value="PUT">'
   end
+
+  def test_old
+    assert_compiles_to "@old(:email)", nil, 'user@example.com'
+    assert_compiles_to "@old(:email, 'default')", nil, 'user@example.com'
+
+    assert_compiles_to "@old(:not_a_field)", nil, ''
+    assert_compiles_to "@old(:not_a_field, 'default')", nil, 'default'
+  end
 end

@@ -891,6 +891,20 @@ However, when an `index.rblade` template exists in a directory, it will be rende
 <a name="forms"></a>
 ## Forms
 
+### Old Input
+
+The Rails `params` Hash is available in views and components. However, the `@old` directive is a useful shortcut that will output the old input value for a given key:
+
+```rblade
+<input type="text" name="email" value="@old('email', user.email)">
+```
+
+The first parameter is the name of the previous input, and the second input is the default if the key isn't present in `params`. The previous example is the equivalent of calling `params.fetch`:
+
+```rblade
+<input type="text" name="email" value="{{ params.fetch(:email, user.email) }}">
+```
+
 <a name="method-field"></a>
 ### Method Field
 
