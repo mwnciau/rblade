@@ -893,7 +893,7 @@ However, when an `index.rblade` template exists in a directory, it will be rende
 
 <a name="method-field"></a>
 ### Method Field
-**TODO add this**
+
 Since HTML forms can't make `PUT`, `PATCH`, or `DELETE` requests, you will need to add a hidden `_method` field to spoof these HTTP verbs. The `@method` RBlade directive can create this field for you:
 
 ```rblade
@@ -903,6 +903,8 @@ Since HTML forms can't make `PUT`, `PATCH`, or `DELETE` requests, you will need 
     ...
 </form>
 ```
+
+Alternatively, you can use the dedicated directives for each method: `@put`, `@patch`, or `@delete`.
 
 <a name="validation-errors"></a>
 ### Validation Errors

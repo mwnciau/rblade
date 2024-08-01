@@ -75,6 +75,21 @@ class CompilesConditionalsTest < TestCase
       ""
   end
 
+  def test_when_edge_cases
+    assert_compiles_to "
+        @case(1)
+        @when(1)
+          ONE
+        @when(2)
+          TWO
+        @endcase
+      ",
+      nil,
+      "
+                 ONE
+             "
+  end
+
   ["checked", "disabled", "required", "selected", "readonly"].each do |statement|
     define_method(:"test_#{statement}") do
       assert_compiles_to "@#{statement}(true)", "if true;_out<<'#{statement}';end;", statement

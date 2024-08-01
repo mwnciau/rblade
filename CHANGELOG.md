@@ -2,6 +2,7 @@
 - Add attributes.class method
 - Add @method, @patch, @put, @delete
 - Add string methods to slots
+- Fix whitespaces causing problems between case and when statements
 
 ## 0.5.0 [2024-07-31]
 - Add support for slots

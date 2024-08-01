@@ -45,6 +45,7 @@ module RBlade
           i += 1
         elsif segment == "@"
           tokenizeStatement! segments, i
+          handleSpecialCases! segments, i
 
           i += 1
         elsif !segments[i].nil? && segments[i] != ""
@@ -72,6 +73,16 @@ module RBlade
       end
 
       segments[i] = Token.new(type: :statement, value: statement_data)
+    end
+
+    def handleSpecialCases!(segments, i)
+      case segments[i][:value][:name]
+      when "case"
+        # Remove any whitespace before a when statement
+        until segments[i + 1].nil? || segments[i + 1] == '@'
+          segments.delete_at i + 1
+        end
+      end
     end
 
     def tokenizeArguments!(segments, segment_index)
