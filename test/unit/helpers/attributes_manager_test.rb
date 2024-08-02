@@ -115,6 +115,47 @@ class BladeTemplatingTest < TestCase
       '<div style="some;"></div>'
   end
 
+  def test_has
+    attributes = RBlade::AttributesManager.new({a: "1", b: "2"})
+
+    assert attributes.has? 'a'
+    assert attributes.has? :a
+    assert attributes.has? :a, :b
+
+    assert !attributes.has?(:c)
+    assert !attributes.has?(:a, :c)
+  end
+
+  def test_has_any
+    attributes = RBlade::AttributesManager.new({a: "1", b: "2"})
+
+    assert attributes.has_any? 'a'
+    assert attributes.has_any? :a
+    assert attributes.has_any? :a, :b
+    assert attributes.has_any? :a, :c
+
+    assert !attributes.has_any?(:c)
+    assert !attributes.has_any?(:c, :d)
+  end
+
+  def test_select
+    attributes = RBlade::AttributesManager.new({a: "1", b: "2"})
+
+    attributes = attributes.select { |key, value| value == "1" }
+
+    assert attributes.is_a?(RBlade::AttributesManager)
+    assert_equal 'a="1"', attributes.to_s
+  end
+
+  def test_slice
+    attributes = RBlade::AttributesManager.new({a: "1", b: "2"})
+
+    attributes = attributes.slice :a
+
+    assert attributes.is_a?(RBlade::AttributesManager)
+    assert_equal 'a="1"', attributes.to_s
+  end
+
   def test_missing_method
     attributes = RBlade::AttributesManager.new({a: "1", b: "2"})
 

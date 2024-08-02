@@ -19,8 +19,12 @@ module RBlade
       !@attributes[key].nil?
     end
 
-    def method_missing(method, *)
-      @attributes.send(method, *)
+    def method_missing(method, *, &block)
+      if [:select, :filter, :slice].include? method
+        AttributesManager.new @attributes.send(method, *, &block)
+      else
+        @attributes.send(method, *, &block)
+      end
     end
 
     def respond_to_missing?(method_name, *args)
@@ -61,9 +65,10 @@ module RBlade
 
     def class(new_classes)
       new_classes = ClassManager.new(new_classes).to_s
-      @attributes[:class] = mergeClasses @attributes[:class], new_classes
+      attributes = @attributes.dup
+      attributes[:class] = mergeClasses attributes[:class], new_classes
 
-      self
+      AttributesManager.new attributes
     end
 
     def merge(default_attributes)
@@ -84,6 +89,18 @@ module RBlade
       end
 
       AttributesManager.new new_attributes
+    end
+
+    def has?(*keys)
+      keys.map!(&:to_sym)
+
+      keys.all? { |key| @attributes.has_key? key }
+    end
+
+    def has_any?(*keys)
+      keys.map!(&:to_sym)
+
+      keys.any? { |key| @attributes.has_key? key }
     end
 
     private

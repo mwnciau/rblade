@@ -122,33 +122,6 @@ In addition to the conditional directives above, the `@blank?`, `defined?`, `@em
 @endempty?
 ```
 
-<a name="authentication-directives"></a>
-#### Authentication Directives
-**TODO add authentication directives?**
-The `@auth` and `@guest` directives may be used to quickly determine if the current user is [authenticated](/docs/{{version}}/authentication) or is a guest:
-
-```rblade
-@auth
-    // The user is authenticated...
-@endauth
-
-@guest
-    // The user is not authenticated...
-@endguest
-```
-
-If needed, you may specify the authentication guard that should be checked when using the `@auth` and `@guest` directives:
-
-```rblade
-@auth('admin')
-    // The user is authenticated...
-@endauth
-
-@guest('admin')
-    // The user is not authenticated...
-@endguest
-```
-
 <a name="environment-directives"></a>
 #### Environment Directives
 
@@ -170,19 +143,6 @@ Or, you may determine if the application is running in a specific environment us
 @env(['staging', 'production'])
     // The application is running in "staging" or "production"...
 @endenv
-```
-
-<a name="session-directives"></a>
-#### Session Directives
-**TODO add sessuib directives**
-The `@session` directive may be used to determine if a [session](/docs/{{version}}/session) value exists. If the session value exists, the template contents within the `@session` and `@endsession` directives will be evaluated. Within the `@session` directive's contents, you may echo the `$value` variable to display the session value:
-
-```rblade
-@session('status')
-  <div class="p-4 bg-green-100">
-    {{ $value }}
-  </div>
-@endsession
 ```
 
 <a name="switch-statements"></a>
@@ -260,56 +220,6 @@ You may also include the continuation or break condition within the directive de
     @break(user.number == 5)
 @endforeach
 ```
-
-<a name="the-loop-variable"></a>
-### The Loop Variable
-**TODO can/should we add this?**
-While iterating through a `foreach` loop, a `$loop` variable will be available inside of your loop. This variable provides access to some useful bits of information such as the current loop index and whether this is the first or last iteration through the loop:
-
-```rblade
-@foreach ($users as $user)
-    @if ($loop->first)
-        This is the first iteration.
-    @endif
-
-    @if ($loop->last)
-        This is the last iteration.
-    @endif
-
-    <p>This is user {{ $user->id }}</p>
-@endforeach
-```
-
-If you are in a nested loop, you may access the parent loop's `$loop` variable via the `parent` property:
-
-```rblade
-@foreach ($users as $user)
-    @foreach ($user->posts as $post)
-        @if ($loop->parent->first)
-            This is the first iteration of the parent loop.
-        @endif
-    @endforeach
-@endforeach
-```
-
-The `$loop` variable also contains a variety of other useful properties:
-
-<div class="overflow-auto">
-
-| Property           | Description                                            |
-| ------------------ | ------------------------------------------------------ |
-| `$loop->index`     | The index of the current loop iteration (starts at 0). |
-| `$loop->iteration` | The current loop iteration (starts at 1).              |
-| `$loop->remaining` | The iterations remaining in the loop.                  |
-| `$loop->count`     | The total number of items in the array being iterated. |
-| `$loop->first`     | Whether this is the first iteration through the loop.  |
-| `$loop->last`      | Whether this is the last iteration through the loop.   |
-| `$loop->even`      | Whether this is an even iteration through the loop.    |
-| `$loop->odd`       | Whether this is an odd iteration through the loop.     |
-| `$loop->depth`     | The nesting level of the current loop.                 |
-| `$loop->parent`    | When in a nested loop, the parent's loop variable.     |
-
-</div>
 
 <a name="conditional-classes"></a>
 ### Conditional Classes & Styles
@@ -447,19 +357,6 @@ In some situations, it's useful to embed Ruby code into your views. You can use 
 @endruby
 ```
 
-**TODO add require?**
-Or, if you only need to use PHP to import a class, you may use the `@use` directive:
-
-```rblade
-@use('App\Models\Flight')
-```
-
-A second argument may be provided to the `@use` directive to alias the imported class:
-
-```php
-@use('App\Models\Flight', 'FlightModel')
-```
-
 <a name="comments"></a>
 ### Comments
 
@@ -591,8 +488,6 @@ We've already examined how to pass data attributes to a component; however, some
 <x-alert type="error" :message class="mt-4"/>
 ```
 
-**TODO remove from attributes bag using @props? Rename to attributes bag?**
-
 All of the attributes that are not part of the component's constructor will automatically be added to the component's "attribute manager". This attribute manager is automatically made available to the component via the `attributes` variable. All of the attributes may be rendered within the component by printing this variable:
 
 ```rblade
@@ -655,31 +550,22 @@ The rendered HTML of the `button` component in this example would be:
 </button>
 ```
 
-**Todo add prepends**
-If you would like an attribute other than `class` or `style` to have its default value and injected values joined together, you can use the `prepends` method. In this example, the `data-controller` attribute will always begin with `profile-controller` and any additional injected `data-controller` values will be placed after this default value:
-
-```rblade
-<div {{ attributes.merge({"data-controller": attributes.prepends("profile-controller")}) }}>
-    {{ slot }}
-</div>
-```
-
 <a name="conditionally-merge-classes"></a>
 #### Conditionally Merge Classes
-**TODO this**
-Sometimes you may wish to merge classes if a given condition is `true`. You can accomplish this via the `class` method, which accepts an array of classes where the array key contains the class or classes you wish to add, while the value is a boolean expression. If the array element has a numeric key, it will always be included in the rendered class list:
+
+Sometimes you may wish to merge classes if a given condition is `true`. You can accomplish this via the `class` method, which accepts a Hash of classes where the array key contains the class or classes you wish to add, while the value is a boolean expression:
 
 ```rblade
-<div {{ $attributes->class(['p-4', 'bg-red' => $hasError]) }}>
-    {{ $message }}
+<div {{ attributes.class({'p-4': true, 'bg-red': hasError}) }}>
+    {{ message }}
 </div>
 ```
 
 If you need to merge other attributes onto your component, you can chain the `merge` method onto the `class` method:
 
 ```rblade
-<button {{ $attributes->class(['p-4'])->merge(['type' => 'button']) }}>
-    {{ $slot }}
+<button {{ attributes.class({'bg-red': hasError}).merge({type: 'button'}) }}>
+    {{ slot }}
 </button>
 ```
 
@@ -689,60 +575,37 @@ If you need to merge other attributes onto your component, you can chain the `me
 <a name="filtering-attributes"></a>
 #### Retrieving and Filtering Attributes
 
-**Todo this**
+The attributes manager is a wrapper around the Ruby Hash class. Unless explicitly overwritten, any methods called on the attributes manager will call that same method on the underlying Hash.
 
-You may filter attributes using the `filter` method. This method accepts a closure which should return `true` if you wish to retain the attribute in the attribute bag:
+You may filter attributes using the `filter` and `slice` methods. These methods call `filter` and `slice` on the underlying Hash and return a new attributes manager with the result.
 
 ```rblade
-{{ $attributes->filter(fn (string $value, string $key) => $key == 'foo') }}
+{{ attributes.filter { |k, v| k == 'foo'} }}
+{{ attributes.slice :foo }}
 ```
 
-For convenience, you may use the `whereStartsWith` method to retrieve all attributes whose keys begin with a given string:
+If you would like to check if an attribute is present on the component, you may use the `has?` method. This method accepts the attribute name as its only argument and returns a boolean indicating whether or not the attribute is present:
 
 ```rblade
-{{ $attributes->whereStartsWith('wire:model') }}
-```
-
-Conversely, the `whereDoesntStartWith` method may be used to exclude all attributes whose keys begin with a given string:
-
-```rblade
-{{ $attributes->whereDoesntStartWith('wire:model') }}
-```
-
-Using the `first` method, you may render the first attribute in a given attribute bag:
-
-```rblade
-{{ $attributes->whereStartsWith('wire:model')->first() }}
-```
-
-If you would like to check if an attribute is present on the component, you may use the `has` method. This method accepts the attribute name as its only argument and returns a boolean indicating whether or not the attribute is present:
-
-```rblade
-@if ($attributes->has('class'))
+@if (attributes.has?(:class))
     <div>Class attribute is present</div>
 @endif
 ```
 
-If an array is passed to the `has` method, the method will determine if all of the given attributes are present on the component:
+If multiple parameters are passed to the `has?` method, the method will determine if all of the given attributes are present on the component:
 
 ```rblade
-@if ($attributes->has(['name', 'class']))
+@if (attributes.has?('name', 'class'))
     <div>All of the attributes are present</div>
 @endif
 ```
 
-The `hasAny` method may be used to determine if any of the given attributes are present on the component:
+The `has_any?` method may be used to determine if any of the given attributes are present on the component:
 
 ```rblade
-@if ($attributes->hasAny(['href', ':href', 'v-bind:href']))
+@if (attributes.has_any?('href', ':href', 'v-bind:href'))
     <div>One of the attributes is present</div>
 @endif
-```
-
-You may retrieve a specific attribute's value using the `get` method:
-
-```rblade
-{{ $attributes->get('class') }}
 ```
 
 <a name="slots"></a>
@@ -918,52 +781,6 @@ Since HTML forms can't make `PUT`, `PATCH`, or `DELETE` requests, you will need 
 
 Alternatively, you can use the dedicated directives for each method: `@put`, `@patch`, or `@delete`.
 
-<a name="validation-errors"></a>
-### Validation Errors
-**TODO this**
-The `@error` directive may be used to quickly check if [validation error messages](/docs/{{version}}/validation#quick-displaying-the-validation-errors) exist for a given attribute. Within an `@error` directive, you may echo the `$message` variable to display the error message:
-
-```rblade
-<!-- /resources/views/post/create.rblade -->
-
-<label for="title">Post Title</label>
-
-<input id="title"
-    type="text"
-    class="@error('title') is-invalid @enderror">
-
-@error('title')
-    <div class="alert alert-danger">{{ $message }}</div>
-@enderror
-```
-
-Since the `@error` directive compiles to an "if" statement, you may use the `@else` directive to render content when there is not an error for an attribute:
-
-```rblade
-<!-- /resources/views/auth.rblade -->
-
-<label for="email">Email address</label>
-
-<input id="email"
-    type="email"
-    class="@error('email') is-invalid @else is-valid @enderror">
-```
-
-You may pass [the name of a specific error bag](/docs/{{version}}/validation#named-error-bags) as the second parameter to the `@error` directive to retrieve validation error messages on pages containing multiple forms:
-
-```rblade
-<!-- /resources/views/auth.rblade -->
-
-<label for="email">Email address</label>
-
-<input id="email"
-    type="email"
-    class="@error('email', 'login') is-invalid @enderror">
-
-@error('email', 'login')
-    <div class="alert alert-danger">{{ $message }}</div>
-@enderror
-```
 
 <a name="stacks"></a>
 ## Stacks
@@ -1006,146 +823,4 @@ If you would like to prepend content onto the beginning of a stack, you should u
 @prepend('scripts')
     This will be first...
 @endprepend
-```
-
-<a name="rendering-blade-fragments"></a>
-## Rendering Blade Fragments
-**TODO this?**
-When using frontend frameworks such as [Turbo](https://turbo.hotwired.dev/) and [htmx](https://htmx.org/), you may occasionally need to only return a portion of a Blade template within your HTTP response. Blade "fragments" allow you to do just that. To get started, place a portion of your Blade template within `@fragment` and `@endfragment` directives:
-
-```rblade
-@fragment('user-list')
-    <ul>
-        @foreach ($users as $user)
-            <li>{{ $user->name }}</li>
-        @endforeach
-    </ul>
-@endfragment
-```
-
-Then, when rendering the view that utilizes this template, you may invoke the `fragment` method to specify that only the specified fragment should be included in the outgoing HTTP response:
-
-```php
-return view('dashboard', ['users' => $users])->fragment('user-list');
-```
-
-The `fragmentIf` method allows you to conditionally return a fragment of a view based on a given condition. Otherwise, the entire view will be returned:
-
-```php
-return view('dashboard', ['users' => $users])
-    ->fragmentIf($request->hasHeader('HX-Request'), 'user-list');
-```
-
-The `fragments` and `fragmentsIf` methods allow you to return multiple view fragments in the response. The fragments will be concatenated together:
-
-```php
-view('dashboard', ['users' => $users])
-    ->fragments(['user-list', 'comment-list']);
-
-view('dashboard', ['users' => $users])
-    ->fragmentsIf(
-        $request->hasHeader('HX-Request'),
-        ['user-list', 'comment-list']
-    );
-```
-
-<a name="extending-blade"></a>
-## Extending Blade
-**TODO this?**
-Blade allows you to define your own custom directives using the `directive` method. When the Blade compiler encounters the custom directive, it will call the provided callback with the expression that the directive contains.
-
-The following example creates a `@datetime($var)` directive which formats a given `$var`, which should be an instance of `DateTime`:
-
-    <?php
-
-    namespace App\Providers;
-
-    use Illuminate\Support\Facades\Blade;
-    use Illuminate\Support\ServiceProvider;
-
-    class AppServiceProvider extends ServiceProvider
-    {
-        /**
-         * Register any application services.
-         */
-        public function register(): void
-        {
-            // ...
-        }
-
-        /**
-         * Bootstrap any application services.
-         */
-        public function boot(): void
-        {
-            Blade::directive('datetime', function (string $expression) {
-                return "<?php echo ($expression)->format('m/d/Y H:i'); ?>";
-            });
-        }
-    }
-
-As you can see, we will chain the `format` method onto whatever expression is passed into the directive. So, in this example, the final PHP generated by this directive will be:
-
-    <?php echo ($var)->format('m/d/Y H:i'); ?>
-
-> [!WARNING]  
-> After updating the logic of a Blade directive, you will need to delete all of the cached Blade views. The cached Blade views may be removed using the `view:clear` Artisan command.
-
-<a name="custom-echo-handlers"></a>
-### Custom Echo Handlers
-**TODO this? Need to do something similar for attribute manager anyway**
-If you attempt to "echo" an object using Blade, the object's `__toString` method will be invoked. The [`__toString`](https://www.php.net/manual/en/language.oop5.magic.php#object.tostring) method is one of PHP's built-in "magic methods". However, sometimes you may not have control over the `__toString` method of a given class, such as when the class that you are interacting with belongs to a third-party library.
-
-In these cases, Blade allows you to register a custom echo handler for that particular type of object. To accomplish this, you should invoke Blade's `stringable` method. The `stringable` method accepts a closure. This closure should type-hint the type of object that it is responsible for rendering. Typically, the `stringable` method should be invoked within the `boot` method of your application's `AppServiceProvider` class:
-
-    use Illuminate\Support\Facades\Blade;
-    use Money\Money;
-
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
-    {
-        Blade::stringable(function (Money $money) {
-            return $money->formatTo('en_GB');
-        });
-    }
-
-Once your custom echo handler has been defined, you may simply echo the object in your Blade template:
-
-```rblade
-Cost: {{ $money }}
-```
-
-<a name="custom-if-statements"></a>
-### Custom If Statements
-**TODO this**  
-Programming a custom directive is sometimes more complex than necessary when defining simple, custom conditional statements. For that reason, Blade provides a `Blade::if` method which allows you to quickly define custom conditional directives using closures. For example, let's define a custom conditional that checks the configured default "disk" for the application. We may do this in the `boot` method of our `AppServiceProvider`:
-
-    use Illuminate\Support\Facades\Blade;
-
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
-    {
-        Blade::if('disk', function (string $value) {
-            return config('filesystems.default') === $value;
-        });
-    }
-
-Once the custom conditional has been defined, you can use it within your templates:
-
-```rblade
-@disk('local')
-    <!-- The application is using the local disk... -->
-@elsedisk('s3')
-    <!-- The application is using the s3 disk... -->
-@else
-    <!-- The application is using some other disk... -->
-@enddisk
-
-@unlessdisk('local')
-    <!-- The application is not using the local disk... -->
-@enddisk
 ```
