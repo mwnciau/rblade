@@ -9,6 +9,38 @@ module RBlade
         "if #{args[0]};"
       end
 
+      def compileBlank args
+        if args&.count != 1
+          raise StandardError.new "Blank? statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+        end
+
+        "if (#{args[0]}).blank?;"
+      end
+
+      def compileEmpty args
+        if args&.count != 1
+          raise StandardError.new "Empty? statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+        end
+
+        "if (#{args[0]}).empty?;"
+      end
+
+      def compileNil args
+        if args&.count != 1
+          raise StandardError.new "Nil? statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+        end
+
+        "if (#{args[0]}).nil?;"
+      end
+
+      def compilePresent args
+        if args&.count != 1
+          raise StandardError.new "Present? statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+        end
+
+        "if (#{args[0]}).present?;"
+      end
+
       def compileElsif args
         if args&.count != 1
           raise StandardError.new "Elsif statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"

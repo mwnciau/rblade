@@ -49,7 +49,12 @@ module RBlade
       handler_class, handler_method = @@statement_handlers[name.tr("_", "").downcase]
 
       if !handler_class&.method_defined?(handler_method)
-        raise StandardError.new "Unhandled statement: @#{name}"
+        if name.start_with? "end"
+          ## Fallback to the default end handler
+          handler_class, handler_method = @@statement_handlers["end"]
+        else
+          raise StandardError.new "Unhandled statement: @#{name}"
+        end
       end
 
       if handler_class == CompilesStatements
@@ -77,22 +82,10 @@ module RBlade
       "eachelse" => [CompilesLoops, :compileEachElse],
       "empty" => [CompilesLoops, :compileEmpty],
       "end" => [CompilesStatements, :compileEnd],
-      "endcase" => [CompilesStatements, :compileEnd],
-      "endeach" => [CompilesStatements, :compileEnd],
-      "endeachelse" => [CompilesStatements, :compileEnd],
-      "endenv" => [CompilesStatements, :compileEnd],
-      "endfor" => [CompilesStatements, :compileEnd],
-      "endforelse" => [CompilesStatements, :compileEnd],
-      "endif" => [CompilesStatements, :compileEnd],
-      "endonce" => [CompilesStatements, :compileEnd],
       "endprepend" => [CompilesStacks, :compileEndPrepend],
       "endprependonce" => [CompilesOnce, :compileEndPrependOnce],
-      "endproduction" => [CompilesStatements, :compileEnd],
       "endpush" => [CompilesStacks, :compileEndPush],
       "endpushonce" => [CompilesOnce, :compileEndPushOnce],
-      "endunless" => [CompilesStatements, :compileEnd],
-      "enduntil" => [CompilesStatements, :compileEnd],
-      "endwhile" => [CompilesStatements, :compileEnd],
       "env" => [CompilesConditionals, :compileEnv],
       "for" => [CompilesLoops, :compileFor],
       "forelse" => [CompilesLoops, :compileForElse],
