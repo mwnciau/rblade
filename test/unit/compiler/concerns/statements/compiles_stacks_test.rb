@@ -7,22 +7,8 @@ class CompilesStacksTest < TestCase
       ""
   end
 
-  def test_inline_push
-    assert_compiles_to "@push('stack', 'abcde') @stack('stack')", nil, "abcde"
-    assert_compiles_to "@stack('stack') @push('stack', 'abcde')", nil, "abcde"
-    assert_compiles_to "@push('stack', '1') @stack('stack') @push('stack', '2')", nil, "12"
-    assert_compiles_to "1 @push('stack', 3) 2 @stack('stack') 5 @push('stack', 4) 6", nil, "123456"
-  end
-
-  def test_inline_prepend
-    assert_compiles_to "@prepend('stack', 'abcde') @stack('stack')", nil, "abcde"
-    assert_compiles_to "@stack('stack') @prepend('stack', 'abcde')", nil, "abcde"
-    assert_compiles_to "@prepend('stack', '1') @stack('stack') @prepend('stack', '2')", nil, "12"
-    assert_compiles_to "1 @prepend('stack', 3) 2 @stack('stack') 5 @prepend('stack', 4) 6", nil, "123456"
-  end
-
   def test_prepends_come_before_pushes
-    assert_compiles_to "@prepend('stack', '1') @push('stack', '3') @stack('stack') @prepend('stack', '2') @push('stack', '4')",
+    assert_compiles_to "@prepend('stack') 1 @endprepend @push('stack') 3 @endpush @stack('stack') @prepend('stack') 2 @endprepend @push('stack') 4 @endpush",
       nil,
       "1234"
   end
@@ -64,16 +50,16 @@ class CompilesStacksTest < TestCase
   end
 
   def test_component
-    assert_compiles_to "@push('stack', '456') 123<x-compiles_stacks_test_stack/>789", nil, "123456789"
+    assert_compiles_to "@push('stack') 456 @endpush 123<x-compiles_stacks_test_stack/>789", nil, "123456789"
     assert_compiles_to "<x-compiles_stacks_test_stack/> @stack('other_stack')", nil, "123"
     assert_compiles_to "@stack('other_stack') <x-compiles_stacks_test_stack/>", nil, "123"
   end
 
   def test_limitations
     # We cannot push to a component stack after the component has been rendered
-    assert_compiles_to "123<x-compiles_stacks_test_stack/>789 @push('stack', '456')", nil, "123789"
+    assert_compiles_to "123<x-compiles_stacks_test_stack/>789 @push('stack') 456 @endpush", nil, "123789"
 
     # Stacks can only be output once
-    assert_compiles_to "@push('stack', '123') @stack('stack') @stack('stack')", nil, "123"
+    assert_compiles_to "@push('stack') 123 @endpush @stack('stack') @stack('stack')", nil, "123"
   end
 end

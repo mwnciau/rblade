@@ -793,12 +793,12 @@ RBlade allows you to push to named stacks which can be rendered elsewhere in ano
 @endpush
 ```
 
-If you would like to `@push` content if a given boolean expression evaluates to `true`, you may use the `@pushIf` directive:
+If you would like to `@push` content if a given boolean expression evaluates to `true`, you may use the `@pushif` directive:
 **TODO add this**
 ```rblade
-@pushIf(shouldPush, 'scripts')
+@pushif(shouldPush, 'scripts')
     <script src="/example.js"></script>
-@endPushIf
+@endpushif
 ```
 
 You may push to a stack as many times as needed. To render the complete stack contents, pass the name of the stack to the `@stack` directive:

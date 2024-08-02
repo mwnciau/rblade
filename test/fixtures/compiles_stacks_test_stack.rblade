@@ -1,1 +1,1 @@
-@stack('stack') @push('other_stack', '123')
+@stack('stack') @push('other_stack') 123 @endpush

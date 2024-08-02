@@ -15,16 +15,12 @@ module RBlade
 
       def compilePrepend args
         if args.nil? || args.count > 2
-          raise StandardError.new "Prepend statement: wrong number of arguments (given #{args&.count}, expecting 1 or 2)"
+          raise StandardError.new "Prepend statement: wrong number of arguments (given #{args&.count}, expecting 1)"
         end
 
-        if args.count == 2
-          "RBlade::StackManager.prepend(#{args[0]}, #{args[1]});"
-        else
-          @push_counter += 1
+        @push_counter += 1
 
-          "_p_#{@push_counter}=#{args[0]};_p_#{@push_counter}_b=_out;_out='';"
-        end
+        "_p_#{@push_counter}=#{args[0]};_p_#{@push_counter}_b=_out;_out='';"
       end
 
       def compileEndPrepend args
@@ -38,17 +34,17 @@ module RBlade
       end
 
       def compilePush args
-        if args.nil? || args.count > 2
-          raise StandardError.new "Push statement: wrong number of arguments (given #{args&.count}, expecting 1 or 2)"
+        if args.nil? || args.count > 1
+          raise StandardError.new "Push statement: wrong number of arguments (given #{args&.count}, expecting 1)"
         end
 
-        if args.count == 2
-          "RBlade::StackManager.push(#{args[0]}, #{args[1]});"
-        else
-          @push_counter += 1
+        @push_counter += 1
 
-          "_p_#{@push_counter}=#{args[0]};_p_#{@push_counter}_b=_out;_out='';"
-        end
+        "_p_#{@push_counter}=#{args[0]};_p_#{@push_counter}_b=_out;_out='';"
+      end
+
+      def compilesPushIf
+
       end
 
       def compileEndPush args
