@@ -1,12 +1,41 @@
 # RBlade Templates
 
-- [Introduction](#introduction)
-    - [Supercharging Blade With Livewire](#supercharging-blade-with-livewire)
-- [Displaying Data](#displaying-data)
-    - [HTML Entity Encoding](#html-entity-encoding)
-    - [Blade and JavaScript Frameworks](#blade-and-javascript-frameworks)
- 
-**TODO redo TOC**
+- [RBlade Templates](#rblade-templates)
+  * [Introduction](#introduction)
+  * [Displaying Data](#displaying-data)
+    + [HTML Entity Encoding](#html-entity-encoding)
+    + [Blade and JavaScript Frameworks](#blade-and-javascript-frameworks)
+      - [The `@verbatim` Directive](#the-at-verbatim-directive)
+  * [RBlade Directives](#rblade-directives)
+    + [If Statements](#if-statements)
+      - [Environment Directives](#environment-directives)
+    + [Case Statements](#case-statements)
+    + [Loops](#loops)
+    + [Conditional Classes & Styles](#conditional-classes-and-styles)
+    + [Additional Attributes](#additional-attributes)
+    + [The `@once` Directive](#the-once-directive)
+    + [Raw Ruby](#raw-ruby)
+    + [Comments](#comments)
+  * [Components](#components)
+    + [Rendering Components](#rendering-components)
+      - [Namespaces](#namespaces)
+    + [Passing Data to Components](#passing-data-to-components)
+      - [Component Properties](#component-properties)
+      - [Short Attribute Syntax](#short-attribute-syntax)
+      - [Escaping Attribute Rendering](#escaping-attribute-rendering)
+    + [Component Attributes](#component-attributes)
+      - [Default & Merged Attributes](#default-and-merged-attributes)
+      - [Non-Class Attribute Merging](#non-class-attribute-merging)
+      - [Conditionally Merge Classes](#conditionally-merge-classes)
+      - [Retrieving and Filtering Attributes](#retrieving-and-filtering-attributes)
+    + [Slots](#slots)
+      - [Slot Attributes](#slot-attributes)
+    + [Registering Additional Component Directories](#registering-additional-component-directories)
+    + [Index Components](#index-components)
+  * [Forms](#forms)
+    + [Old Input](#old-input)
+    + [Method Field](#method-field)
+  * [Stacks](#stacks)
 
 <a name="introduction"></a>
 ## Introduction
@@ -98,18 +127,18 @@ In addition to template inheritance and displaying data, RBlade also provides co
 <a name="if-statements"></a>
 ### If Statements
 
-You may construct `if` statements using the `@if`, `@elseif`, `@else`, `@endif`, `@unless`, and `@endunless` directives. These directives function identically to their Ruby counterparts:
+You may construct `if` statements using the `@if`, `@elseIf`, `@else`, `@endIf`, `@unless`, and `@endUnless` directives. These directives function identically to their Ruby counterparts:
 
 ```rblade
 @unless(records.nil?)
   @if (records.count === 1)
       I have one record!
-  @elseif (records.count > 1)
+  @elseIf (records.count > 1)
       I have multiple records!
   @else
       I don't have any records!
-  @endif
-@endunless
+  @endIf
+@endUnless
 ```
 
 In addition to the conditional directives above, the `@blank?`, `defined?`, `@empty?`, `@nil?` and `@present` directives may be used as convenient shortcuts:
@@ -130,7 +159,7 @@ You may check if the application is running in the production environment using 
 ```rblade
 @production
     // Production specific content...
-@endproduction
+@endProduction
 ```
 
 Or, you may determine if the application is running in a specific environment using the `@env` directive:
@@ -138,17 +167,17 @@ Or, you may determine if the application is running in a specific environment us
 ```rblade
 @env('staging')
     // The application is running in "staging"...
-@endenv
+@endEnv
 
 @env(['staging', 'production'])
     // The application is running in "staging" or "production"...
-@endenv
+@endEnv
 ```
 
 <a name="switch-statements"></a>
 ### Case Statements
 
-Case statements can be constructed using the `@case`, `@when`, `@else` and `@endcase` directives:
+Case statements can be constructed using the `@case`, `@when`, `@else` and `@endCase` directives:
 
 ```rblade
 @case(i)
@@ -158,7 +187,7 @@ Case statements can be constructed using the `@case`, `@when`, `@else` and `@end
     Second case...
 @else
     Default case...
-@endcase
+@endCase
 ```
 
 <a name="loops"></a>
@@ -169,28 +198,28 @@ In addition to conditional statements, RBlade provides simple directives for wor
 ```rblade
 @for (i in 0...10)
     The current value is {{ i }}
-@endfor
+@endFor
 
 {{-- Compiles to users.each do |user| ... --}}
 @each (user in users)
     <p>This is user {{ user.id }}</p>
-@endeach
+@endEach
 
-@forelse (name in [])
+@forElse (name in [])
     <li>{{ name }}</li>
 @empty
     <p>No names</p>
-@endforelse
+@endForElse
 
-@eachelse (user in users)
+@eachElse (user in users)
     <li>{{ user.name }}</li>
 @empty
     <p>No users</p>
-@endeachelse
+@endEachElse
 
 @while (true)
     <p>I'm looping forever.</p>
-@endwhile
+@endWhile
 ```
 
 When using loops you can also skip the current iteration or end the loop using the `@next` and `@break` directives:
@@ -199,29 +228,29 @@ When using loops you can also skip the current iteration or end the loop using t
 for (user in users)
     @if (user.type == 1)
         @next
-    @endif
+    @endIf
 
     <li>{{ user.name }}</li>
 
     @if (user.number == 5)
         @break
-    @endif
-@endfor
+    @endIf
+@endFor
 ```
 
 You may also include the continuation or break condition within the directive declaration:
 
 ```rblade
-@foreach (user in users)
+@for (user in users)
     @next(user.type == 1)
 
-    <li>{{ $user->name }}</li>
+    <li>{{ user.name }}</li>
 
     @break(user.number == 5)
-@endforeach
+@endFor
 ```
 
-<a name="conditional-classes"></a>
+<a name="conditional-classes-and-styles"></a>
 ### Conditional Classes & Styles
 
 The `@class` directive conditionally adds CSS classes. The directive accepts a `Hash` of classes where the key contains the class or classes you wish to add, and the value is a boolean expression:
@@ -230,7 +259,7 @@ The `@class` directive conditionally adds CSS classes. The directive accepts a `
 @ruby
     isActive = false;
     hasError = true;
-@endruby
+@endRuby
 
 <span @class({
     "p-4": true,
@@ -247,7 +276,7 @@ Likewise, the `@style` directive may be used to conditionally add inline CSS sty
 ```rblade
 @ruby
     isActive = true;
-@endruby
+@endRuby
 
 <span @style({
     "background-color: red": true,
@@ -277,7 +306,7 @@ Likewise, the `@selected` directive may be used to indicate if a given select op
     <option value="{{ version }}" @selected(version == selectedVersion)>
       {{ version }}
     </option>
-  @endeach
+  @endEach
 </select>
 ```
 
@@ -354,7 +383,7 @@ In some situations, it's useful to embed Ruby code into your views. You can use 
 ```rblade
 @ruby
     counter = 1;
-@endruby
+@endRuby
 ```
 
 <a name="comments"></a>
@@ -463,7 +492,7 @@ When passing attributes to components, you may also use a "short attribute" synt
 <a name="escaping-attribute-rendering"></a>
 #### Escaping Attribute Rendering
 
-Since some JavaScript frameworks such as Alpine.js also use colon-prefixed attributes, you may use a double colon (`::`) prefix to inform RBlade that the attribute is not a PHP expression. For example, given the following component:
+Since some JavaScript frameworks such as Alpine.js also use colon-prefixed attributes, you may use a double colon (`::`) prefix to inform RBlade that the attribute is not a Ruby expression. For example, given the following component:
 
 ```rblade
 <x-button ::class="{ danger: isDeleting }">
@@ -496,8 +525,8 @@ All of the attributes that are not part of the component's constructor will auto
 </div>
 ```
 
-<a name="default-merged-attributes"></a>
-#### Default / Merged Attributes
+<a name="default-and-merged-attributes"></a>
+#### Default & Merged Attributes
 
 Sometimes you may need to specify default values for attributes or merge additional values into some of the component's attributes. To accomplish this, you may use the attribute manager's `merge` method. This method is particularly useful for defining a set of default CSS classes that should always be applied to a component:
 
@@ -790,15 +819,15 @@ RBlade allows you to push to named stacks which can be rendered elsewhere in ano
 ```rblade
 @push('scripts')
     <script src="/example.js"></script>
-@endpush
+@endPush
 ```
 
 If you would like to `@push` content if a given boolean expression evaluates to `true`, you may use the `@pushif` directive:
-**TODO add this**
+
 ```rblade
-@pushif(shouldPush, 'scripts')
+@pushIf(shouldPush, 'scripts')
     <script src="/example.js"></script>
-@endpushif
+@endPushIf
 ```
 
 You may push to a stack as many times as needed. To render the complete stack contents, pass the name of the stack to the `@stack` directive:
@@ -816,11 +845,11 @@ If you would like to prepend content onto the beginning of a stack, you should u
 ```rblade
 @push('scripts')
     This will be second...
-@endpush
+@endPush
 
 // Later...
 
 @prepend('scripts')
     This will be first...
-@endprepend
+@endPrepend
 ```

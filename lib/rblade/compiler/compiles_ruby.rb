@@ -38,7 +38,7 @@ module RBlade
               segments[i] << ";"
             end
 
-            segments[i] = Token.new(type: :php, value: segments[i])
+            segments[i] = Token.new(type: :ruby, value: segments[i])
 
             i += 1
           elsif !segments[i].nil? && segments[i] != ""
