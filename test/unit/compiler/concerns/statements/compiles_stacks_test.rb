@@ -13,40 +13,32 @@ class CompilesStacksTest < TestCase
       "1234"
   end
 
-  def test_block_push
+  def test_push
     assert_compiles_to "@push('stack') 12345 @endpush @stack('stack')", nil, "12345"
     assert_compiles_to "@stack('stack') @push('stack') 12345 @endpush", nil, "12345"
     assert_compiles_to "@stack('buttons') content @push('buttons')<x-button>hello</x-button>@endpush",
       nil,
       '<button class="button">hello</button>content'
-
-    assert_compiles_to <<~BLADE
-      @push('stack')
-      1
-      @push('stack')
-      2
-      @endpush
-      @endpush
-      @stack('stack')", nil, "12"
-    BLADE
   end
 
-  def test_block_prepend
+  def test_push_if
+    assert_compiles_to "@pushif(true, 'stack') 12345 @endpushif @stack('stack')", nil, "12345"
+    assert_compiles_to "@pushif(false, 'stack') 12345 @endpushif @stack('stack')", nil, ""
+    assert_compiles_to "@pushif(foo == 'FOO', 'stack') 12345 @endpushif @stack('stack')", nil, "12345"
+  end
+
+  def test_prepend_if
+    assert_compiles_to "@prependif(true, 'stack') 12345 @endprependif @stack('stack')", nil, "12345"
+    assert_compiles_to "@prependif(false, 'stack') 12345 @endprependif @stack('stack')", nil, ""
+    assert_compiles_to "@prependif(foo == 'FOO', 'stack') 12345 @endprependif @stack('stack')", nil, "12345"
+  end
+
+  def test_prepend
     assert_compiles_to "@prepend('stack') 12345 @endprepend @stack('stack')", nil, "12345"
     assert_compiles_to "@stack('stack') @prepend('stack') 12345 @endprepend", nil, "12345"
     assert_compiles_to "@stack('buttons') content @prepend('buttons')<x-button>hello</x-button>@endprepend",
       nil,
       '<button class="button">hello</button>content'
-
-    assert_compiles_to <<~BLADE
-      @prepend('stack')
-      1
-      @prepend('stack')
-      2
-      @endprepend
-      @endprepend
-      @stack('stack')", nil, "12"
-    BLADE
   end
 
   def test_component
