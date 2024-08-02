@@ -1,4 +1,4 @@
-## 0.5.1
+## 0.6.0 [2024-08-02]
 - Add attributes.class method
 - Add `@blank?`, `@defined?`, `@empty?`, `@nil?` and `@present?`
 - Add `@method`, `@patch`, `@put` and `@delete`
