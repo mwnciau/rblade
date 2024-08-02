@@ -34,6 +34,12 @@ class CompilesConditionalsTest < TestCase
     assert_compiles_to "@blank?({}) blank! @endblank?", "if ({}).blank?;_out<<'blank!';end;", "blank!"
   end
 
+  def test_defined
+    assert_compiles_to "@defined?(foo) defined! @enddefined?", "if defined? foo;_out<<'defined!';end;", "defined!"
+    assert_compiles_to "@defined?(bar) defined! @enddefined?", "if defined? bar;_out<<'defined!';end;", "defined!"
+    assert_compiles_to "@defined?(baz) defined! @enddefined?", "if defined? baz;_out<<'defined!';end;", ""
+  end
+
   def test_empty
     assert_compiles_to "@empty?('abc') empty! @endempty?", "if ('abc').empty?;_out<<'empty!';end;", ""
     assert_compiles_to "@empty?('') empty! @endempty?", "if ('').empty?;_out<<'empty!';end;", "empty!"

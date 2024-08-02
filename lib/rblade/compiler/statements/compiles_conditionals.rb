@@ -17,6 +17,14 @@ module RBlade
         "if (#{args[0]}).blank?;"
       end
 
+      def compileDefined args
+        if args&.count != 1
+          raise StandardError.new "Defined? statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+        end
+
+        "if defined? #{args[0]};"
+      end
+
       def compileEmpty args
         if args&.count != 1
           raise StandardError.new "Empty? statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"

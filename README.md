@@ -112,16 +112,14 @@ You may construct `if` statements using the `@if`, `@elseif`, `@else`, `@endif`,
 @endunless
 ```
 
-In addition to the conditional directives already discussed, the `@isset` and `@empty` directives may be used as convenient shortcuts for their respective PHP functions:
-**TODO add nil? directive?**
-```rblade
-@isset($records)
-    // $records is defined and is not null...
-@endisset
+In addition to the conditional directives above, the `@blank?`, `defined?`, `@empty?`, `@nil?` and `@present` directives may be used as convenient shortcuts:
 
-@empty($records)
-    // $records is "empty"...
-@endempty
+```rblade
+@present?(records)
+    // records is defined and is not nil
+@else
+    // These directives are shortcuts to if statements so @else may be used
+@endempty?
 ```
 
 <a name="authentication-directives"></a>

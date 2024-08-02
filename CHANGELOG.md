@@ -1,6 +1,7 @@
 ## 0.5.1
 - Add attributes.class method
-- Add @method, @patch, @put, @delete
+- Add `@blank?`, `@defined?`, `@empty?`, `@nil?` and `@present?`
+- Add `@method`, `@patch`, `@put` and `@delete`
 - Add string methods to slots
 - Fix whitespaces causing problems between case and when statements
 - Pass Rails `session`, `cookies`, `flash` and `params` variables into components
