@@ -23,6 +23,47 @@ class CompilesConditionalsTest < TestCase
     assert_compiles_to "@if ( foo == 'FOO' ){{bar}} @endif", "if foo == 'FOO';_out<<RBlade.e(bar);end;", "BAR"
   end
 
+  def test_blank
+    assert_compiles_to "@blank?(nil) blank! @endblank?", "if (nil).blank?;_out<<'blank!';end;", "blank!"
+    assert_compiles_to "@blank?(true) blank! @endblank?", "if (true).blank?;_out<<'blank!';end;", ""
+    assert_compiles_to "@blank?(false) blank! @endblank?", "if (false).blank?;_out<<'blank!';end;", "blank!"
+    assert_compiles_to "@blank?('abc') blank! @endblank?", "if ('abc').blank?;_out<<'blank!';end;", ""
+    assert_compiles_to "@blank?('') blank! @endblank?", "if ('').blank?;_out<<'blank!';end;", "blank!"
+    assert_compiles_to "@blank?(' ') blank! @endblank?", "if (' ').blank?;_out<<'blank!';end;", "blank!"
+    assert_compiles_to "@blank?([]) blank! @endblank?", "if ([]).blank?;_out<<'blank!';end;", "blank!"
+    assert_compiles_to "@blank?({}) blank! @endblank?", "if ({}).blank?;_out<<'blank!';end;", "blank!"
+  end
+
+  def test_empty
+    assert_compiles_to "@empty?('abc') empty! @endempty?", "if ('abc').empty?;_out<<'empty!';end;", ""
+    assert_compiles_to "@empty?('') empty! @endempty?", "if ('').empty?;_out<<'empty!';end;", "empty!"
+    assert_compiles_to "@empty?(' ') empty! @endempty?", "if (' ').empty?;_out<<'empty!';end;", ""
+    assert_compiles_to "@empty?([]) empty! @endempty?", "if ([]).empty?;_out<<'empty!';end;", "empty!"
+    assert_compiles_to "@empty?({}) empty! @endempty?", "if ({}).empty?;_out<<'empty!';end;", "empty!"
+  end
+
+  def test_nil
+    assert_compiles_to "@nil?(nil) nil! @endnil?", "if (nil).nil?;_out<<'nil!';end;", "nil!"
+    assert_compiles_to "@nil?(true) nil! @endnil?", "if (true).nil?;_out<<'nil!';end;", ""
+    assert_compiles_to "@nil?(false) nil! @endnil?", "if (false).nil?;_out<<'nil!';end;", ""
+    assert_compiles_to "@nil?('abc') nil! @endnil?", "if ('abc').nil?;_out<<'nil!';end;", ""
+    assert_compiles_to "@nil?('') nil! @endnil?", "if ('').nil?;_out<<'nil!';end;", ""
+    assert_compiles_to "@nil?(' ') nil! @endnil?", "if (' ').nil?;_out<<'nil!';end;", ""
+    assert_compiles_to "@nil?([]) nil! @endnil?", "if ([]).nil?;_out<<'nil!';end;", ""
+    assert_compiles_to "@nil?({}) nil! @endnil?", "if ({}).nil?;_out<<'nil!';end;", ""
+  end
+
+  def test_nil
+    assert_compiles_to "@present?(nil) present! @endpresent?", "if (nil).present?;_out<<'present!';end;", ""
+    assert_compiles_to "@present?(true) present! @endpresent?", "if (true).present?;_out<<'present!';end;", "present!"
+    assert_compiles_to "@present?(false) present! @endpresent?", "if (false).present?;_out<<'present!';end;", ""
+    assert_compiles_to "@present?('abc') present! @endpresent?", "if ('abc').present?;_out<<'present!';end;", "present!"
+    assert_compiles_to "@present?('') present! @endpresent?", "if ('').present?;_out<<'present!';end;", ""
+    assert_compiles_to "@present?(' ') present! @endpresent?", "if (' ').present?;_out<<'present!';end;", ""
+    assert_compiles_to "@present?([]) present! @endpresent?", "if ([]).present?;_out<<'present!';end;", ""
+    assert_compiles_to "@present?({}) present! @endpresent?", "if ({}).present?;_out<<'present!';end;", ""
+  end
+
   def test_elsif
     assert_compiles_to "@if(false) @elsif ( true ) hi @endif", "if false;elsif true;_out<<'hi';end;", "hi"
     assert_compiles_to "@if(false) @elsif(true) hi @endif", "if false;elsif true;_out<<'hi';end;", "hi"

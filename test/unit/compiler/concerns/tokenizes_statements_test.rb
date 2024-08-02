@@ -82,6 +82,7 @@ class TokenizesStatementsTest < TestCase
     assert_compiles_to "a @end", "_out<<'a';end;"
     assert_compiles_to ">@end", "_out<<'>';end;"
     assert_compiles_to "'@end", "_out<<'\\'';end;"
+    assert_compiles_to "\n@end?", "end;"
 
     # Should not be compiled
     assert_compiles_to "a@end", "_out<<'a@end';"

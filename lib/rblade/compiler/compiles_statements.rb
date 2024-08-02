@@ -69,6 +69,7 @@ module RBlade
     @@handler_instances = {}
 
     @@statement_handlers = {
+      "blank?" => [CompilesConditionals, :compileBlank],
       "break" => [CompilesLoops, :compileBreak],
       "breakif" => [CompilesLoops, :compileBreakIf],
       "case" => [CompilesConditionals, :compileCase],
@@ -81,6 +82,7 @@ module RBlade
       "each" => [CompilesLoops, :compileEach],
       "eachelse" => [CompilesLoops, :compileEachElse],
       "empty" => [CompilesLoops, :compileEmpty],
+      "empty?" => [CompilesConditionals, :compileEmpty],
       "end" => [CompilesStatements, :compileEnd],
       "endprepend" => [CompilesStacks, :compileEndPrepend],
       "endprependonce" => [CompilesOnce, :compileEndPrependOnce],
@@ -93,11 +95,14 @@ module RBlade
       "method" => [CompilesForm, :compileMethod],
       "next" => [CompilesLoops, :compileNext],
       "nextif" => [CompilesLoops, :compileNextIf],
+      "nil" => [CompilesConditionals, :compileNil],
+      "nil?" => [CompilesConditionals, :compileNil],
       "old" => [CompilesForm, :compileOld],
       "once" => [CompilesOnce, :compileOnce],
       "patch" => [CompilesForm, :compilePatch],
       "prepend" => [CompilesStacks, :compilePrepend],
       "prependonce" => [CompilesOnce, :compilePrependOnce],
+      "present?" => [CompilesConditionals, :compilePresent],
       "production" => [CompilesConditionals, :compileProduction],
       "props" => [CompilesProps, :compileProps],
       "push" => [CompilesStacks, :compilePush],
