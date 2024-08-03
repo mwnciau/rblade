@@ -1,6 +1,6 @@
 require "rblade/compiler/compiles_comments"
 require "rblade/compiler/compiles_components"
-require "rblade/compiler/compiles_echos"
+require "rblade/compiler/compiles_prints"
 require "rblade/compiler/compiles_ruby"
 require "rblade/compiler/compiles_verbatim"
 require "rblade/compiler/compiles_statements"
@@ -37,7 +37,7 @@ module RBlade
       CompilesRuby.new.compile! tokens
       TokenizesComponents.new.tokenize! tokens
       TokenizesStatements.new.tokenize! tokens
-      CompilesEchos.new.compile! tokens
+      CompilesPrints.new.compile! tokens
       CompilesStatements.new.compile! tokens
       CompilesComponents.new.compile! tokens
 
@@ -49,7 +49,7 @@ module RBlade
 
       CompilesComments.compile!(tokens)
       CompilesRuby.compile! tokens
-      CompilesEchos.compile!(tokens)
+      CompilesPrints.compile!(tokens)
 
       compileTokens tokens
     end

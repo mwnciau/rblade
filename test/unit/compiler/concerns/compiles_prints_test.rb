@@ -1,6 +1,6 @@
 require "test_case"
 
-class CompilesEchoTest < TestCase
+class CompilesPrintsTest < TestCase
   def test_variable
     assert_compiles_to "{{foo}}", "_out<<RBlade.e(foo);", "FOO"
     assert_compiles_to "{{ foo }}", "_out<<RBlade.e(foo);", "FOO"
@@ -91,7 +91,7 @@ class CompilesEchoTest < TestCase
   end
 
   def test_limitations
-    # The end tag cannot appear within the echo
+    # The end tag cannot appear within the print
     assert_compiles_to "{{ 'foo}}' }}", "_out<<RBlade.e('foo);_out<<'\\' }}';"
     assert_compiles_to "<%= 'foo%>' %>", "_out<<RBlade.e('foo);_out<<'\\' %>';"
 

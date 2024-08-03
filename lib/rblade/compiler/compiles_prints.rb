@@ -1,22 +1,22 @@
 module RBlade
-  class CompilesEchos
+  class CompilesPrints
     def compile!(tokens)
-      compile_regular_echos!(tokens)
-      compile_unsafe_echos!(tokens)
+      compile_regular_prints!(tokens)
+      compile_unsafe_prints!(tokens)
     end
 
     private
 
-    def compile_regular_echos!(tokens)
-      compile_echos! tokens, "{{", "}}", "RBlade.e"
-      compile_echos! tokens, "<%=", "%>", "RBlade.e"
+    def compile_regular_prints!(tokens)
+      compile_prints! tokens, "{{", "}}", "RBlade.e"
+      compile_prints! tokens, "<%=", "%>", "RBlade.e"
     end
 
-    def compile_unsafe_echos!(tokens)
-      compile_echos! tokens, "{!!", "!!}"
+    def compile_unsafe_prints!(tokens)
+      compile_prints! tokens, "{!!", "!!}"
     end
 
-    def compile_echos!(tokens, start_token, end_token, wrapper_function = nil)
+    def compile_prints!(tokens, start_token, end_token, wrapper_function = nil)
       tokens.map! do |token|
         next(token) if token.type != :unprocessed
 
@@ -41,7 +41,7 @@ module RBlade
             else
               "(" + segments[i] + ").to_s;"
             end
-            segments[i] = Token.new(:echo, segment_value)
+            segments[i] = Token.new(:print, segment_value)
 
             i += 1
           elsif !segments[i].nil? && segments[i] != ""
