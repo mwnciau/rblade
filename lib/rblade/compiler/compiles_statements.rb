@@ -71,7 +71,6 @@ module RBlade
     @@statement_handlers = {
       "blank?" => [CompilesConditionals, :compileBlank],
       "break" => [CompilesLoops, :compileBreak],
-      "breakif" => [CompilesLoops, :compileBreakIf],
       "case" => [CompilesConditionals, :compileCase],
       "checked" => [CompilesConditionals, :compileChecked],
       "class" => [CompilesHtmlAttributes, :compileClass],
@@ -97,7 +96,6 @@ module RBlade
       "if" => [CompilesConditionals, :compileIf],
       "method" => [CompilesForm, :compileMethod],
       "next" => [CompilesLoops, :compileNext],
-      "nextif" => [CompilesLoops, :compileNextIf],
       "nil?" => [CompilesConditionals, :compileNil],
       "old" => [CompilesForm, :compileOld],
       "once" => [CompilesOnce, :compileOnce],
