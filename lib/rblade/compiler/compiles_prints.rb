@@ -1,8 +1,8 @@
 module RBlade
   class CompilesPrints
     def compile!(tokens)
-      compile_regular_prints!(tokens)
       compile_unsafe_prints!(tokens)
+      compile_regular_prints!(tokens)
     end
 
     private
@@ -14,6 +14,7 @@ module RBlade
 
     def compile_unsafe_prints!(tokens)
       compile_prints! tokens, "{!!", "!!}"
+      compile_prints! tokens, "<%==", "%>"
     end
 
     def compile_prints!(tokens, start_token, end_token, wrapper_function = nil)

@@ -88,6 +88,12 @@ class CompilesPrintsTest < TestCase
     assert_compiles_to "<%=
       foo
       %>", "_out<<RBlade.e(foo);", "FOO"
+
+    assert_compiles_to "<%==foo%>", "_out<<(foo).to_s;", "FOO"
+    assert_compiles_to "<%== foo %>", "_out<<(foo).to_s;", "FOO"
+    assert_compiles_to "<%==
+      foo
+      %>", "_out<<(foo).to_s;", "FOO"
   end
 
   def test_limitations
