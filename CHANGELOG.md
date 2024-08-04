@@ -1,3 +1,9 @@
+## 0.6.2 [UNRELEASED]
+- Add support for ERB style `<%==` unsafe prints
+- Remove deprecated "breakIf" and "nextIf" statements
+- Rename "echo" compilers to "print"
+- Update README
+
 ## 0.6.1 [2024-08-02]
 - Fix broken build
 
