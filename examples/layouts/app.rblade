@@ -1,13 +1,16 @@
+@props({title: _required})
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>RBlade Example</title>
+    <title>{{ title }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    @stack('scripts')
   </head>
   <body>
+    <div {{ attributes.merge({class: "max-w-prose mt-8 mx-auto flex flex-col gap-4"}) }}>
 	  {{ slot }}
   </body>
 </html>

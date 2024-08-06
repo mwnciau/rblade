@@ -1,0 +1,14 @@
+@props({heading: nil})
+@pushOnce('scripts')
+<script src="/js/hero.js"></script>
+@endPushOnce
+<div class="bg-blue-50 p-16">
+  <div class="max-w-96">
+    @if (heading)
+      <h2 {{ heading.attributes.merge({class: "text-lg font-bold"}) }}>
+        {{ heading }}
+      </h2>
+    @end
+    <p class="mt-4">{{ slot }}</p>
+  </div>
+</div>

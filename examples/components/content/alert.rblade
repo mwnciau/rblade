@@ -1,0 +1,6 @@
+@props({alert: _required})
+@shouldRender(alert.present?)
+<p class="py-2 px-3 bg-amber-100 border border-amber-500">
+  @@alert
+  {{ alert }}
+</p>
