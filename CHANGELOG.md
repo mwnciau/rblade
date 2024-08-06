@@ -1,4 +1,4 @@
-## 1.0.0 [UNRELEASED]
+## 1.0.0 [2024-08-06]
 - Add quick reference and examples
 - Add @shouldRender directive
 - Add support for ERB style `<%==` unsafe prints
