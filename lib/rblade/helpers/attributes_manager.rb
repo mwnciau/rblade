@@ -15,15 +15,17 @@ module RBlade
       @attributes[key]
     end
 
-    def has?(key)
-      !@attributes[key].nil?
+    def has?(*keys)
+      keys.map!(&:to_sym)
+
+      keys.all? { |key| @attributes.has_key? key }
     end
 
-    def method_missing(method, *, &block)
+    def method_missing(method, *, &)
       if [:select, :filter, :slice].include? method
-        AttributesManager.new @attributes.send(method, *, &block)
+        AttributesManager.new @attributes.send(method, *, &)
       else
-        @attributes.send(method, *, &block)
+        @attributes.send(method, *, &)
       end
     end
 
@@ -89,12 +91,6 @@ module RBlade
       end
 
       AttributesManager.new new_attributes
-    end
-
-    def has?(*keys)
-      keys.map!(&:to_sym)
-
-      keys.all? { |key| @attributes.has_key? key }
     end
 
     def has_any?(*keys)

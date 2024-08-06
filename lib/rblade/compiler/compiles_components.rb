@@ -51,11 +51,11 @@ module RBlade
 
       namespace = nil
       name = component[:name]
-      if name.match '::'
+      if name.match? "::"
         namespace, name = component[:name].split("::")
       end
 
-      code = if namespace == 'slot'
+      if namespace == "slot"
         compile_slot_end name, component
       else
         compile_component_end component

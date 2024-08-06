@@ -79,7 +79,7 @@ module RBlade
       case segments[i][:value][:name]
       when "case"
         # Remove any whitespace before a when statement
-        until segments[i + 1].nil? || segments[i + 1] == '@'
+        until segments[i + 1].nil? || segments[i + 1] == "@"
           segments.delete_at i + 1
         end
       end

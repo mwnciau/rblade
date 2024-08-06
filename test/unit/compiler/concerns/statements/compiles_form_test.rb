@@ -20,10 +20,10 @@ class CompilesHelpersTest < TestCase
   end
 
   def test_old
-    assert_compiles_to "@old(:email)", nil, 'user@example.com'
-    assert_compiles_to "@old(:email, 'default')", nil, 'user@example.com'
+    assert_compiles_to "@old(:email)", nil, "user@example.com"
+    assert_compiles_to "@old(:email, 'default')", nil, "user@example.com"
 
-    assert_compiles_to "@old(:not_a_field)", nil, ''
-    assert_compiles_to "@old(:not_a_field, 'default')", nil, 'default'
+    assert_compiles_to "@old(:not_a_field)", nil, ""
+    assert_compiles_to "@old(:not_a_field, 'default')", nil, "default"
   end
 end

@@ -82,11 +82,11 @@ class BladeTemplatingTest < TestCase
   def test_class_method
     assert_equal 'class="block mt-2"', RBlade::AttributesManager.new({}).class("block mt-2").to_s
     assert_equal 'class="block mt-2"', RBlade::AttributesManager.new({}).class(["block", "mt-2"]).to_s
-    assert_equal 'class="block mt-2"', RBlade::AttributesManager.new({}).class({"block": true, "mt-2": true, "mb-6": false}).to_s
+    assert_equal 'class="block mt-2"', RBlade::AttributesManager.new({}).class({block: true, "mt-2": true, "mb-6": false}).to_s
 
     assert_equal 'class="relative block mt-2"', RBlade::AttributesManager.new({class: "relative"}).class("block mt-2").to_s
     assert_equal 'class="relative block mt-2"', RBlade::AttributesManager.new({class: "relative"}).class(["block", "mt-2"]).to_s
-    assert_equal 'class="relative block mt-2"', RBlade::AttributesManager.new({class: "relative"}).class({"block": true, "mt-2": true, "mb-6": false}).to_s
+    assert_equal 'class="relative block mt-2"', RBlade::AttributesManager.new({class: "relative"}).class({block: true, "mt-2": true, "mb-6": false}).to_s
   end
 
   def test_style
@@ -118,7 +118,7 @@ class BladeTemplatingTest < TestCase
   def test_has
     attributes = RBlade::AttributesManager.new({a: "1", b: "2"})
 
-    assert attributes.has? 'a'
+    assert attributes.has? "a"
     assert attributes.has? :a
     assert attributes.has? :a, :b
 
@@ -129,7 +129,7 @@ class BladeTemplatingTest < TestCase
   def test_has_any
     attributes = RBlade::AttributesManager.new({a: "1", b: "2"})
 
-    assert attributes.has_any? 'a'
+    assert attributes.has_any? "a"
     assert attributes.has_any? :a
     assert attributes.has_any? :a, :b
     assert attributes.has_any? :a, :c

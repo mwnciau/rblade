@@ -59,7 +59,7 @@ class CompilesConditionalsTest < TestCase
     assert_compiles_to "@nil?({}) nil! @endnil?", "if ({}).nil?;_out<<'nil!';end;", ""
   end
 
-  def test_nil
+  def test_present
     assert_compiles_to "@present?(nil) present! @endpresent?", "if (nil).present?;_out<<'present!';end;", ""
     assert_compiles_to "@present?(true) present! @endpresent?", "if (true).present?;_out<<'present!';end;", "present!"
     assert_compiles_to "@present?(false) present! @endpresent?", "if (false).present?;_out<<'present!';end;", ""

@@ -57,28 +57,28 @@ class CompilesComponentsTest < TestCase
     assert_compiles_to "<x-button>hello<//>", nil, '<button class="button">hello</button>'
   end
 
-  def test_slots
+  def test_slot_components
     assert_compiles_to "<x-compiles_components_test.slot><x-slot::title>TITLE<//>SLOT<//>",
       nil,
-      'TITLE - SLOT'
+      "TITLE - SLOT"
 
     assert_compiles_to "<x-compiles_components_test.slot><x-slot::title><strong>TITLE</strong><//>SLOT<//>",
       nil,
-      '<strong>TITLE</strong> - SLOT'
+      "<strong>TITLE</strong> - SLOT"
 
     assert_compiles_to "<x-compiles_components_test.slot>SLOT<x-slot::title>TITLE<//><//>",
       nil,
-      'TITLE - SLOT'
+      "TITLE - SLOT"
 
     assert_compiles_to "<x-compiles_components_test.slot>SL<x-slot::title>TITLE<//>OT<//>",
       nil,
-      'TITLE - SLOT'
+      "TITLE - SLOT"
   end
 
   def test_slot_attributes
     assert_compiles_to "<x-compiles_components_test.slot-attributes><x-slot::title>TITLE<//>SLOT<//>",
       nil,
-      '<div ><h1 >TITLE</h1>SLOT</div>'
+      "<div ><h1 >TITLE</h1>SLOT</div>"
 
     assert_compiles_to "<x-compiles_components_test.slot-attributes><x-slot::title a=b>TITLE<//>SLOT<//>",
       nil,

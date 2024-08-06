@@ -24,8 +24,6 @@ module RBlade
       @content.respond_to?(method_name)
     end
 
-    def attributes
-      @attributes
-    end
+    attr_reader :attributes
   end
 end
