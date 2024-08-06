@@ -1,0 +1,14 @@
+<p {{ attributes.merge({
+    class: "
+      text-base font-normal
+      {{--
+        The tailwindcss-unimportant plugin works well with component design:
+        the "-:" prefix allows the consumer of the component to easily override
+        the component classes and extend the component.
+        See: https://www.npmjs.com/package/tailwindcss-unimportant
+      --}}
+      -:mt-1
+    "
+}) }}>
+  {{ slot }}
+</p>

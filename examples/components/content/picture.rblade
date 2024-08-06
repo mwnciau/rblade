@@ -1,0 +1,7 @@
+@props({image: _required, caption: _required})
+<figure {{ attributes }}>
+  <img src="{{ image }}">
+  <figcaption {{ caption.attributes }}>
+    {{ caption }}
+  </figcaption>
+</figure>

@@ -1,0 +1,6 @@
+@props({blue: false})
+<h1 {{ attributes.merge({
+    class: "text-xl font-bold #{blue ? 'text-blue-700' : 'text-black'}"
+}) }}>
+  {{ slot }}
+</h1>

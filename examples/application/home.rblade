@@ -1,0 +1,19 @@
+@ruby
+# Typically these values would be set by the controller
+banner_image = 'banner.png'
+@endruby
+<x-layout::app title="Home page">
+  <x-h1 blue>Welcome to the home page!</x-h1>
+
+  <x-p class="mt-4">
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias amet architecto, at commodi consectetur ipsa itaque magni minus neque nostrum pariatur possimus recusandae sunt! Est explicabo praesentium quidem vero voluptatum!
+  </x-p>
+
+  @if (banner_image)
+    <x-content.picture :image="banner_image">
+      <x-slot::caption class="p-2">
+        This is our banner image
+      </x-slot::caption>
+    </x-content.picture>
+  @endif
+</x-layout::app>
