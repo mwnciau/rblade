@@ -5,11 +5,25 @@ RBlade is a simple, yet powerful templating engine for Ruby on Rails, inspired b
 
 RBlade template files use the `.rblade` file extension and are typically stored in the `app/views` directory.
 
-<a name="displaying-data"></a>
+
+<a name="getting-started"></a>
+## Getting Started
+
+Add RBlade to your Rails project by adding it to your Gemfile:
+
+```
+bundle add rblade
+```
+
+RBlade will automatically be detected and start parsing templates ending in `.rblade`.
+
+For a quick overview of RBlade's capabilities, refer to the [reference file](REFERENCE.md) or take a look at the [examples](examples/README.md).
+
+<a name="table-of-contents"></a>
 ## Table of Contents
 - [RBlade Templates](#rblade-templates)
-  * [Table of Contents](#table-of-contents)
   * [Getting Started](#getting-started)
+  * [Table of Contents](#table-of-contents)
   * [Displaying Data](#displaying-data)
     + [HTML Entity Encoding](#html-entity-encoding)
     + [RBlade and JavaScript Frameworks](#rblade-and-javascript-frameworks)
@@ -44,20 +58,6 @@ RBlade template files use the `.rblade` file extension and are typically stored 
     + [Old Input](#old-input)
     + [Method Field](#method-field)
   * [Stacks](#stacks)
-
-<a name="getting-started"></a>
-## Getting Started
-
-Add RBlade to your Rails project by adding it to your Gemfile:
-
-```
-bundle add rblade
-```
-
-RBlade will automatically be detected and start parsing templates ending in `.rblade`.
-
-For a quick overview of RBlade's capabilities, refer to the [reference file](REFERENCE.md) or take a look at the [examples](examples/README.md).
-
 
 <a name="displaying-data"></a>
 ## Displaying Data
