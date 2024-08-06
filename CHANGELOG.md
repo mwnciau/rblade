@@ -1,5 +1,6 @@
 ## 0.6.2 [UNRELEASED]
 - Add quick reference and examples
+- Add @shouldRender directive
 - Add support for ERB style `<%==` unsafe prints
 - Remove deprecated "breakIf" and "nextIf" statements
 - Rename "echo" compilers to "print"

@@ -754,6 +754,18 @@ To interact with slot attributes, you can access the `attributes` property of th
 </div>
 ```
 
+<a name="conditional-rendering"></a>
+#### Conditional Rendering
+
+Sometimes, you may wish to return early from a component without printing anything. For example, if you make an error component and no errors are passed in as properties, you might want to skip rendering. You can use the `@shouldRender` directive anywhere within a component to prevent the component from being rendered:
+
+```rblade
+{{-- components/error.rblade --}}
+@props({errors: []})
+@shouldRender(errors.present?)
+...
+```
+
 <a name="registering-additional-component-directories"></a>
 ### Registering Additional Component Directories
 

@@ -1,10 +1,10 @@
+require "rblade/compiler/statements/compiles_component_helpers"
 require "rblade/compiler/statements/compiles_conditionals"
 require "rblade/compiler/statements/compiles_form"
 require "rblade/compiler/statements/compiles_html_attributes"
 require "rblade/compiler/statements/compiles_inline_ruby"
 require "rblade/compiler/statements/compiles_loops"
 require "rblade/compiler/statements/compiles_once"
-require "rblade/compiler/statements/compiles_props"
 require "rblade/compiler/statements/compiles_stacks"
 
 module RBlade
@@ -105,7 +105,7 @@ module RBlade
       "prependonce" => [CompilesOnce, :compilePrependOnce],
       "present?" => [CompilesConditionals, :compilePresent],
       "production" => [CompilesConditionals, :compileProduction],
-      "props" => [CompilesProps, :compileProps],
+      "props" => [CompilesComponentHelpers, :compileProps],
       "push" => [CompilesStacks, :compilePush],
       "pushif" => [CompilesStacks, :compilePushIf],
       "pushonce" => [CompilesOnce, :compilePushOnce],
@@ -114,6 +114,7 @@ module RBlade
       "required" => [CompilesConditionals, :compileRequired],
       "ruby" => [CompilesInlineRuby, :compile],
       "selected" => [CompilesConditionals, :compileSelected],
+      "shouldrender" => [CompilesComponentHelpers, :compileShouldRender],
       "stack" => [CompilesStacks, :compileStack],
       "style" => [CompilesHtmlAttributes, :compileStyle],
       "unless" => [CompilesConditionals, :compileUnless],

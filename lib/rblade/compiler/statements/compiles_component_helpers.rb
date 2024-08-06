@@ -2,7 +2,15 @@ require "rblade/helpers/tokenizer"
 
 module RBlade
   class CompilesStatements
-    class CompilesProps
+    class CompilesComponentHelpers
+      def compileShouldRender args
+        if args.nil?
+          raise StandardError.new "Props statement: wrong number of arguments (given #{args&.count}, expecting 1)"
+        end
+
+        "unless(#{args[0]});return'';end;"
+      end
+
       def compileProps args
         if args.nil?
           raise StandardError.new "Props statement: wrong number of arguments (given #{args&.count}, expecting 1)"
