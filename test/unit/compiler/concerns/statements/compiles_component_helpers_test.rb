@@ -44,13 +44,13 @@ class CompilesComponentHelpersTest < TestCase
   def test_required
     exception = assert_raises Exception do
       assert_props_compiles_to "@props({b: _required}) {{ b }}",
-        "if !attributes.has?(:'b');raise \"Props statement: b is not defined\";end;b=attributes[:'b'].nil? ? _required : attributes[:'b'];attributes.delete :'b';_out<<RBlade.e(b);",
+        "if !attributes.has?(:'b');raise \"Props statement: b is not defined\";end;b=attributes[:'b'];attributes.delete :'b';_out<<RBlade.e(b);",
         ""
     end
     assert_equal "Props statement: b is not defined", exception.to_s
 
     assert_props_compiles_to "@props({a: _required}) {{ a }}",
-      "if !attributes.has?(:'a');raise \"Props statement: a is not defined\";end;a=attributes[:'a'].nil? ? _required : attributes[:'a'];attributes.delete :'a';_out<<RBlade.e(a);",
+      "if !attributes.has?(:'a');raise \"Props statement: a is not defined\";end;a=attributes[:'a'];attributes.delete :'a';_out<<RBlade.e(a);",
       "A"
   end
 
