@@ -7,7 +7,7 @@ module RBlade
 
       def compileBreak args
         if args&.count&.> 1
-          raise StandardError.new "Break statement: wrong number of arguments (given #{args&.count}, expecting 0 or 1)"
+          raise StandardError.new "Break statement: wrong number of arguments (given #{args.count}, expecting 0 or 1)"
         end
 
         if args.nil?
@@ -31,7 +31,7 @@ module RBlade
 
       def compileEachElse args
         if args.nil? || args.count > 2
-          raise StandardError.new "Each statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+          raise StandardError.new "Each else statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
         # Allow variables to be a key, value pair
         args = args.join ","
@@ -59,7 +59,11 @@ module RBlade
         "_looped_#{@loop_else_counter}=false;for #{args[0]};_looped_#{@loop_else_counter}=true;"
       end
 
-      def compileEmpty
+      def compileEmpty args
+        unless args.nil?
+          raise StandardError.new "Empty statement: wrong number of arguments (given #{args.count}, expecting 0)"
+        end
+
         @loop_else_counter -= 1
 
         "end;if !_looped_#{@loop_else_counter + 1};"
@@ -67,7 +71,7 @@ module RBlade
 
       def compileNext args
         if args&.count&.> 1
-          raise StandardError.new "For statement: wrong number of arguments (given #{args&.count || 0}, expecting 0 or 1)"
+          raise StandardError.new "Next statement: wrong number of arguments (given #{args.count}, expecting 0 or 1)"
         end
 
         if args.nil?

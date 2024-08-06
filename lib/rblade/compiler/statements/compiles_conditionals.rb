@@ -58,8 +58,8 @@ module RBlade
       end
 
       def compileElse args
-        if !args.nil?
-          raise StandardError.new "Else statement: wrong number of arguments (given #{args&.count || 0}, expecting 0)"
+        unless args.nil?
+          raise StandardError.new "Else statement: wrong number of arguments (given #{args.count}, expecting 0)"
         end
 
         "else;"
@@ -82,8 +82,8 @@ module RBlade
       end
 
       def compileWhen args
-        if args.nil? || args.count == 0
-          raise StandardError.new "When statement: wrong number of arguments (given #{args&.count || 0}, expecting at least 1)"
+        if args.nil?
+          raise StandardError.new "When statement: wrong number of arguments (given 0, expecting at least 1)"
         end
 
         "when #{args.join ","};"
@@ -141,18 +141,10 @@ module RBlade
 
       def compileProduction args
         unless args.nil?
-          raise StandardError.new "Production statement: wrong number of arguments (given #{args.count}, expecting 1)"
+          raise StandardError.new "Production statement: wrong number of arguments (given #{args.count}, expecting 0)"
         end
 
         "if Rails.env.production?;"
-      end
-
-      def compileOnce args
-        if args&.count&.> 1
-          raise StandardError.new "Production statement: wrong number of arguments (given #{args.count}, expecting 0 or 1)"
-        end
-
-        args[0].nil? ? "" : args[0]
       end
     end
   end

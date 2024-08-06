@@ -4,16 +4,16 @@ module RBlade
   class CompilesStatements
     class CompilesComponentHelpers
       def compileShouldRender args
-        if args.nil?
-          raise StandardError.new "Props statement: wrong number of arguments (given #{args&.count}, expecting 1)"
+        if args&.count != 1
+          raise StandardError.new "Should render statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
 
         "unless(#{args[0]});return'';end;"
       end
 
       def compileProps args
-        if args.nil?
-          raise StandardError.new "Props statement: wrong number of arguments (given #{args&.count}, expecting 1)"
+        if args&.count != 1
+          raise StandardError.new "Props statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
 
         props = extractProps args[0]
@@ -21,8 +21,8 @@ module RBlade
           compiled_code = ""
           if value == "_required"
             compiled_code << "if !attributes.has?(:'#{RBlade.escape_quotes(key)}');raise \"Props statement: #{key} is not defined\";end;"
-          end
-          if isValidVariableName key
+            compiled_code << "#{key}=attributes[:'#{RBlade.escape_quotes(key)}'];attributes.delete :'#{RBlade.escape_quotes(key)}';"
+          elsif isValidVariableName key
             compiled_code << "#{key}=attributes[:'#{RBlade.escape_quotes(key)}'].nil? ? #{value} : attributes[:'#{RBlade.escape_quotes(key)}'];"
             compiled_code << "attributes.delete :'#{RBlade.escape_quotes(key)}';"
           else

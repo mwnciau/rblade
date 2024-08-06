@@ -3,7 +3,7 @@ module RBlade
     class CompilesForm
       def compileMethod args
         if args&.count != 1
-          raise StandardError.new "Once statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+          raise StandardError.new "Method statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
         method = RBlade.h(args[0].tr "\"'", "")
 
@@ -11,24 +11,24 @@ module RBlade
       end
 
       def compileDelete args
-        if !args.nil?
-          raise StandardError.new "Once statement: wrong number of arguments (given #{args.count}, expecting 0)"
+        unless args.nil?
+          raise StandardError.new "Delete statement: wrong number of arguments (given #{args.count}, expecting 0)"
         end
 
         compileMethod(['DELETE'])
       end
 
       def compilePatch args
-        if !args.nil?
-          raise StandardError.new "Once statement: wrong number of arguments (given #{args.count}, expecting 0)"
+        unless args.nil?
+          raise StandardError.new "Patch statement: wrong number of arguments (given #{args.count}, expecting 0)"
         end
 
         compileMethod(['PATCH'])
       end
 
       def compilePut args
-        if !args.nil?
-          raise StandardError.new "Once statement: wrong number of arguments (given #{args.count}, expecting 0)"
+        unless args.nil?
+          raise StandardError.new "Put statement: wrong number of arguments (given #{args.count}, expecting 0)"
         end
 
         compileMethod(['PUT'])
@@ -36,7 +36,7 @@ module RBlade
 
       def compileOld args
         if args.nil? || args.count > 2
-          raise StandardError.new "Once statement: wrong number of arguments (given #{args.count}, expecting 0)"
+          raise StandardError.new "Old statement: wrong number of arguments (given #{args&.count || 0}, expecting 1 or 2)"
         end
 
         default_value = args[1] || "''"
