@@ -17,7 +17,7 @@ bundle add rblade
 
 RBlade will automatically be detected and start parsing templates ending in `.rblade`.
 
-For a quick overview of RBlade's capabilities, refer to the [reference file](REFERENCE.md) or take a look at the [examples](examples/README.md).
+For a quick overview of RBlade's capabilities, refer to the [reference file](REFERENCE.md) or take a look at the [examples](examples/).
 
 <a name="table-of-contents"></a>
 ## Table of Contents
