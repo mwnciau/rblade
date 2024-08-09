@@ -1,2 +1,2 @@
-@props({title: _required})
+@props({title: required})
 {{ title }} - {{ slot }}

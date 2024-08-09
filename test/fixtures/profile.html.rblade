@@ -1,2 +1,2 @@
-@props({name: _required})
+@props({name: required})
 <div class="profile"><h2>{{ name.capitalize }}</h2>{{ slot }}<x-button>View</x-button></div>

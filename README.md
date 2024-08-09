@@ -475,11 +475,11 @@ You can define a component's data properties using a `@props` directive at the t
 
 ```rblade
 {{-- alert.rblade --}}
-@props({type: "warning", message: _required})
+@props({type: "warning", message: required})
 <div class="{{ type }}">{{ message }}</div>
 ```
 
-The `@props` directive accepts a Hash where the key is the name of the attribute, and the value is the default value for the property. You can use the special `_required` value to represent a property with no default that must always be defined:
+The `@props` directive accepts a Hash where the key is the name of the attribute, and the value is the default value for the property. You can use the special `required` value to represent a property with no default that must always be defined:
 
 ```rblade
 {{-- This will give an error because the alert component requires a message propery --}}
@@ -489,7 +489,7 @@ The `@props` directive accepts a Hash where the key is the name of the attribute
 All properties in the `@props` directive are automatically removed from `attributes`. Properties with names that aren't valid Ruby variable names or are Ruby reserved keywords are not created as local variables. However, you can reference them via the `attributes` local variable:
 
 ```rblade
-@props({"for": _required, "data-value": nil})
+@props({"for": required, "data-value": nil})
 <div>{{ attributes[:for] }} {{ attributes[:'data-value'] }}</div>
 ```
 
@@ -681,7 +681,7 @@ Sometimes a component may need to render multiple different slots in different l
 
 ```rblade
 {{-- /app/views/components/alert.rblade --}}
-@props({title: _required})
+@props({title: required})
 <span class="alert-title">{{ title }}</span>
 <div class="alert alert-danger">
     {{ slot }}
@@ -737,8 +737,8 @@ To interact with slot attributes, you can access the `attributes` property of th
 
 ```rblade
 @props({
-    "heading": _required,
-    "footer": _required,
+    "heading": required,
+    "footer": required,
 })
 
 <div {{ attributes.class('border') }}>

@@ -1,5 +1,5 @@
 @props({
-    firstName: _required,
+    firstName: required,
     visible: true
 })
 @if(visible)

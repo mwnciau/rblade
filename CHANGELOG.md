@@ -1,5 +1,6 @@
 ## 1.0.1 [UNRELEASED]
 - Automatically detect when properties are used as slots
+- Change `_required` to `required` in @props
 
 ## 1.0.0 [2024-08-06]
 - Add quick reference and examples

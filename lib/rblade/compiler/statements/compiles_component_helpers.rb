@@ -20,7 +20,8 @@ module RBlade
         props.map do |key, value|
           compiled_code = ""
 
-          compiled_code << if value == "_required"
+          # `_required` is deprecated. Use `required`. To be removed in 2.0.0
+          compiled_code << if value == "_required" || value == "required"
             "if !attributes.has?(:'#{RBlade.escape_quotes(key)}');raise \"Props statement: #{key} is not defined\";end;"
           else
             "attributes.default(:'#{RBlade.escape_quotes(key)}', #{value});"

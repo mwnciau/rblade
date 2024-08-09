@@ -1,2 +1,2 @@
-@props({title: _required})
+@props({title: required})
 <div {{attributes}}><h1 {{title.attributes}}>{{ title }}</h1>{{ slot }}</div>

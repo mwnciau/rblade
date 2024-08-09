@@ -31,7 +31,7 @@ By default, RBlade will look for components in the `app/views/components` folder
 | `<x-name attribute/>`                                    | Pass an attribute to a component with value `true`                                                                                         |
 | `<x-name {{ attributes }}/>`                             | Pass attributes to a child component                                                                                                       |
 | `@props({header: "Header"})`                             | Remove `header` from the attributes Hash and introduce it as a local variable, using the specified value as a default                      |
-| `@props({header: _required})`                            | Remove `header` from the attributes Hash and introduce it as a local variable, raising an error if it is not set                           |
+| `@props({header: required})`                             | Remove `header` from the attributes Hash and introduce it as a local variable, raising an error if it is not set                           |
 | `{{ slot }}`                                             | Output the block content passed into the current component                                                                                 |
 | `<x-name><x-slot::header><h1>Header</h1><//>Content<//>` | Pass a named block to a component                                                                                                          |
 | `{{ header }}`                                           | Output the contents of a named block                                                                                                       |

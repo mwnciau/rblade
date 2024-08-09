@@ -1,2 +1,2 @@
-@props({href: _required})
+@props({href: required})
 <a href="{{ href }}">{{ slot }}</a>

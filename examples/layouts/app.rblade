@@ -1,4 +1,4 @@
-@props({title: _required})
+@props({title: required})
 <!DOCTYPE html>
 <html lang="en">
   <head>
