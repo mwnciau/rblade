@@ -83,4 +83,13 @@ class CompilesComponentHelpersTest < TestCase
     assert_compiles_to "<x-#{component}><x-slot::mySlot a=b/><//>", nil, ' a="b"'
     assert_compiles_to "<x-#{component}><x-slot::mySlot a=b>ghi<//><//>", nil, 'ghi a="b"'
   end
+
+  def test_should_allow_non_string_defaults
+    component = "compiles_component_helpers.should_allow_non_string_defaults"
+    assert_compiles_to "<x-#{component}/>", nil, ""
+    assert_compiles_to "<x-#{component}><x-slot::falseSlot a=b>c<//><//>", nil, '  c a="b"'
+    assert_compiles_to "<x-#{component}><x-slot::nilSlot a=b>c<//><//>", nil, '  c a="b"'
+
+    assert_compiles_to "<x-#{component} nilSlot='123'/>", nil, '  123 '
+  end
 end

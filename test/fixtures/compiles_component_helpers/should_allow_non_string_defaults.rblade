@@ -1,0 +1,7 @@
+@props({falseSlot: false, nilSlot: nil})
+@if(falseSlot)
+  {{ falseSlot }} {{ falseSlot.attributes }}
+@endif
+@if(nilSlot)
+  {{ nilSlot }} {{ nilSlot.attributes }}
+@endif

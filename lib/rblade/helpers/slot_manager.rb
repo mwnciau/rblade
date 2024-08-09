@@ -24,9 +24,9 @@ module RBlade
       @content.respond_to?(method_name)
     end
 
-    # Wraps var in a slot manager, if it isn't already
+    # Wraps var in a slot manager if it's a string
     def self.wrap var
-      var.is_a?(self) ? var : new(var)
+      var.is_a?(String) ? new(var) : var
     end
 
     attr_reader :attributes
