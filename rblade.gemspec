@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "rblade"
-  s.version = "1.0.1"
+  s.version = "1.0.2"
   s.summary = "A component-first templating engine for Rails"
   s.description = "RBlade is a simple, yet powerful templating engine for Ruby on Rails, inspired by Laravel Blade."
   s.authors = ["Simon J"]
@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
   s.files = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|storage)/}) }
   s.require_paths = ["lib"]
   s.homepage = "https://rubygems.org/gems/rblade"
+  s.metadata = { "source_code_uri" => "https://github.com/mwnciau/rblade" }
   s.license = "MIT"
   s.required_ruby_version = ">= 3.0.0"
 

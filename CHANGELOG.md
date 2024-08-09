@@ -1,3 +1,6 @@
+## 1.0.2 [2024-08-09]
+- Fix non-string `@props` defaults being converted to slots
+
 ## 1.0.1 [2024-08-09]
 - Automatically detect when properties are used as slots
 - Change `_required` to `required` in @props
