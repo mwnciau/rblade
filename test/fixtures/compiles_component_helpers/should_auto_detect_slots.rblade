@@ -1,0 +1,2 @@
+@props({mySlot: "abc"})
+{{ mySlot }} {{ mySlot.attributes }}

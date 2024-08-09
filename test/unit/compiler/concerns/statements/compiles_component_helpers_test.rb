@@ -31,11 +31,11 @@ class CompilesComponentHelpersTest < TestCase
 
   def test_props_hash
     assert_props_compiles_to "@props({b: 'default'}) {{ b }}",
-      "b=attributes[:'b'].nil? ? 'default' : attributes[:'b'];attributes.delete :'b';_out<<RBlade.e(b);",
+      "attributes.default(:'b', 'default');b=attributes.delete :'b';_out<<RBlade.e(b);",
       "default"
 
     assert_props_compiles_to "@props({a: 'default'}) {{ a }}",
-      "a=attributes[:'a'].nil? ? 'default' : attributes[:'a'];attributes.delete :'a';_out<<RBlade.e(a);",
+      "attributes.default(:'a', 'default');a=attributes.delete :'a';_out<<RBlade.e(a);",
       "A"
 
     assert_props_compiles_to "@props({a: 'default', b:false,}) {{ a }} {{ b }}", nil, "A false"
@@ -44,13 +44,13 @@ class CompilesComponentHelpersTest < TestCase
   def test_required
     exception = assert_raises Exception do
       assert_props_compiles_to "@props({b: _required}) {{ b }}",
-        "if !attributes.has?(:'b');raise \"Props statement: b is not defined\";end;b=attributes[:'b'];attributes.delete :'b';_out<<RBlade.e(b);",
+        "if !attributes.has?(:'b');raise \"Props statement: b is not defined\";end;b=attributes.delete :'b';_out<<RBlade.e(b);",
         ""
     end
     assert_equal "Props statement: b is not defined", exception.to_s
 
     assert_props_compiles_to "@props({a: _required}) {{ a }}",
-      "if !attributes.has?(:'a');raise \"Props statement: a is not defined\";end;a=attributes[:'a'];attributes.delete :'a';_out<<RBlade.e(a);",
+      "if !attributes.has?(:'a');raise \"Props statement: a is not defined\";end;a=attributes.delete :'a';_out<<RBlade.e(a);",
       "A"
   end
 
@@ -74,5 +74,13 @@ class CompilesComponentHelpersTest < TestCase
     assert_props_compiles_to "@props({a: nil, 'a-b': 'A'}) {{ attributes }}", nil, 'a-b="A"'
     assert_props_compiles_to "@props({a: nil, '1': 'A'}) {{ attributes }}", nil, '1="A"'
     assert_props_compiles_to "@props({a: nil, 2: 'A'}) {{ attributes }}", nil, '2="A"'
+  end
+
+  def test_should_auto_detect_slots
+    component = "compiles_component_helpers.should_auto_detect_slots"
+    assert_compiles_to "<x-#{component}/>", nil, "abc "
+    assert_compiles_to "<x-#{component}><x-slot::mySlot>def<//><//>", nil, "def "
+    assert_compiles_to "<x-#{component}><x-slot::mySlot a=b/><//>", nil, ' a="b"'
+    assert_compiles_to "<x-#{component}><x-slot::mySlot a=b>ghi<//><//>", nil, 'ghi a="b"'
   end
 end
