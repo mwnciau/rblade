@@ -90,6 +90,6 @@ class CompilesComponentHelpersTest < TestCase
     assert_compiles_to "<x-#{component}><x-slot::falseSlot a=b>c<//><//>", nil, '  c a="b"'
     assert_compiles_to "<x-#{component}><x-slot::nilSlot a=b>c<//><//>", nil, '  c a="b"'
 
-    assert_compiles_to "<x-#{component} nilSlot='123'/>", nil, '  123 '
+    assert_compiles_to "<x-#{component} nilSlot='123'/>", nil, "  123 "
   end
 end
