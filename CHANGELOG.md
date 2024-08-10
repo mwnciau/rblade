@@ -1,3 +1,6 @@
+## 1.0.3 [UNRELEASED]
+- Add support for the Rails `raw` method for outputting unescaped HTML
+
 ## 1.0.2 [2024-08-09]
 - Fix non-string `@props` defaults being converted to slots
 

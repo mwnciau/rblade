@@ -2,7 +2,7 @@ require "test_case"
 require "rblade/compiler"
 require "rblade/helpers/class_manager"
 
-class BladeTemplatingTest < TestCase
+class ClassManagerTest < TestCase
   def test_string
     manager = RBlade::ClassManager.new ""
     assert_equal "", manager.to_s

@@ -105,4 +105,12 @@ class CompilesPrintsTest < TestCase
     assert_compiles_to "<%= 'foo}}' %>", "_out<<RBlade.e('foo}}');", "foo}}"
     assert_compiles_to "{{ 'foo%>' }}", "_out<<RBlade.e('foo%>');", "foo%&gt;"
   end
+
+  def test_raw
+    assert_compiles_to "{{ '<>' }}", "_out<<RBlade.e('<>');", "&lt;&gt;"
+    assert_compiles_to "{{ raw('<>') }}", "_out<<RBlade.e(raw('<>'));", "<>"
+
+    assert_compiles_to "{{ '\"\\'' }}", nil, "&quot;&#39;"
+    assert_compiles_to "{{ raw('\"\\'') }}", nil, "\"'"
+  end
 end

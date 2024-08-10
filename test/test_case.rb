@@ -1,8 +1,11 @@
 require "minitest/autorun"
 require "minitest/reporters"
 require "rblade/rails_template"
+require "action_view/helpers"
 
 class TestCase < Minitest::Test
+  include ActionView::Helpers
+
   RBlade::ComponentStore.add_path(File.join(File.dirname(__FILE__), "fixtures"))
 
   def assert_compiles_to template, expected_code = nil, expected_result = nil

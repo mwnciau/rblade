@@ -7,6 +7,7 @@ require "rblade/compiler/compiles_statements"
 require "rblade/compiler/tokenizes_components"
 require "rblade/compiler/tokenizes_statements"
 require "rblade/helpers/html_string"
+require "active_support/core_ext/string/output_safety"
 
 Token = Struct.new(:type, :value)
 
@@ -21,7 +22,7 @@ module RBlade
   end
 
   def self.e string
-    if string.is_a? HtmlString
+    if string.is_a?(HtmlString) || string.is_a?(ActiveSupport::SafeBuffer)
       string
     else
       h(string)
