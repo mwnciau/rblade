@@ -1,5 +1,3 @@
-require "rblade/compiler"
-
 module RBlade
   FILE_EXTENSIONS = [".rblade", ".html.rblade"]
 
