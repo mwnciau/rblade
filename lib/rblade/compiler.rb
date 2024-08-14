@@ -37,8 +37,8 @@ module RBlade
       CompilesComments.new.compile! tokens
       CompilesRuby.new.compile! tokens
       TokenizesComponents.new.tokenize! tokens
-      TokenizesStatements.new.tokenize! tokens
       CompilesPrints.new.compile! tokens
+      TokenizesStatements.new.tokenize! tokens
       CompilesStatements.new.compile! tokens
       CompilesComponents.new.compile! tokens
 
