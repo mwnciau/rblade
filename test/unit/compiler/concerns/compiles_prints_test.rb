@@ -113,4 +113,8 @@ class CompilesPrintsTest < TestCase
     assert_compiles_to "{{ '\"\\'' }}", nil, "&quot;&#39;"
     assert_compiles_to "{{ raw('\"\\'') }}", nil, "\"'"
   end
+
+  def test_printing_member_variables
+    assert_compiles_to "{{ @foo }}", "_out<<RBlade.e(@foo);"
+  end
 end
