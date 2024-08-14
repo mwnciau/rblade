@@ -1,3 +1,6 @@
+## 1.0.5 [2024-08-14]
+- Allow use of variables in @method directive
+
 ## 1.0.4 [2024-08-14]
 - Fix printing ruby member variables (#8)
 

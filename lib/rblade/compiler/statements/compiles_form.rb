@@ -5,9 +5,8 @@ module RBlade
         if args&.count != 1
           raise StandardError.new "Method statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
-        method = RBlade.h(args[0].tr("\"'", ""))
 
-        %(_out<<'<input type="hidden" name="_method" value="#{method}">';)
+        %(_out<<'<input type="hidden" name="_method" value="'<<#{args[0]}<<'">';)
       end
 
       def compileDelete args
@@ -15,7 +14,7 @@ module RBlade
           raise StandardError.new "Delete statement: wrong number of arguments (given #{args.count}, expecting 0)"
         end
 
-        compileMethod(["DELETE"])
+        compileMethod(["'DELETE'"])
       end
 
       def compilePatch args
@@ -23,7 +22,7 @@ module RBlade
           raise StandardError.new "Patch statement: wrong number of arguments (given #{args.count}, expecting 0)"
         end
 
-        compileMethod(["PATCH"])
+        compileMethod(["'PATCH'"])
       end
 
       def compilePut args
@@ -31,7 +30,7 @@ module RBlade
           raise StandardError.new "Put statement: wrong number of arguments (given #{args.count}, expecting 0)"
         end
 
-        compileMethod(["PUT"])
+        compileMethod(["'PUT'"])
       end
 
       def compileOld args

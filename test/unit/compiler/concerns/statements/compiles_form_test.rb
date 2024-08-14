@@ -5,6 +5,7 @@ class CompilesHelpersTest < TestCase
     assert_compiles_to "@method('POST')", nil, '<input type="hidden" name="_method" value="POST">'
     assert_compiles_to '@method("GET")', nil, '<input type="hidden" name="_method" value="GET">'
     assert_compiles_to "@method('PUT')", nil, '<input type="hidden" name="_method" value="PUT">'
+    assert_compiles_to "@method(foo)", nil, '<input type="hidden" name="_method" value="FOO">'
   end
 
   def test_delete
