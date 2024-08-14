@@ -2,6 +2,7 @@
 - Fix printing ruby member variables (#8)
 
 ## 1.0.3 [2024-08-10]
+- Add GitHub CI
 - Add support for the Rails `raw` method for outputting unescaped HTML
 
 ## 1.0.2 [2024-08-09]
