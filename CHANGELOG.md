@@ -1,3 +1,6 @@
+## [UNRELEASED]
+- Add `@eachWithIndex` directive
+
 ## 1.0.5 [2024-08-14]
 - Allow use of variables in @method directive
 

@@ -19,27 +19,74 @@ module RBlade
 
       def compileEach args
         if args.nil? || args.count > 2
-          raise StandardError.new "Each statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+          raise StandardError.new "Each statement: wrong number of arguments (given #{args&.count || 0}, expecting 1 or 2)"
         end
-        # Allow variables to be a key, value pair
-        args = args.join ","
+        last_arg, collection = args.pop.split(" in ")
+        args.push(last_arg)
 
-        variables, collection = args.split(" in ")
+        if collection.nil?
+          raise StandardError.new "Each statement: collection not found (expecting 'in')"
+        end
 
-        "#{collection}.each do |#{variables}|;"
+        "#{collection}.each do |#{args.join(',')}|;"
+      end
+
+      def compileEachWithIndex args
+        if args.nil? || args.count > 3
+          raise StandardError.new "Each with index statement: wrong number of arguments (given #{args&.count || 0}, expecting 1 to 3)"
+        end
+        last_arg, collection = args.pop.split(" in ")
+        args.push(last_arg)
+
+        if collection.nil?
+          raise StandardError.new "Each with index statement: collection not found (expecting 'in')"
+        end
+
+        # Special case for 3 arguments: the first 2 arguments are the key/value pair in a Hash, and
+        # the third is the index
+        if args.count == 3
+          "#{collection}.each_with_index do |_ivar,#{args[2]}|;#{args[0]},#{args[1]}=_ivar;"
+        else
+          "#{collection}.each_with_index do |#{args.join(",")}|;"
+        end
       end
 
       def compileEachElse args
         if args.nil? || args.count > 2
           raise StandardError.new "Each else statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
-        # Allow variables to be a key, value pair
-        args = args.join ","
+        last_arg, collection = args.pop.split(" in ")
+        args.push(last_arg)
+
+        if collection.nil?
+          raise StandardError.new "Each else statement: collection not found (expecting 'in')"
+        end
+
         @loop_else_counter += 1
 
-        variables, collection = args.split(" in ")
+        "_looped_#{@loop_else_counter}=false;#{collection}.each do |#{args.join(',')}|;_looped_#{@loop_else_counter}=true;"
+      end
 
-        "_looped_#{@loop_else_counter}=false;#{collection}.each do |#{variables}|;_looped_#{@loop_else_counter}=true;"
+      def compileEachWithIndexElse args
+        if args.nil? || args.count > 3
+          raise StandardError.new "Each with index statement: wrong number of arguments (given #{args&.count || 0}, expecting 1 to 3)"
+        end
+        last_arg, collection = args.pop.split(" in ")
+        args.push(last_arg)
+
+        if collection.nil?
+          raise StandardError.new "Each with index statement: collection not found (expecting 'in')"
+        end
+
+        @loop_else_counter += 1
+
+        # Special case for 3 arguments: the first 2 arguments are the key/value pair in a Hash, and
+        # the third is the index
+        if args.count == 3
+          "_looped_#{@loop_else_counter}=false;#{collection}.each_with_index do |_ivar,#{args[2]}|;#{args[0]},#{args[1]}=_ivar;_looped_#{@loop_else_counter}=true;"
+        else
+          "_looped_#{@loop_else_counter}=false;#{collection}.each_with_index do |#{args.join(",")}|;_looped_#{@loop_else_counter}=true;"
+        end
       end
 
       def compileFor args

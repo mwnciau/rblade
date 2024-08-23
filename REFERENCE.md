@@ -36,6 +36,7 @@ By default, RBlade will look for components in the `app/views/components` folder
 | `<x-name><x-slot::header><h1>Header</h1><//>Content<//>` | Pass a named block to a component                                                                                                          |
 | `{{ header }}`                                           | Output the contents of a named block                                                                                                       |
 | `<div {{ header.attributes }}>`                          | Output the attributes passed into a named block                                                                                            |
+| `@shouldRender(RUBY_EXPRESSION)`                         | Only renders the component if RUBY_EXPRESSION evaluates to true                                                                            |
 
 <a name="quick-reference-attributes"></a>
 ## Attributes
@@ -75,19 +76,22 @@ The attributes variable is an instance of a class that manages attributes. As we
 <a name="quick-reference-loops"></a>
 ## Loops
 
-| Syntax                                                | Description                                                                                                |
-|:------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------|
-| `@while( looping ) ... @endWhile`                     | Compiles to a Ruby while statement                                                                         |
-| `@until( finished ) ... @endUntil`                    | Compiles to a Ruby until statement                                                                         |
-| `@for( i in 1..10 ) ... @endFor`                      | Compiles to a Ruby for loop                                                                                |
-| `@each( i in 1..10 ) ... @endEach`                    | Calls `each` on the given collection, with `\|i\|` as the block argument                                   |
-| `@each( key, value in {a: 1} ) ... @endEach`          | Calls `each` on the given Hash, with `\|key, value\|` as the block arguments                               |
-| `@forElse( i in 1..10 ) ... @empty ... @endForElse`   | Compiles to a for loop as above, but the block after `@empty` is printed if the given collection is empty  |
-| `@eachElse( i in 1..10 ) ... @empty ... @endEachElse` | Compiles to a each loop as above, but the block after `@empty` is printed if the given collection is empty |
-| `@break`                                              | Break out of the current loop                                                                              |
-| `@next`                                               | Go to the next iteration in the current loop                                                               |
-| `@break( RUBY_EXPRESSION )`                           | Break out of the current loop if the expression evaluate to true                                           |
-| `@next( RUBY_EXPRESSION )`                            | Go to the next iteration in the current loop if the expression evaluate to true                            |
+| Syntax                                                                             | Description                                                                                                                 |
+|:-----------------------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------|
+| `@while( looping ) ... @endWhile`                                                  | Compiles to a Ruby while statement                                                                                          |
+| `@until( finished ) ... @endUntil`                                                 | Compiles to a Ruby until statement                                                                                          |
+| `@for( i in 1..10 ) ... @endFor`                                                   | Compiles to a Ruby for loop                                                                                                 |
+| `@each( i in 1..10 ) ... @endEach`                                                 | Calls `each` on the given collection, with `\|i\|` as the block argument                                                    |
+| `@each( key, value in {a: 1} ) ... @endEach`                                       | Calls `each` on the given Hash, with `\|key, value\|` as the block arguments                                                |
+| `@eachWithIndex( value, index in ['a', 'b'] ) ... @endEachWithIndex`               | Calls `each_with_index` on the given Array, with `\|value, index\|` as the block arguments                                  |
+| `@eachWithIndex( key, value, index in {a: 1} ) ... @endEachWithIndex`              | Calls `each_with_index` on the given Hash, where `key` is the Hash key, `value` is the Hash value, and `index` is the index |
+| `@forElse( i in 1..10 ) ... @empty ... @endForElse`                                | Compiles to a for loop as above, but the block after `@empty` is printed if the given collection is empty                   |
+| `@eachElse( i in 1..10 ) ... @empty ... @endEachElse`                              | Compiles to a each loop as above, but the block after `@empty` is printed if the given collection is empty                  |
+| `@eachWithIndexElse( value, index in 1..10 ) ... @empty ... @endEachWithIndexElse` | Compiles to a each_with_index loop as above, but the block after `@empty` is printed if the given collection is empty       |
+| `@break`                                                                           | Break out of the current loop                                                                                               |
+| `@next`                                                                            | Go to the next iteration in the current loop                                                                                |
+| `@break( RUBY_EXPRESSION )`                                                        | Break out of the current loop if the expression evaluate to true                                                            |
+| `@next( RUBY_EXPRESSION )`                                                         | Go to the next iteration in the current loop if the expression evaluate to true                                             |
 
 <a name="quick-reference-forms"></a>
 ## Forms

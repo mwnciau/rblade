@@ -81,6 +81,8 @@ module RBlade
       "elsif" => [CompilesConditionals, :compileElsif],
       "each" => [CompilesLoops, :compileEach],
       "eachelse" => [CompilesLoops, :compileEachElse],
+      "eachwithindex" => [CompilesLoops, :compileEachWithIndex],
+      "eachwithindexelse" => [CompilesLoops, :compileEachWithIndexElse],
       "empty" => [CompilesLoops, :compileEmpty],
       "empty?" => [CompilesConditionals, :compileEmpty],
       "end" => [CompilesStatements, :compileEnd],

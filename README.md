@@ -222,6 +222,16 @@ In addition to conditional statements, RBlade provides simple directives for wor
     <p>This is user {{ user.id }}</p>
 @endEach
 
+{{-- Compiles to users.each_with_index do |user, index| ... --}}
+@eachWithIndex (user, index in users)
+    <p>This is user {{ index }} {{ user.name }}</p>
+@endEachWithIndex
+
+{{-- eachWithIndex has a special case for Hashes: in this example, the result is "Item 1: a A" --}}
+@eachWithIndex (key, value, index  in {a: 'A'})
+    Item #{{ index + 1 }}: {{ key }} {{ value }}
+@endEachWithIndex
+
 @forElse (name in [])
     <li>{{ name }}</li>
 @empty
@@ -233,6 +243,12 @@ In addition to conditional statements, RBlade provides simple directives for wor
 @empty
     <p>No users</p>
 @endEachElse
+
+@eachWithIndexElse (user, index in users)
+    <li>{{ index }}: {{ user.name }}</li>
+@empty
+    <p>No users</p>
+@endEachWithIndexElse
 
 @while (true)
     <p>I'm looping forever.</p>
