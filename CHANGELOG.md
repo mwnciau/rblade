@@ -1,4 +1,4 @@
-## [UNRELEASED]
+## 1.1.0 [2024-08-23]
 - Add `@eachWithIndex` directive
 - Fix attribute manager output of attributes with no value (#10)
 
