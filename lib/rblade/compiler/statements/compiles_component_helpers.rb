@@ -42,12 +42,12 @@ module RBlade
       private
 
       def extractProps prop_string
-        if !prop_string.start_with?("{") || !prop_string.end_with?("}")
-          raise StandardError.new "Props statement: expecting hash as parameter"
+        if prop_string.start_with?("{") && prop_string.end_with?("}")
+          prop_string = prop_string.delete_prefix("{").delete_suffix("}")
         end
 
         props = {}
-        prop_strings = Tokenizer.extractCommaSeparatedValues prop_string[1..-2]
+        prop_strings = Tokenizer.extractCommaSeparatedValues prop_string
 
         prop_strings.each do |prop|
           prop.strip!

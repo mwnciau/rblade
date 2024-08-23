@@ -491,7 +491,7 @@ You can define a component's data properties using a `@props` directive at the t
 
 ```rblade
 {{-- alert.rblade --}}
-@props({type: "warning", message: required})
+@props(type: "warning", message: required)
 <div class="{{ type }}">{{ message }}</div>
 ```
 
@@ -505,7 +505,7 @@ The `@props` directive accepts a Hash where the key is the name of the attribute
 All properties in the `@props` directive are automatically removed from `attributes`. Properties with names that aren't valid Ruby variable names or are Ruby reserved keywords are not created as local variables. However, you can reference them via the `attributes` local variable:
 
 ```rblade
-@props({"for": required, "data-value": nil})
+@props("for": required, "data-value": nil)
 <div>{{ attributes[:for] }} {{ attributes[:'data-value'] }}</div>
 ```
 
@@ -697,7 +697,7 @@ Sometimes a component may need to render multiple different slots in different l
 
 ```rblade
 {{-- /app/views/components/alert.rblade --}}
-@props({title: required})
+@props(title: required)
 <span class="alert-title">{{ title }}</span>
 <div class="alert alert-danger">
     {{ slot }}
@@ -752,10 +752,10 @@ Like RBlade components, you can assign additional [attributes](#component-attrib
 To interact with slot attributes, you can access the `attributes` property of the slot's variable. For more information on how to interact with attributes, please consult the documentation on [component attributes](#component-attributes):
 
 ```rblade
-@props({
+@props(
     "heading": required,
     "footer": required,
-})
+)
 
 <div {{ attributes.class('border') }}>
     <h1 {{ heading.attributes.class('text-lg') }}>
@@ -777,7 +777,7 @@ Sometimes, you may wish to return early from a component without printing anythi
 
 ```rblade
 {{-- components/error.rblade --}}
-@props({errors: []})
+@props(errors: [])
 @shouldRender(errors.present?)
 ...
 ```

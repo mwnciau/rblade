@@ -32,6 +32,10 @@ class CompilesComponentHelpersTest < TestCase
       "A"
 
     assert_props_compiles_to "@props({a: 'default', b:false,}) {{ a }} {{ b }}", nil, "A false"
+
+    assert_props_compiles_to "@props(b: 'default') {{ b }}",
+      "attributes.default(:'b', 'default');b=attributes.delete :'b';_out<<RBlade.e(b);",
+      "default"
   end
 
   def test_required
