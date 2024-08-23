@@ -28,7 +28,7 @@ module RBlade
           raise StandardError.new "Each statement: collection not found (expecting 'in')"
         end
 
-        "#{collection}.each do |#{args.join(',')}|;"
+        "#{collection}.each do |#{args.join(",")}|;"
       end
 
       def compileEachWithIndex args
@@ -64,7 +64,7 @@ module RBlade
 
         @loop_else_counter += 1
 
-        "_looped_#{@loop_else_counter}=false;#{collection}.each do |#{args.join(',')}|;_looped_#{@loop_else_counter}=true;"
+        "_looped_#{@loop_else_counter}=false;#{collection}.each do |#{args.join(",")}|;_looped_#{@loop_else_counter}=true;"
       end
 
       def compileEachWithIndexElse args

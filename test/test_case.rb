@@ -16,7 +16,7 @@ class TestCase < Minitest::Test
     end
 
     if expected_result
-      locals ||= %[
+      locals ||= %(
         extend ActionView::Helpers;
         foo = "FOO";
         bar = "BAR";
@@ -24,8 +24,8 @@ class TestCase < Minitest::Test
         session = {user_id: 4};
         flash = {notice: "Request successful"};
         cookies = {accept_cookies: true};
-      ]
-      result = Class.new.instance_eval locals + RBlade::RailsTemplate.new.call(nil, template) # standard:disable Security/Eval
+      )
+      result = Class.new.instance_eval locals + RBlade::RailsTemplate.new.call(nil, template)
 
       assert_equal expected_result, result
     end
