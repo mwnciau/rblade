@@ -2,18 +2,11 @@ require "test_case"
 
 class CompilesComponentHelpersTest < TestCase
   def assert_props_compiles_to template, expected_code = nil, expected_result = nil
-    compiled_string = RBlade::Compiler.compileString(template)
-
-    if expected_code
-      assert_equal expected_code, compiled_string
-    end
-
-    if expected_result
+    locals = %[
       attributes = RBlade::AttributesManager.new({a: "A"}) # standard:disable Lint/UselessAssignment
-      result = eval RBlade::RailsTemplate.new.call(nil, template) # standard:disable Security/Eval
+    ]
 
-      assert_equal expected_result, result
-    end
+    assert_compiles_to template, expected_code, expected_result, locals
   end
 
   def test_should_render
