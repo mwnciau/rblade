@@ -37,7 +37,7 @@ module RBlade
       attributes ||= @attributes
 
       attributes.map do |key, value|
-        "#{key}=\"#{(value == true) ? key : h(value)}\""
+        value == true ? key : "#{key}=\"#{h(value)}\""
       end.join " "
     end
 

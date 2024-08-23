@@ -1,5 +1,6 @@
 ## [UNRELEASED]
 - Add `@eachWithIndex` directive
+- Fix attribute manager output of attributes with no value (#10)
 
 ## 1.0.5 [2024-08-14]
 - Allow use of variables in @method directive
