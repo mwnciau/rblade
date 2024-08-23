@@ -3,7 +3,7 @@ require "test_case"
 class CompilesComponentHelpersTest < TestCase
   def assert_props_compiles_to template, expected_code = nil, expected_result = nil
     locals = %[
-      attributes = RBlade::AttributesManager.new({a: "A"}) # standard:disable Lint/UselessAssignment
+      attributes = RBlade::AttributesManager.new({a: "A"})
     ]
 
     assert_compiles_to template, expected_code, expected_result, locals

@@ -5,6 +5,7 @@ require "rblade/helpers/attributes_manager"
 class BladeTemplatingTest < TestCase
   def test_attributes_to_s
     assert_compiles_to "<x-attributes/>", nil, "<div ></div>"
+    assert_compiles_to "<x-attributes a/>", nil, "<div a></div>"
     assert_compiles_to "<x-attributes a=b/>", nil, '<div a="b"></div>'
     assert_compiles_to "@ruby(name='bob')<x-attributes a=b :c=name/>",
       nil,
