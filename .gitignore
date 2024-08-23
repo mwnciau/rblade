@@ -1,2 +1,3 @@
 storage
 Gemfile.lock
+*.gem
