@@ -117,4 +117,37 @@ class CompilesPrintsTest < TestCase
   def test_printing_member_variables
     assert_compiles_to "{{ @foo }}", "_out<<RBlade.e(@foo);"
   end
+  
+  def self.block_helper_func
+    output = '2'
+    output << yield
+    output << '4'
+  end
+  
+  def self.block_helper_func_with_arg
+    output = '2'
+    output << (yield '3')
+    output << '4'
+  end
+
+  def test_block_helpers
+    assert_compiles_to "1{{ CompilesPrintsTest::block_helper_func do }}3{{ end }}5", nil, "12345"
+    assert_compiles_to "1<%= CompilesPrintsTest::block_helper_func do %>3<%= end %>5", nil, "12345"
+    assert_compiles_to "1{{ CompilesPrintsTest::block_helper_func_with_arg do |x| }}{{ x }}{{ end }}5", nil, "12345"
+    assert_compiles_to "1<%= CompilesPrintsTest::block_helper_func_with_arg do |x| %><%= x %><%= end %>5", nil, "12345"
+
+    # Test that if statements on the end block work
+    assert_compiles_to "1{{ CompilesPrintsTest::block_helper_func do }}3{{ end if true }}5", nil, "12345"
+    assert_compiles_to "1{{ CompilesPrintsTest::block_helper_func do }}3{{ end if false }}5", nil, "15"
+
+    # Ensure return value is properly set
+    assert_compiles_to "1{{ CompilesPrintsTest::block_helper_func do }}3<% 'bad' %>{{ end }}5", nil, "12345"
+    assert_compiles_to "1{{ CompilesPrintsTest::block_helper_func do }}3 @ruby('bad'){{ end }}5", nil, "12345"
+    assert_compiles_to "1{{ CompilesPrintsTest::block_helper_func_with_arg do |x| }}<%= x %><% 'bad' %>{{ end }}5", nil, "12345"
+
+    # Ensure this still works when we wrap the end block differently
+    assert_compiles_to "1<%= CompilesPrintsTest::block_helper_func do %>3<% end %>5", nil, "12345"
+    assert_compiles_to "1<%= CompilesPrintsTest::block_helper_func do %>3 @ruby(end)5", nil, "12345"
+    assert_compiles_to "1<%= CompilesPrintsTest::block_helper_func do %>3<% 'bad' %><% end %>5", nil, "12345"
+  end
 end
