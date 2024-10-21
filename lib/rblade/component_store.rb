@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RBlade
   FILE_EXTENSIONS = [".rblade", ".html.rblade"]
 
@@ -48,7 +50,7 @@ module RBlade
     end
 
     def self.clear
-      @@component_definitions = ""
+      @@component_definitions = +""
       @@component_method_names = {}
       @@component_name_stack = []
     end
@@ -78,12 +80,7 @@ module RBlade
 
       compiled_component = RBlade::Compiler.compileString(code)
 
-      @@component_definitions \
-        << "def #{@@component_method_names[name]}(slot,attributes,params,session,flash,cookies);_out='';" \
-        << "_stacks=[];" \
-        << "attributes=RBlade::AttributesManager.new(attributes);" \
-        << compiled_component \
-        << "RBlade::StackManager.get(_stacks) + _out;end;"
+      @@component_definitions << "def #{@@component_method_names[name]}(slot,attributes,params,session,flash,cookies);_out=+'';_stacks=[];attributes=RBlade::AttributesManager.new(attributes);#{compiled_component}RBlade::StackManager.get(_stacks) + _out;end;"
 
       @@component_method_names[name]
     end
@@ -91,7 +88,7 @@ module RBlade
 
     private
 
-    @@component_definitions = ""
+    @@component_definitions = +""
     @@component_name_stack = []
     @@component_method_names = {}
     @@template_paths = {}

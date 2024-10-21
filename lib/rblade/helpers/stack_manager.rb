@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RBlade
   class StackManager
     def self.initialize stack_name, before_stack
@@ -34,8 +36,8 @@ module RBlade
 
     class Stack
       def initialize
-        @prepends = ""
-        @stack = ""
+        @prepends = +""
+        @stack = +""
       end
 
       def set_before_stack before_stack

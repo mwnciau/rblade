@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RBlade
   class CompilesStatements
     class CompilesStacks
@@ -10,7 +12,7 @@ module RBlade
           raise StandardError.new "Stack statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
 
-        "RBlade::StackManager.initialize(#{args[0]}, _out);_stacks.push(#{args[0]});_out = '';"
+        "RBlade::StackManager.initialize(#{args[0]}, _out);_stacks.push(#{args[0]});_out=+'';"
       end
 
       def compilePrepend args
@@ -20,7 +22,7 @@ module RBlade
 
         @push_counter += 1
 
-        "_p_#{@push_counter}=#{args[0]};_p_#{@push_counter}_b=_out;_out='';"
+        "_p_#{@push_counter}=#{args[0]};_p_#{@push_counter}_b=_out;_out=+'';"
       end
 
       def compileEndPrepend args
@@ -56,7 +58,7 @@ module RBlade
 
         @push_counter += 1
 
-        "_p_#{@push_counter}=#{args[0]};_p_#{@push_counter}_b=_out;_out='';"
+        "_p_#{@push_counter}=#{args[0]};_p_#{@push_counter}_b=_out;_out=+'';"
       end
 
       def compilePushIf args

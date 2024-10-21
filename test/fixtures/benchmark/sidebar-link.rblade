@@ -1,0 +1,2 @@
+@props({colour: required})
+<li><a href="{{ colour[:url] }}">{{ colour[:name] }}</a></li>

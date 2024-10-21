@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rblade/helpers/html_string"
 
 module RBlade

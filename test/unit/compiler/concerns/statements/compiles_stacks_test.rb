@@ -3,7 +3,7 @@ require "test_case"
 class CompilesStacksTest < TestCase
   def test_stack
     assert_compiles_to "@stack('stack')",
-      "RBlade::StackManager.initialize('stack', _out);_stacks.push('stack');_out = '';",
+      "RBlade::StackManager.initialize('stack', _out);_stacks.push('stack');_out=+'';",
       ""
   end
 

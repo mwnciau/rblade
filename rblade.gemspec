@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "rblade"
-  s.version = "1.1.1"
+  s.version = "1.2.0-beta"
   s.summary = "A component-first templating engine for Rails"
   s.description = "RBlade is a simple, yet powerful templating engine for Ruby on Rails, inspired by Laravel Blade."
   s.authors = ["Simon J"]

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rblade/helpers/tokenizer"
 
 module RBlade
@@ -18,17 +20,15 @@ module RBlade
 
         props = extractProps args[0]
         props.map do |key, value|
-          compiled_code = ""
-
           # `_required` is deprecated. Use `required`. To be removed in 2.0.0
-          compiled_code << if value == "_required" || value == "required"
+          compiled_code = if value == "_required" || value == "required"
             "if !attributes.has?(:'#{RBlade.escape_quotes(key)}');raise \"Props statement: #{key} is not defined\";end;"
           else
             "attributes.default(:'#{RBlade.escape_quotes(key)}', #{value});"
           end
 
           if isValidVariableName key
-            compiled_code << if variableIsSlot key, tokens
+            compiled_code += if variableIsSlot key, tokens
               "#{key}=RBlade::SlotManager.wrap(attributes.delete :'#{RBlade.escape_quotes(key)}');"
             else
               "#{key}=attributes.delete :'#{RBlade.escape_quotes(key)}';"

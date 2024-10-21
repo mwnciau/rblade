@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails"
 require "rblade/rails_template"
 require "rblade/component_store"

@@ -1,0 +1,9 @@
+@pushOnce('styles')
+#related-panels {
+  display: flex;
+  gap: 0.5rem;
+}
+@endPushOnce
+<div id="related-panels">
+  {{ slot }}
+</div>

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RBlade
   class Tokenizer
     def self.extractCommaSeparatedValues segment
@@ -36,7 +38,7 @@ module RBlade
             next
           end
 
-          argument = ""
+          argument = +""
 
           # Concatenate all lines up to this token's line, including the tail end of the current line
           if token[0][0] != current_line

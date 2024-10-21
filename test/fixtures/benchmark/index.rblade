@@ -1,0 +1,23 @@
+<x-.layout title="Colours">
+  @each(colour, i in colours.map.with_index.to_h)
+    @if(colour[:current])
+      <h2>{{ colour[:name].capitalize }}</h2>
+      <x-.colour-panel :colour/>
+      <x-.related-panels>
+        <x-.related-panels.panel :colour="colours[(i+1) % colours.count]"/>
+        <x-.related-panels.panel :colour="colours[(i+2) % colours.count]"/>
+        <x-.related-panels.panel :colour="colours[(i+3) % colours.count]"/>
+      </x-.related-panels>
+      @prepend('sidebar-links')
+        <strong>{{ colour[:name] }}</strong>
+      @endPrepend
+    @else
+      @push('sidebar-links')
+        <x-.sidebar-link :colour/>
+      @endpush
+    @end
+  @endeach
+  <x-slot::footer>
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias doloremque facere ipsa iure modi nam officiis quidem saepe!
+  </x-slot::footer>
+</x-.layout>

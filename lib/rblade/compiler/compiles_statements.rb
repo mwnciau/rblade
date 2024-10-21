@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rblade/compiler/statements/compiles_component_helpers"
 require "rblade/compiler/statements/compiles_conditionals"
 require "rblade/compiler/statements/compiles_form"

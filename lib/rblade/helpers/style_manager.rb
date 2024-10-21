@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RBlade
   class StyleManager
     def initialize styles
@@ -16,7 +18,7 @@ module RBlade
           style
         end.join
       elsif styles.is_a? Hash
-        @styles = ""
+        @styles = +""
         styles.each do |value, predicate|
           if predicate
             value = value.to_s.strip

@@ -1,0 +1,14 @@
+@props({colour: required})
+@pushOnce('styles')
+#colour-panel
+{
+  width: 100%;
+  height: 200px;
+  padding: 0.25rem;
+  margin-top: 1rem;
+  background-clip: content-box !important;
+  border: 1px solid #ccc;
+  background: {{ colour[:value] }};
+}
+@endPushOnce
+<div id="colour-panel"></div>

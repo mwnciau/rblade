@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rblade/compiler/compiles_comments"
 require "rblade/compiler/compiles_components"
 require "rblade/compiler/compiles_prints"
@@ -21,7 +23,7 @@ module RBlade
     string.gsub(/['\\\x0]/, '\\\\\0')
   end
 
-  def self.e string
+  def self.e(string)
     if string.is_a?(HtmlString) || string.is_a?(ActiveSupport::SafeBuffer)
       string
     else
@@ -56,11 +58,11 @@ module RBlade
     end
 
     def self.compileTokens tokens
-      output = ""
+      output = +""
 
       tokens.each do |token, cake|
         if token.type == :unprocessed || token.type == :raw_text
-          output << "_out<<'" << RBlade.escape_quotes(token.value) << "';"
+          output << "_out<<'#{RBlade.escape_quotes(token.value)}';"
         else
           output << token.value
         end

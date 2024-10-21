@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RBlade
   class CompilesPrints
     def compile!(tokens)
@@ -8,8 +10,8 @@ module RBlade
     private
 
     def compile_regular_prints!(tokens)
-      compile_prints! tokens, "{{", "}}", "RBlade.e"
-      compile_prints! tokens, "<%=", "%>", "RBlade.e"
+      compile_prints! tokens, "{{", "}}", +"RBlade.e"
+      compile_prints! tokens, "<%=", "%>", +"RBlade.e"
     end
 
     def compile_unsafe_prints!(tokens)
@@ -62,16 +64,15 @@ module RBlade
           \|\s*
         )?
         $/x)
-        return Token.new(:print, "_out+=#{expression};_out='';")
+        return Token.new(:print, "_out+=#{expression};_out=+'';")
       elsif expression.match(/^\s*end(?![a-zA-Z0-9_])/i)
         return Token.new(:print, "_out;#{expression};")
       end
 
-      segment_value = "_out<<"
-      segment_value <<= if !wrapper_function.nil?
-        wrapper_function + "(" + expression + ");"
+      segment_value = if !wrapper_function.nil?
+        "_out<<#{wrapper_function}(#{expression});"
       else
-        "(" + expression + ").to_s;"
+        "_out<<(#{expression}).to_s;"
       end
 
       Token.new(:print, segment_value)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rblade/helpers/attributes_manager"
 require "rblade/helpers/html_string"
 

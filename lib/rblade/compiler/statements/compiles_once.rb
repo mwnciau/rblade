@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RBlade
   class CompilesStatements
     class CompilesOnce
@@ -23,7 +25,7 @@ module RBlade
         once_id = args[1].nil? ? ":_#{@once_counter}" : args[1]
 
         "unless $_once_tokens.include? #{once_id};$_once_tokens<<#{once_id};" \
-          << "_p1_#{@once_counter}=#{args[0]};_p1_#{@once_counter}_b=_out;_out='';"
+          << "_p1_#{@once_counter}=#{args[0]};_p1_#{@once_counter}_b=_out;_out=+'';"
       end
 
       def compileEndPushOnce args
@@ -42,7 +44,7 @@ module RBlade
         once_id = args[1].nil? ? ":_#{@once_counter}" : args[1]
 
         "unless $_once_tokens.include? #{once_id};$_once_tokens<<#{once_id};" \
-          << "_p1_#{@once_counter}=#{args[0]};_p1_#{@once_counter}_b=_out;_out='';"
+          << "_p1_#{@once_counter}=#{args[0]};_p1_#{@once_counter}_b=_out;_out=+'';"
       end
 
       def compileEndPrependOnce args

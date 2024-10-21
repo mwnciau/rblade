@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails"
 require "rblade/compiler"
 require "rblade/component_store"
@@ -25,7 +27,7 @@ module RBlade
           "view::#{view_name}"
         )
       end
-      setup = "_out='';_stacks=[];$_once_tokens=[];"
+      setup = "_out=+'';_stacks=[];$_once_tokens=[];"
       code = RBlade::Compiler.compileString(source || template.source)
       setdown = "RBlade::StackManager.get(_stacks) + _out"
       setup + ComponentStore.get + code + setdown
