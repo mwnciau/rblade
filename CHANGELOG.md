@@ -1,3 +1,6 @@
+## 1.2.0 [UNRELEASED]
+- Add support for helper functions that use block content (#14)
+
 ## 1.1.1 [2024-08-23]
 - Remove requirement for including braces in `@props` directive
 

@@ -38,7 +38,13 @@ module RBlade
               segments[i] << ";"
             end
 
-            segments[i] = Token.new(type: :ruby, value: segments[i])
+            # Ensure _out is returned at the end of any blocks
+            # See also ./compiles_prints.rb
+            if segments[i].match(/^end(?![a-zA-Z0-9_])/i)
+              segments[i] =  Token.new(type: :ruby, value: "_out;#{segments[i]}")
+            else
+              segments[i] = Token.new(type: :ruby, value: segments[i])
+            end
 
             i += 1
           elsif !segments[i].nil? && segments[i] != ""

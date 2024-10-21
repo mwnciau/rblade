@@ -35,14 +35,8 @@ module RBlade
           elsif segments[i] == start_token
             segments.delete_at i
             segments.delete_at i + 1
-            segment_value = "_out<<"
 
-            segment_value <<= if !wrapper_function.nil?
-              wrapper_function + "(" + segments[i] + ");"
-            else
-              "(" + segments[i] + ").to_s;"
-            end
-            segments[i] = Token.new(:print, segment_value)
+            segments[i] = create_token(segments[i], wrapper_function)
 
             i += 1
           elsif !segments[i].nil? && segments[i] != ""
@@ -56,6 +50,31 @@ module RBlade
 
         segments
       end.flatten!
+    end
+
+    def create_token expression, wrapper_function
+      if expression.match(/
+        do\s*
+        (
+          \|\s*
+          [a-zA-Z0-9_]+\s*
+          (,\s*[a-zA-Z0-9_]+)?\s*
+          \|\s*
+        )?
+        $/x)
+        return Token.new(:print, "_out+=#{expression};_out='';")
+      elsif expression.match(/^\s*end(?![a-zA-Z0-9_])/i)
+        return Token.new(:print, "_out;#{expression};")
+      end
+
+      segment_value = "_out<<"
+      segment_value <<= if !wrapper_function.nil?
+        wrapper_function + "(" + expression + ");"
+      else
+        "(" + expression + ").to_s;"
+      end
+
+      Token.new(:print, segment_value)
     end
   end
 end

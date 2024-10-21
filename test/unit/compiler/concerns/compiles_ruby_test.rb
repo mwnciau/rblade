@@ -42,6 +42,10 @@ class CompilesRubyTest < TestCase
       _out << 'bar'
     %> baz", nil, "foo bar baz"
   end
+  
+  def test_erb_style_tags_with_no_spaces
+    assert_compiles_to "<%_out = 'cake'%>", "_out = 'cake';", "cake"
+  end
 
   def test_escaped_erb_style_tags
     assert_compiles_to "<%% _out = 'cake' %%>", nil, "<% _out = 'cake' %>"
