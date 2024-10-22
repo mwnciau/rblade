@@ -31,6 +31,16 @@ module RBlade
     end
   end
 
+  # Register a new custom directive by providing a class and method that will compile the directive into ruby code.
+  #
+  # @param [String] name The directive tag without the "@", e.g. "if" for the "@if" directive
+  # @param [Object] handler_class The class that will handle the directive, which will be initialized the first time the directive is used
+  # @param [Symbol] method The method in `handler_class` that will process the directive and return the compiled ruby code. Any arguments will be passed to this method as an array.
+  # @return [void]
+  def self.register_directive_handler(name, handler_class, method)
+    CompilesStatements.register_handler name, handler_class, method
+  end
+
   class Compiler
     def self.compileString(string_template)
       tokens = [Token.new(:unprocessed, string_template)]

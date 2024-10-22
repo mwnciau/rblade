@@ -21,10 +21,28 @@ class CompilesStatementsTest < TestCase
   end
 
   def test_does_not_parse_invalid_statements
-    assert_compiles_to "@not_a_real_statement", "_out<<'@not_a_real_statement';"
-    assert_compiles_to "@not_a_real_statement()", "_out<<'@not_a_real_statement()';"
-    assert_compiles_to "@not_a_real_statement(1, 2, 3)", "_out<<'@not_a_real_statement(1, 2, 3)';"
-    assert_compiles_to "@not_a_real_statement  (1, 2, 3)", "_out<<'@not_a_real_statement  (1, 2, 3)';"
-    assert_compiles_to "@not_a_real_statement   (1, 2, 3)", "_out<<'@not_a_real_statement   (1, 2, 3)';"
+    assert_compiles_to "@not_a_real_directive", "_out<<'@not_a_real_directive';"
+    assert_compiles_to "@not_a_real_directive()", "_out<<'@not_a_real_directive()';"
+    assert_compiles_to "@not_a_real_directive(1, 2, 3)", "_out<<'@not_a_real_directive(1, 2, 3)';"
+    assert_compiles_to "@not_a_real_directive  (1, 2, 3)", "_out<<'@not_a_real_directive  (1, 2, 3)';"
+    assert_compiles_to "@not_a_real_directive   (1, 2, 3)", "_out<<'@not_a_real_directive   (1, 2, 3)';"
+  end
+
+  class CustomDirectiveHandler
+    def custom_directive args
+      return args&.join(",") || 'no arguments'
+    end
+  end
+
+  def test_register_directive_handler
+    RBlade::register_directive_handler('custom_directive', CustomDirectiveHandler, :custom_directive)
+
+    assert_compiles_to "@custom_directive", "no arguments"
+    assert_compiles_to "@customDirective", "no arguments"
+    assert_compiles_to "@customdirective()", "no arguments"
+
+    assert_compiles_to "@customdirective(one argument)", "one argument"
+    assert_compiles_to "@customdirective(a,b)", "a,b"
+    assert_compiles_to "@customdirective(1,2,3)", "1,2,3"
   end
 end

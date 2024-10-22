@@ -51,6 +51,10 @@ module RBlade
       @@statement_handlers[name.tr("_", "")].present? || name.start_with?("end")
     end
 
+    def self.register_handler(name, klass, method_name)
+      @@statement_handlers[name.tr("_", "").downcase] = [klass, method_name]
+    end
+
     private
 
     def getHandler(name)
