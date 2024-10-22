@@ -12,10 +12,10 @@ class BladeTemplatingTest < TestCase
   def test_performance
     # Benchmarking: set this to a higher number to test the performance of the compiler
     n = 1
-    compiled_string = RBlade::Compiler.compileString('<x-benchmark/>')
+    compiled_string = RBlade::Compiler.compileString("<x-benchmark/>")
     Benchmark.bm do |bm|
-      bm.report("compile") { for i in 1..n; RBlade::Compiler.compileString('benchmark'); end }
-      bm.report("execute") { for i in 1..n; run_compiled_string(compiled_string); end }
+      bm.report("compile") { (1..n).each { RBlade::Compiler.compileString("benchmark") } }
+      bm.report("execute") { (1..n).each { run_compiled_string(compiled_string) } }
     end
   end
 

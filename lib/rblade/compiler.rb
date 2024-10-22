@@ -60,11 +60,11 @@ module RBlade
     def self.compileTokens tokens
       output = +""
 
-      tokens.each do |token, cake|
-        if token.type == :unprocessed || token.type == :raw_text
-          output << "_out<<'#{RBlade.escape_quotes(token.value)}';"
+      tokens.each do |token|
+        output << if token.type == :unprocessed || token.type == :raw_text
+          "_out<<'#{RBlade.escape_quotes(token.value)}';"
         else
-          output << token.value
+          token.value
         end
       end
 

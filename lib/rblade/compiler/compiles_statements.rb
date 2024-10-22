@@ -15,7 +15,7 @@ module RBlade
       token_index = 0
       while token_index < tokens.count
         token = tokens[token_index]
-        pp token
+
         if token.type != :statement
           token_index += 1
           next

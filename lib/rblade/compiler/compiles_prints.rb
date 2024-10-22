@@ -55,7 +55,7 @@ module RBlade
     end
 
     def create_token expression, wrapper_function
-      if expression.match(/
+      if expression.match?(/
         do\s*
         (
           \|\s*
@@ -65,7 +65,7 @@ module RBlade
         )?
         $/x)
         return Token.new(:print, "_out+=#{expression};_out=+'';")
-      elsif expression.match(/^\s*end(?![a-zA-Z0-9_])/i)
+      elsif expression.match?(/^\s*end(?![a-zA-Z0-9_])/i)
         return Token.new(:print, "_out;#{expression};")
       end
 
