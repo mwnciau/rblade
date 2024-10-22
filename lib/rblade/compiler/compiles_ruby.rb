@@ -8,15 +8,15 @@ module RBlade
 
         segments = token.value.split(/
           # @ escapes blade style tags
-          (@)(@ruby.+?@endruby)
+          (@)(@ruby.+?@end_?ruby)
           |
           # <%% and %%> are escape ERB style tags
           (<%%)(.+?)(%%>)
           |
-          \s?(?<!\w)(@ruby)\s+(.+?)[\s;]*(@endruby)(?!\w)\s?
+          \s?(?<!\w)(@ruby)\s+(.+?)[\s;]*(@end_?ruby)(?!\w)\s?
           |
           (<%)(?!=)\s*(.+?)[\s;]*(%>)
-        /xm)
+        /xmi)
 
         i = 0
         while i < segments.count
@@ -31,7 +31,7 @@ module RBlade
             segments[i] = Token.new(type: :raw_text, value: "<%#{segments[i]}%>")
 
             i += 1
-          elsif segments[i] == "@ruby" || segments[i] == "<%"
+          elsif segments[i].downcase == "@ruby" || segments[i] == "<%"
             segments.delete_at i
             segments.delete_at i + 1
 
