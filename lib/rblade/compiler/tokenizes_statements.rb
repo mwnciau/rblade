@@ -20,7 +20,7 @@ module RBlade
             (?:
               (@)
               (\w+(?!\w)[!\?]?)
-              (?:[ \t]*
+              (?:([ \t]*)
                 (\(.*?\))
               )?
             )
@@ -46,8 +46,23 @@ module RBlade
 
           i += 1
         elsif segment == "@"
-          tokenizeStatement! segments, i
-          handleSpecialCases! segments, i
+          if CompilesStatements.has_handler(segments[i + 1])
+            tokenizeStatement! segments, i
+            handleSpecialCases! segments, i
+          else
+            # For unhandled statements, restore the original string
+            segments[i] = Token.new(type: :unprocessed, value: segments[i] + segments[i + 1])
+            segments.delete_at i + 1
+
+            if segments.count > i + 2 && segments[i + 1].match(/^[ \t]*$/) && segments[i + 2][0] == "("
+              segments[i].value += segments[i + 1] + segments[i + 2]
+              segments.delete_at i + 1
+              segments.delete_at i + 1
+            elsif segments.count > i + 1 && segments[i + 1][0] == "("
+              segments[i].value += segments[i + 1]
+              segments.delete_at i + 1
+            end
+          end
 
           i += 1
         elsif !segments[i].nil? && segments[i] != ""
@@ -65,6 +80,11 @@ module RBlade
     def tokenizeStatement!(segments, i)
       statement_data = {name: segments[i + 1]}
       segments.delete_at i + 1
+
+      # Remove optional whitespace
+      if segments.count > i + 2 && segments[i + 1].match(/^[ \t]*$/) && segments[i + 2][0] == "("
+        segments.delete_at i + 1
+      end
 
       if segments.count > i + 1 && segments[i + 1][0] == "("
         arguments = tokenizeArguments! segments, i + 1

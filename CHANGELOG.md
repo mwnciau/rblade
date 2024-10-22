@@ -2,6 +2,7 @@
 - Add support for helper functions that use block content (#14)
 - Change to use frozen string literals
 - Fix issue with no space after starting ERB style tag
+- Ignore any @ directives that don't have a handler
 - Make @endruby directive case insensitive and allow underscore
 
 ## 1.1.1 [2024-08-23]

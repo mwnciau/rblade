@@ -15,6 +15,7 @@ module RBlade
       token_index = 0
       while token_index < tokens.count
         token = tokens[token_index]
+        pp token
         if token.type != :statement
           token_index += 1
           next
@@ -43,6 +44,11 @@ module RBlade
 
     def compileEnd
       "end;"
+    end
+
+    def self.has_handler(name)
+      name = name.downcase
+      @@statement_handlers[name.tr("_", "")].present? || name.start_with?("end")
     end
 
     private

@@ -20,10 +20,11 @@ class CompilesStatementsTest < TestCase
     assert_compiles_to "@end_if", "end;"
   end
 
-  def test_fails_with_wrong_arguments
-    exception = assert_raises Exception do
-      RBlade::Compiler.compileString("@not_a_real_statement")
-    end
-    assert_equal "Unhandled statement: @not_a_real_statement", exception.to_s
+  def test_does_not_parse_invalid_statements
+    assert_compiles_to "@not_a_real_statement", "_out<<'@not_a_real_statement';"
+    assert_compiles_to "@not_a_real_statement()", "_out<<'@not_a_real_statement()';"
+    assert_compiles_to "@not_a_real_statement(1, 2, 3)", "_out<<'@not_a_real_statement(1, 2, 3)';"
+    assert_compiles_to "@not_a_real_statement  (1, 2, 3)", "_out<<'@not_a_real_statement  (1, 2, 3)';"
+    assert_compiles_to "@not_a_real_statement   (1, 2, 3)", "_out<<'@not_a_real_statement   (1, 2, 3)';"
   end
 end
