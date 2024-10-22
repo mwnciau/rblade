@@ -37,10 +37,10 @@ module RBlade
           end
         end
 
-        if handler.is_a? Proc
-          token.value = "_out<<'#{RBlade::escape_quotes(handler.call(*handler_arguments).to_s)}';"
+        token.value = if handler.is_a? Proc
+          "_out<<'#{RBlade.escape_quotes(handler.call(*handler_arguments).to_s)}';"
         else
-          token.value = handler.call(*handler_arguments)
+          handler.call(*handler_arguments)
         end
         token_index += 1
       end
@@ -56,7 +56,7 @@ module RBlade
     end
 
     def self.register_handler(name, &block)
-      @@statement_handlers[name.tr("_", "").downcase] = ['proc', block]
+      @@statement_handlers[name.tr("_", "").downcase] = ["proc", block]
     end
 
     private
@@ -64,7 +64,7 @@ module RBlade
     def getHandler(name)
       handler_class, handler_method = @@statement_handlers[name.tr("_", "").downcase]
 
-      if (handler_class == 'proc')
+      if handler_class == "proc"
         return handler_method
       end
 

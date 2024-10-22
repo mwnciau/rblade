@@ -36,8 +36,8 @@ module RBlade
   # @param [String] name The directive tag without the "@", e.g. "if" for the "@if" directive
   # @param [Proc] block The block that will return the compiled ruby code for the directive. Any arguments will be passed to this Proc as an array.
   # @return [void]
-  def self.register_directive_handler(name, &block)
-    CompilesStatements.register_handler(name, &block)
+  def self.register_directive_handler(name, &)
+    CompilesStatements.register_handler(name, &)
   end
 
   class Compiler

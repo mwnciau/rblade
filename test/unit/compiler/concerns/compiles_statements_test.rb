@@ -29,9 +29,9 @@ class CompilesStatementsTest < TestCase
   end
 
   def test_register_directive_handler
-    RBlade::register_directive_handler('custom_directive') { 'simple' }
-    RBlade::register_directive_handler('custom_directive_with_args') { |args| args&.join(",") || 'no arguments' }
-    RBlade::register_directive_handler('custom_directive_with_tokens') do |tokens, token_index|
+    RBlade.register_directive_handler("custom_directive") { "simple" }
+    RBlade.register_directive_handler("custom_directive_with_args") { |args| args&.join(",") || "no arguments" }
+    RBlade.register_directive_handler("custom_directive_with_tokens") do |tokens, token_index|
       tokens[token_index].value[:name]
     end
 
@@ -50,12 +50,12 @@ class CompilesStatementsTest < TestCase
   end
 
   def test_sum_directive_used_in_readme
-    RBlade::register_directive_handler('sum') do |args|
+    RBlade.register_directive_handler("sum") do |args|
       args.inject(0) { |sum, num| sum + num.to_i }
     end
 
-    assert_compiles_to "@sum(1)", nil, '1'
-    assert_compiles_to "@sum(1, 2)", nil, '3'
-    assert_compiles_to "@sum (1, 2, 3)", nil, '6'
+    assert_compiles_to "@sum(1)", nil, "1"
+    assert_compiles_to "@sum(1, 2)", nil, "3"
+    assert_compiles_to "@sum (1, 2, 3)", nil, "6"
   end
 end
