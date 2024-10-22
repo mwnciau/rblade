@@ -26,6 +26,7 @@ For a quick overview of RBlade's capabilities, refer to the [reference file](REF
   * [Table of Contents](#table-of-contents)
   * [Displaying Data](#displaying-data)
     + [HTML Entity Encoding](#html-entity-encoding)
+    + [ERB Compatbility and Rails Helper Methods](#erb-compatibility-and-rails-helper-methods)
     + [RBlade and JavaScript Frameworks](#rblade-and-javascript-frameworks)
       - [The `@verbatim` Directive](#the-at-verbatim-directive)
   * [RBlade Directives](#rblade-directives)
@@ -37,6 +38,7 @@ For a quick overview of RBlade's capabilities, refer to the [reference file](REF
     + [Additional Attributes](#additional-attributes)
     + [The `@once` Directive](#the-once-directive)
     + [Raw Ruby](#raw-ruby)
+    + [Custom Directives](#custom-directives)
     + [Comments](#comments)
   * [Components](#components)
     + [Rendering Components](#rendering-components)
@@ -66,14 +68,14 @@ You can display data that is passed to your RBlade views by wrapping the variabl
 
 ```ruby
 def index
-  name = "Samantha"
+  @name = "Samantha"
 end
 ```
 
 You can display the contents of the `name` variable like so:
 
 ```rblade
-Hello, {{ name }}.
+Hello, {{ @name }}.
 ```
 
 > [!NOTE]  
@@ -91,11 +93,19 @@ The current UNIX timestamp is {{ Time.now.to_i }}.
 By default, RBlade `{{ }}` directives are automatically sent through Rails' `h` function to prevent XSS attacks. If you do not want your data to be escaped, you can use the following syntax:
 
 ```rblade
-Hello, {!! name !!}.
+Hello, {!! @name !!}.
 ```
 
 > [!WARNING]  
 > Be very careful when printing content that is supplied by users of your application. You should typically use the escaped, double curly brace syntax to prevent XSS attacks when displaying user supplied data.
+
+
+<a name="erb-compatibility-and-rails-helper-methods"></a>
+### ERB Compatbility and Rails Helper Methods
+
+For the most part, RBlade templates are backwards compatible with the built in ERB templates. Anything that works in an ERB template should also work in an RBlade template.
+
+This includes helper methods, path helpers and methods from third party gems such as `simple_forms` or `vite-ruby`. It additionally includes the ERB syntax for outputting data, `<%= ... %>`, and running ruby code, `<%= ... %>`.
 
 <a name="rblade-and-javascript-frameworks"></a>
 ### RBlade and JavaScript Frameworks
@@ -417,6 +427,23 @@ In some situations, it's useful to embed Ruby code into your views. You can use 
 @ruby
     counter = 1;
 @endRuby
+```
+
+<a name="custom-directives"></a>
+### Custom Directives
+
+RBlade also allows you to define your own directives using the `RBlade.register_directive_handler`
+method. When the compiler encounters the custom directive, it will call the provided block and
+output the returned value.
+
+```rblade
+RBlade::register_directive_handler('sum') do |args|
+  args.inject(0) { |sum, num| sum + num.to_i }
+end
+
+@sum(1)       -> 1
+@sum(1, 2)    -> 3
+@sum(1, 2, 3) -> 6
 ```
 
 <a name="comments"></a>
