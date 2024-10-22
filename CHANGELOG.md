@@ -1,4 +1,4 @@
-## 1.2.0 [UNRELEASED]
+## 1.2.0 [2024-10-22]
 - Add support for custom directives (#2)
 - Add support for helper functions that use block content (#14)
 - Change to use frozen string literals
