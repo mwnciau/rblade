@@ -1,3 +1,6 @@
+## 1.2.1 [2024-10-31]
+- Fix issue with @props directive when defining multiple properties without braces
+
 ## 1.2.0 [2024-10-22]
 - Add support for custom directives (#2)
 - Add support for helper functions that use block content (#14)

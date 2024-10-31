@@ -2,7 +2,7 @@ require "test_case"
 require "rblade/compiler"
 require "rblade/component_store"
 
-class BladeTemplatingTest < TestCase
+class BladeBenchmarkingTest < TestCase
   def setup
     super
 

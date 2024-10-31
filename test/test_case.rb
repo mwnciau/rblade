@@ -25,7 +25,7 @@ class TestCase < Minitest::Test
         flash = {notice: "Request successful"};
         cookies = {accept_cookies: true};
       )
-      result = Class.new.instance_eval locals + RBlade::RailsTemplate.new.call(nil, template)
+      result = Class.new.instance_eval(locals + RBlade::RailsTemplate.new.call(nil, template))
 
       assert_equal expected_result, result
     end

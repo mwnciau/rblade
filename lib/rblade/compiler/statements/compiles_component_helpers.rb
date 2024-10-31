@@ -14,11 +14,7 @@ module RBlade
       end
 
       def compileProps args, tokens
-        if args&.count != 1
-          raise StandardError.new "Props statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
-        end
-
-        props = extractProps args[0]
+        props = extractProps args
         props.map do |key, value|
           # `_required` is deprecated. Use `required`. To be removed in 2.0.0
           compiled_code = if value == "_required" || value == "required"
@@ -41,13 +37,8 @@ module RBlade
 
       private
 
-      def extractProps prop_string
-        if prop_string.start_with?("{") && prop_string.end_with?("}")
-          prop_string = prop_string.delete_prefix("{").delete_suffix("}")
-        end
-
+      def extractProps prop_strings
         props = {}
-        prop_strings = Tokenizer.extractCommaSeparatedValues prop_string
 
         prop_strings.each do |prop|
           prop.strip!

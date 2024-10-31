@@ -79,7 +79,7 @@ module RBlade
 
     def tokenizeStatement!(segments, i)
       statement_data = {name: segments[i + 1]}
-      segments.delete_at i + 1
+      statement_name = segments.delete_at i + 1
 
       # Remove optional whitespace
       if segments.count > i + 2 && segments[i + 1].match(/^[ \t]*$/) && segments[i + 2][0] == "("
@@ -87,7 +87,7 @@ module RBlade
       end
 
       if segments.count > i + 1 && segments[i + 1][0] == "("
-        arguments = tokenizeArguments! segments, i + 1
+        arguments = tokenizeArguments! statement_name, segments, i + 1
 
         if !arguments.nil?
           statement_data[:arguments] = arguments
@@ -107,7 +107,7 @@ module RBlade
       end
     end
 
-    def tokenizeArguments!(segments, segment_index)
+    def tokenizeArguments!(statement_name, segments, segment_index)
       success = expandSegmentToEndParenthesis! segments, segment_index
 
       # If no matching parentheses were found, so we combine the argument string with the next segment
@@ -120,7 +120,17 @@ module RBlade
         return nil
       end
 
-      arguments = Tokenizer.extractCommaSeparatedValues segments[segment_index][1..-2]
+      # Remove the parentheses from the argument string
+      argument_string = segments[segment_index][1..-2]
+
+      # Special case for the props statement: remove the wrapping braces if they exist
+      if statement_name == "props"
+        if argument_string.start_with?("{") && argument_string.end_with?("}")
+          argument_string = argument_string[1..-2]
+        end
+      end
+
+      arguments = Tokenizer.extractCommaSeparatedValues argument_string
       segments.delete_at segment_index
 
       arguments

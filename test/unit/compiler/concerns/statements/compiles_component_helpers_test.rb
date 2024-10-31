@@ -33,9 +33,27 @@ class CompilesComponentHelpersTest < TestCase
 
     assert_props_compiles_to "@props({a: 'default', b:false,}) {{ a }} {{ b }}", nil, "A false"
 
+    assert_props_compiles_to "@props({b: ',\\''})",
+      "attributes.default(:'b', ',\\'');b=attributes.delete :'b';"
+    assert_props_compiles_to "@props({b: {c: 1, d: 2}})",
+      "attributes.default(:'b', {c: 1, d: 2});b=attributes.delete :'b';"
+  end
+
+  def test_props_without_hash
     assert_props_compiles_to "@props(b: 'default') {{ b }}",
       "attributes.default(:'b', 'default');b=attributes.delete :'b';_out<<RBlade.e(b);",
       "default"
+
+    assert_props_compiles_to "@props(a: 'default') {{ a }}",
+      "attributes.default(:'a', 'default');a=attributes.delete :'a';_out<<RBlade.e(a);",
+      "A"
+
+    assert_props_compiles_to "@props(a: 'default', b:false) {{ a }} {{ b }}", nil, "A false"
+
+    assert_props_compiles_to "@props(b: ',\\'')",
+      "attributes.default(:'b', ',\\'');b=attributes.delete :'b';"
+    assert_props_compiles_to "@props(b: {c: 1, d: 2} )",
+      "attributes.default(:'b', {c: 1, d: 2});b=attributes.delete :'b';"
   end
 
   def test_required
