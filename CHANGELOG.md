@@ -1,3 +1,7 @@
+## 1.2.2 [UNRELEASED]
+- Update dependencies
+- Fixed redundant unfreezing of interpolated string
+
 ## 1.2.1 [2024-10-31]
 - Fix issue with @props directive when defining multiple properties without braces
 

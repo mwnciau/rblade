@@ -36,7 +36,7 @@ module RBlade
 
       attributes = compile_attributes token.value[:attributes]
 
-      code = +"_c#{component[:index]}_swap=_out;_out=+'';"
+      code = "_c#{component[:index]}_swap=_out;_out=+'';"
       code << "_c#{component[:index]}_attr={#{attributes.join(",")}};"
 
       code
@@ -67,14 +67,14 @@ module RBlade
     def compile_slot_end name, component
       parent = @component_stack.last
 
-      code = +"_c#{parent[:index]}_attr[:'#{RBlade.escape_quotes(name)}']=RBlade::SlotManager.new(_out,_c#{component[:index]}_attr);"
+      code = "_c#{parent[:index]}_attr[:'#{RBlade.escape_quotes(name)}']=RBlade::SlotManager.new(_out,_c#{component[:index]}_attr);"
       code << "_out=_c#{component[:index]}_swap;_c#{component[:index]}_swap=nil;_c#{component[:index]}_attr=nil;"
 
       code
     end
 
     def compile_component_end component
-      code = +"_slot=RBlade::SlotManager.new(_out);_out=_c#{component[:index]}_swap;"
+      code = "_slot=RBlade::SlotManager.new(_out);_out=_c#{component[:index]}_swap;"
       code << "_out<<#{ComponentStore.component(component[:name])}(_slot,_c#{component[:index]}_attr,params,session,flash,cookies);"
       code << "_slot=nil;_c#{component[:index]}_swap=nil;_c#{component[:index]}_attr=nil;"
 
