@@ -105,7 +105,7 @@ Hello, {!! @name !!}.
 
 For the most part, RBlade templates are backwards compatible with the built in ERB templates. Anything that works in an ERB template should also work in an RBlade template.
 
-This includes helper methods, path helpers and methods from third party gems such as `simple_forms` or `vite-ruby`. It additionally includes the ERB syntax for outputting data, `<%= ... %>`, and running ruby code, `<%= ... %>`.
+This includes helper methods, path helpers and methods from third party gems such as `simple_forms` or `vite-ruby`. It additionally includes the ERB syntax for outputting data, `<%= ... %>`, and running ruby code, `<% ... %>`.
 
 <a name="rblade-and-javascript-frameworks"></a>
 ### RBlade and JavaScript Frameworks
