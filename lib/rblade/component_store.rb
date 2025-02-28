@@ -8,7 +8,7 @@ module RBlade
     def self.component full_name
       # If this is a relative path, prepend with the previous component name's base
       if full_name.start_with? "."
-        full_name = @@component_name_stack.last.gsub(/\.[^\.]+$/, "") + full_name
+        full_name = @@component_name_stack.last.gsub(/\.[^\.]+\Z/, "") + full_name
       end
 
       # Ensure each component is only compiled once

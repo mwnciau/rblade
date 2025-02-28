@@ -54,7 +54,7 @@ module RBlade
             segments[i] = Token.new(type: :unprocessed, value: segments[i] + segments[i + 1])
             segments.delete_at i + 1
 
-            if segments.count > i + 2 && segments[i + 1].match(/^[ \t]*$/) && segments[i + 2][0] == "("
+            if segments.count > i + 2 && segments[i + 1].match(/\A[ \t]*\Z/) && segments[i + 2][0] == "("
               segments[i].value += segments[i + 1] + segments[i + 2]
               segments.delete_at i + 1
               segments.delete_at i + 1
@@ -82,7 +82,7 @@ module RBlade
       statement_name = segments.delete_at i + 1
 
       # Remove optional whitespace
-      if segments.count > i + 2 && segments[i + 1].match(/^[ \t]*$/) && segments[i + 2][0] == "("
+      if segments.count > i + 2 && segments[i + 1].match(/\A[ \t]*\Z/) && segments[i + 2][0] == "("
         segments.delete_at i + 1
       end
 

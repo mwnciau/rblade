@@ -43,7 +43,7 @@ module RBlade
         prop_strings.each do |prop|
           prop.strip!
 
-          key, value = prop.split(/^
+          key, value = prop.split(/\A
             (?:
               '(.+)':
               |
@@ -74,7 +74,7 @@ module RBlade
       RUBY_RESERVED_KEYWORDS = %w[__FILE__ __LINE__ alias and begin BEGIN break case class def defined? do else elsif end END ensure false for if in module next nil not or redo rescue retry return self super then true undef unless until when while yield].freeze
 
       def isValidVariableName key
-        return false unless key.match?(/^[a-zA-Z_][a-zA-Z0-9_]*$/)
+        return false unless key.match?(/\A[a-zA-Z_][a-zA-Z0-9_]*\Z/)
 
         return false if RUBY_RESERVED_KEYWORDS.include? key
 

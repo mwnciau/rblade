@@ -42,7 +42,7 @@ module RBlade
 
             # Ensure _out is returned at the end of any blocks
             # See also ./compiles_prints.rb
-            segments[i] = if segments[i].match?(/^end(?![a-zA-Z0-9_])/i)
+            segments[i] = if segments[i].match?(/\Aend(?![a-zA-Z0-9_])/i)
               Token.new(type: :ruby, value: "_out;#{segments[i]}")
             else
               Token.new(type: :ruby, value: segments[i])

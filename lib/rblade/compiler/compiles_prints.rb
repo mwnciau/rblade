@@ -63,9 +63,9 @@ module RBlade
           (,\s*[a-zA-Z0-9_]+)?\s*
           \|\s*
         )?
-        $/x)
+        \Z/x)
         return Token.new(:print, "_out+=#{expression};_out=+'';")
-      elsif expression.match?(/^\s*end(?![a-zA-Z0-9_])/i)
+      elsif expression.match?(/\A\s*end(?![a-zA-Z0-9_])/i)
         return Token.new(:print, "_out;#{expression};")
       end
 
