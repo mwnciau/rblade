@@ -5,25 +5,23 @@ module RBlade
 
   class ComponentStore
     class Component
-      def initialize
-        @attributes = {}
+      def initialize(attributes)
+        @attributes = RBlade::AttributesManager.new(attributes)
       end
 
-      def render(attributes, params, session, flash, cookies, &block)
+      attr_accessor :attributes
+
+      def render(params, session, flash, cookies, &block)
         slot = capture_slots(&block) if block_given?
 
-        attributes = RBlade::AttributesManager.new(attributes.merge(@attributes))
-
-        compiled_component(attributes, slot, params, session, flash, cookies)
+        compiled_component(slot, params, session, flash, cookies)
       end
 
       private
 
       def capture_slots
-        RBlade::SlotManager.new yield(->(name, attributes, &block) do
-          @attributes[name] = RBlade::SlotManager.new(block.call, attributes)
-
-          ""
+        RBlade::SlotManager.new yield(+"", ->(name, attributes, &block) do
+          @attributes[name] = RBlade::SlotManager.new(block.call(+""), attributes)
         end)
       end
     end
@@ -57,8 +55,8 @@ module RBlade
 
     def self.add_path path, namespace = nil
       path = path.to_s
-      if !path.end_with? "/"
-        path += "/"
+      unless path.end_with? "/"
+        path << "/"
       end
 
       @@template_paths[namespace] ||= []
@@ -104,7 +102,7 @@ module RBlade
 
       compiled_component = RBlade::Compiler.compileString(code)
 
-      @@component_definitions << "class #{@@component_method_names[name]} < RBlade::ComponentStore::Component;private def compiled_component(attributes,slot,params,session,flash,cookies);_out=+'';_stacks=[];#{compiled_component}RBlade::StackManager.get(_stacks)+_out;end;end;"
+      @@component_definitions << "class #{@@component_method_names[name]} < RBlade::ComponentStore::Component;private def compiled_component(slot,params,session,flash,cookies);_out=+'';_stacks=[];#{compiled_component}RBlade::StackManager.get(_stacks)+_out;end;end;"
 
       @@component_method_names[name]
     end
