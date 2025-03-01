@@ -14,26 +14,26 @@ class BladeTemplatingTest < TestCase
     component_method2 = RBlade::ComponentStore.component "link"
     component_method3 = RBlade::ComponentStore.component "button"
 
-    assert_equal "_c0", component_method
-    assert_equal "_c1", component_method2
-    assert_equal "_c0", component_method3
+    assert_equal "RBlade::ComponentStore::C0", component_method
+    assert_equal "RBlade::ComponentStore::C1", component_method2
+    assert_equal "RBlade::ComponentStore::C0", component_method3
 
     compiled_code = RBlade::ComponentStore.get
 
-    assert compiled_code.match("def _c0")
-    assert compiled_code.match("def _c1")
-    assert !compiled_code.match("def _c2")
+    assert compiled_code.match("::C0")
+    assert compiled_code.match("::C1")
+    assert !compiled_code.match("::C2")
   end
 
   def test_clear
     RBlade::ComponentStore.component "button"
-    assert RBlade::ComponentStore.get.match("def _c0")
+    assert RBlade::ComponentStore.get.match("::C0")
 
     RBlade::ComponentStore.clear
     assert_equal "", RBlade::ComponentStore.get
 
     RBlade::ComponentStore.component "link"
-    assert !RBlade::ComponentStore.get.match("def _c1")
+    assert !RBlade::ComponentStore.get.match("::C1")
   end
 
   def test_extensions_index
@@ -69,9 +69,9 @@ class BladeTemplatingTest < TestCase
 
     compiled_code = RBlade::ComponentStore.get
 
-    assert compiled_code.match("def _c0")
-    assert compiled_code.match("def _c1")
-    assert compiled_code.match("def _c2")
-    assert !compiled_code.match("def _c3")
+    assert compiled_code.match("::C0")
+    assert compiled_code.match("::C1")
+    assert compiled_code.match("::C2")
+    assert !compiled_code.match("::C3")
   end
 end

@@ -29,17 +29,17 @@ module RBlade
 
     def compile_token_start token
       component = {
-        name: token.value[:name],
-        index: @component_stack.count
+        name: token.value[:name]
       }
       @component_stack << component
 
       attributes = compile_attributes token.value[:attributes]
 
-      code = "_c#{component[:index]}_swap=_out;_out=+'';"
-      code << "_c#{component[:index]}_attr={#{attributes.join(",")}};"
-
-      code
+      if component[:name].start_with? "slot::"
+        "_out=_out<<_slot.call(:'#{RBlade.escape_quotes(component[:name].delete_prefix("slot::"))}', {#{attributes.join(",")}}) do;_out=+'';"
+      else
+        "_out=_out<<#{ComponentStore.component(component[:name])}.new.render({#{attributes.join(",")}},params,session,flash,cookies) do |_slot|;_out=+'';"
+      end
     end
 
     def compile_token_end token
@@ -51,17 +51,7 @@ module RBlade
         raise StandardError.new "Unexpected closing tag (#{token.value[:name]}) expecting #{component[:name]}"
       end
 
-      namespace = nil
-      name = component[:name]
-      if name.match? "::"
-        namespace, name = component[:name].split("::")
-      end
-
-      if namespace == "slot"
-        compile_slot_end name, component
-      else
-        compile_component_end component
-      end
+      "_out;end;"
     end
 
     def compile_slot_end name, component
@@ -69,14 +59,6 @@ module RBlade
 
       code = "_c#{parent[:index]}_attr[:'#{RBlade.escape_quotes(name)}']=RBlade::SlotManager.new(_out,_c#{component[:index]}_attr);"
       code << "_out=_c#{component[:index]}_swap;_c#{component[:index]}_swap=nil;_c#{component[:index]}_attr=nil;"
-
-      code
-    end
-
-    def compile_component_end component
-      code = "_slot=RBlade::SlotManager.new(_out);_out=_c#{component[:index]}_swap;"
-      code << "_out<<#{ComponentStore.component(component[:name])}(_slot,_c#{component[:index]}_attr,params,session,flash,cookies);"
-      code << "_slot=nil;_c#{component[:index]}_swap=nil;_c#{component[:index]}_attr=nil;"
 
       code
     end

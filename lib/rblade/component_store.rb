@@ -4,6 +4,30 @@ module RBlade
   FILE_EXTENSIONS = [".rblade", ".html.rblade"]
 
   class ComponentStore
+    class Component
+      def initialize
+        @attributes = {}
+      end
+
+      def render(attributes, params, session, flash, cookies, &block)
+        slot = capture_slots(&block) if block_given?
+
+        attributes = RBlade::AttributesManager.new(attributes.merge(@attributes))
+
+        compiled_component(attributes, slot, params, session, flash, cookies)
+      end
+
+      private
+
+      def capture_slots
+        RBlade::SlotManager.new yield(->(name, attributes, &block) do
+          @attributes[name] = RBlade::SlotManager.new(block.call, attributes)
+
+          ""
+        end)
+      end
+    end
+
     # Retrieve the method name for a component, and compile it if it hasn't already been compiled
     def self.component full_name
       # If this is a relative path, prepend with the previous component name's base
@@ -76,11 +100,11 @@ module RBlade
     private_class_method :find_component_file
 
     def self.compile_component(name, code)
-      @@component_method_names[name] = "_c#{@@component_method_names.count}"
+      @@component_method_names[name] = "RBlade::ComponentStore::C#{@@component_method_names.count}"
 
       compiled_component = RBlade::Compiler.compileString(code)
 
-      @@component_definitions << "def #{@@component_method_names[name]}(slot,attributes,params,session,flash,cookies);_out=+'';_stacks=[];attributes=RBlade::AttributesManager.new(attributes);#{compiled_component}RBlade::StackManager.get(_stacks) + _out;end;"
+      @@component_definitions << "class #{@@component_method_names[name]} < RBlade::ComponentStore::Component;private def compiled_component(attributes,slot,params,session,flash,cookies);_out=+'';_stacks=[];#{compiled_component}RBlade::StackManager.get(_stacks)+_out;end;end;"
 
       @@component_method_names[name]
     end
