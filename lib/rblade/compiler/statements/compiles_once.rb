@@ -24,16 +24,7 @@ module RBlade
         @once_counter += 1
         once_id = args[1].nil? ? ":_#{@once_counter}" : args[1]
 
-        "unless $_once_tokens.include? #{once_id};$_once_tokens<<#{once_id};" \
-          << "_p1_#{@once_counter}=#{args[0]};_p1_#{@once_counter}_b=_out;_out=+'';"
-      end
-
-      def compileEndPushOnce args
-        unless args.nil?
-          raise StandardError.new "End push once statement: wrong number of arguments (given #{args.count}, expecting 0)"
-        end
-
-        "RBlade::StackManager.push(_p1_#{@once_counter}, _out);_out=_p1_#{@once_counter}_b;end;"
+        "($_once_tokens.include? #{once_id}) || $_once_tokens<<#{once_id} && RBlade::StackManager.push(#{args[0]}) do |_out|;"
       end
 
       def compilePrependOnce args
@@ -43,16 +34,7 @@ module RBlade
         @once_counter += 1
         once_id = args[1].nil? ? ":_#{@once_counter}" : args[1]
 
-        "unless $_once_tokens.include? #{once_id};$_once_tokens<<#{once_id};" \
-          << "_p1_#{@once_counter}=#{args[0]};_p1_#{@once_counter}_b=_out;_out=+'';"
-      end
-
-      def compileEndPrependOnce args
-        unless args.nil?
-          raise StandardError.new "End prepend once statement: wrong number of arguments (given #{args.count}, expecting 0)"
-        end
-
-        "RBlade::StackManager.prepend(_p1_#{@once_counter}, _out);_out=_p1_#{@once_counter}_b;end;"
+        "($_once_tokens.include? #{once_id}) || $_once_tokens<<#{once_id} && RBlade::StackManager.prepend(#{args[0]}) do |_out|;"
       end
     end
   end

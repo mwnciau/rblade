@@ -11,8 +11,8 @@ module RBlade
 
       attr_accessor :attributes
 
-      def render(params, session, flash, cookies, &block)
-        slot = capture_slots(&block) if block_given?
+      def render(params, session, flash, cookies, &)
+        slot = capture_slots(&) if block_given?
 
         compiled_component(slot, params, session, flash, cookies)
       end

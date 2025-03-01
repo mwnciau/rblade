@@ -11,22 +11,19 @@ module RBlade
       @@stacks = {}
     end
 
-    def self.push stack_name, code
+    def self.push stack_name
       @@stacks[stack_name] ||= Stack.new
-      @@stacks[stack_name].push code.to_s
+      @@stacks[stack_name].push yield(+"")
     end
 
-    def self.prepend stack_name, code
+    def self.prepend stack_name
       @@stacks[stack_name] ||= Stack.new
-      @@stacks[stack_name].prepend code.to_s
+      @@stacks[stack_name].prepend yield(+"")
     end
 
     def self.get(stacks)
       stacks.map do |name|
-        out = @@stacks[name].to_s
-        @@stacks.delete name
-
-        out
+        @@stacks.delete(name).to_s
       end.join
     end
 
