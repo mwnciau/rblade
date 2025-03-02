@@ -1,6 +1,9 @@
 ## 1.2.2 [UNRELEASED]
+- Improve performance of stacks and components
 - Update dependencies
-- Fixed redundant unfreezing of interpolated string
+- Fix redundant unfreezing of interpolated string
+- Fix issue with "end" inside multi-line print blocks
+- Fix whitespace being removed for non-statements
 
 ## 1.2.1 [2024-10-31]
 - Fix issue with @props directive when defining multiple properties without braces
