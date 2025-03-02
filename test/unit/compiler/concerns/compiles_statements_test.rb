@@ -8,8 +8,8 @@ class CompilesStatementsTest < TestCase
 
   def test_escaping
     assert_compiles_to "@@end", "_out<<'@end';"
-    assert_compiles_to "@@this(12345)", "_out<<'@this';_out<<'(12345)';"
-    assert_compiles_to "@@this(@end)", "_out<<'@this';_out<<'(';end;_out<<')';"
+    assert_compiles_to "@@this(12345)", "_out<<'@this(12345)';"
+    assert_compiles_to "@@this(@end)", "_out<<'@this(';end;_out<<')';"
   end
 
   def test_statements_are_case_insensitive

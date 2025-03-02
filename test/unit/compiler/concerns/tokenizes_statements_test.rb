@@ -88,7 +88,10 @@ class TokenizesStatementsTest < TestCase
     assert_compiles_to "a@end", "_out<<'a@end';"
     assert_compiles_to "1@end", "_out<<'1@end';"
 
-    # Should paretly be compiled
+    # Should partly be compiled
     assert_compiles_to "@end@end", "end;_out<<'@end';"
+
+    # Whitespace should not be trimmed for non-statements
+    assert_compiles_to " @cake ", "_out<<' @cake ';"
   end
 end

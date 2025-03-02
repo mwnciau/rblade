@@ -69,12 +69,25 @@ module RBlade
     def self.compileTokens tokens
       output = +""
 
-      tokens.each do |token|
-        output << if token.type == :unprocessed || token.type == :raw_text
-          "_out<<'#{RBlade.escape_quotes(token.value)}';"
+      i = 0
+      while i < tokens.count
+        token = tokens[i]
+        if token.type == :unprocessed || token.type == :raw_text
+          output << "_out<<'"
+          
+          # Merge together consecutive prints
+          while tokens[i + 1]&.type == :unprocessed || tokens[i + 1]&.type == :raw_text 
+            output << RBlade.escape_quotes(token.value)
+            i += 1
+            token = tokens[i]
+          end
+          
+          output << RBlade.escape_quotes(token.value)
+          output << "';"
         else
-          token.value
+          output << token.value
         end
+        i += 1
       end
 
       output
