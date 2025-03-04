@@ -65,7 +65,7 @@ module RBlade
         when "attributes"
           "**(#{attribute[:value]})"
         when "string"
-          "'#{attribute[:name]}': '#{RBlade.escape_quotes(attribute[:value])}'"
+          "'#{attribute[:name]}': #{process_string_attribute(attribute[:value])}"
         when "ruby"
           "'#{attribute[:name]}': (#{attribute[:value]})"
         when "pass_through"
@@ -76,6 +76,16 @@ module RBlade
           raise StandardError.new "Component compiler: unexpected attribute type (#{attribute[:type]})"
         end
       end
+    end
+
+    def process_string_attribute(string)
+      string.split(/(\{\{.*?\}\})/).map do |substring|
+        if substring.start_with?('{{') && substring.end_with?('}}')
+          "(#{substring[2..-3]}).to_s"
+        else
+          "'#{RBlade.escape_quotes(substring)}'"
+        end
+      end.join '<<'
     end
   end
 end
