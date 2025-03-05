@@ -25,6 +25,12 @@ module RBlade
       end
     end
 
+    def ensure_all_tags_closed
+      unless @component_stack.empty?
+        raise RBladeTemplateError.new("Unexpected end of document. Expecting </x-#{@component_stack.last[:name]}>")
+      end
+    end
+
     private
 
     def compile_token_start token
@@ -45,11 +51,11 @@ module RBlade
     def compile_token_end token
       component = @component_stack.pop
       if component.nil?
-        raise StandardError.new "Unexpected closing tag (#{token.value[:name]})"
+        raise RBladeTemplateError.new "Unexpected closing tag (#{token.value[:name]})"
       end
 
       if token.type == :component_end && token.value[:name] != component[:name]
-        raise StandardError.new "Unexpected closing tag (#{token.value[:name]}) expecting #{component[:name]}"
+        raise RBladeTemplateError.new "Unexpected closing tag (#{token.value[:name]}) expecting #{component[:name]}"
       end
 
       "_out;end;"
@@ -73,7 +79,7 @@ module RBlade
         when "empty"
           "'#{attribute[:name]}': true"
         else
-          raise StandardError.new "Component compiler: unexpected attribute type (#{attribute[:type]})"
+          raise RBladeTemplateError.new "Component compiler: unexpected attribute type (#{attribute[:type]})"
         end
       end
     end

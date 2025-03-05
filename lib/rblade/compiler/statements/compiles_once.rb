@@ -9,7 +9,7 @@ module RBlade
 
       def compileOnce args
         if args&.count&.> 1
-          raise StandardError.new "Once statement: wrong number of arguments (given #{args.count}, expecting 0 or 1)"
+          raise RBladeTemplateError.new "Once statement: wrong number of arguments (given #{args.count}, expecting 0 or 1)"
         end
 
         once_id = args.nil? ? ":_#{@once_counter += 1}" : args[0]
@@ -19,7 +19,7 @@ module RBlade
 
       def compilePushOnce args
         if args&.count != 1 && args&.count != 2
-          raise StandardError.new "Push once statement: wrong number of arguments (given #{args&.count || 0}, expecting 1 or 2)"
+          raise RBladeTemplateError.new "Push once statement: wrong number of arguments (given #{args&.count || 0}, expecting 1 or 2)"
         end
         @once_counter += 1
         once_id = args[1].nil? ? ":_#{@once_counter}" : args[1]
@@ -29,7 +29,7 @@ module RBlade
 
       def compilePrependOnce args
         if args&.count != 1 && args&.count != 2
-          raise StandardError.new "Prepend once statement: wrong number of arguments (given #{args&.count || 0}, expecting 1 or 2)"
+          raise RBladeTemplateError.new "Prepend once statement: wrong number of arguments (given #{args&.count || 0}, expecting 1 or 2)"
         end
         @once_counter += 1
         once_id = args[1].nil? ? ":_#{@once_counter}" : args[1]

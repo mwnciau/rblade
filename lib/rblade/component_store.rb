@@ -93,7 +93,7 @@ module RBlade
         end
       end
 
-      raise StandardError.new "Unknown component #{namespace}::#{name}"
+      raise RBladeTemplateError.new "Unknown component #{namespace}::#{name}"
     end
     private_class_method :find_component_file
 

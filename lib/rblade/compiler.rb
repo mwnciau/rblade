@@ -31,6 +31,8 @@ module RBlade
     end
   end
 
+  class RBladeTemplateError < StandardError; end
+
   # Register a new custom directive by providing a class and method that will compile the directive into ruby code.
   #
   # @param [String] name The directive tag without the "@", e.g. "if" for the "@if" directive
@@ -51,7 +53,10 @@ module RBlade
       CompilesPrints.new.compile! tokens
       TokenizesStatements.new.tokenize! tokens
       CompilesStatements.new.compile! tokens
-      CompilesComponents.new.compile! tokens
+
+      component_compiler = CompilesComponents.new
+      component_compiler.compile! tokens
+      component_compiler.ensure_all_tags_closed
 
       compileTokens tokens
     end

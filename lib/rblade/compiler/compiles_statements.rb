@@ -73,7 +73,7 @@ module RBlade
           ## Fallback to the default end handler
           handler_class, handler_method = @@statement_handlers["end"]
         else
-          raise StandardError.new "Unhandled statement: @#{name}"
+          raise RBladeTemplateError.new "Unhandled statement: @#{name}"
         end
       end
 

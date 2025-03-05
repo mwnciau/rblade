@@ -132,4 +132,13 @@ class CompilesComponentsTest < TestCase
     assert_compiles_to "<x-compiles_components_test.params/>", nil, "user@example.com"
     assert_compiles_to "<x-compiles_components_test.session/>", nil, "4"
   end
+
+  def test_end_tag_checking
+    exception = assert_raises Exception do
+      assert_compiles_to "<x-button>",
+        nil,
+        ""
+    end
+    assert_equal "Unexpected end of document. Expecting </x-button>", exception.to_s
+  end
 end

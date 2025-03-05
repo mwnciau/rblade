@@ -7,7 +7,7 @@ module RBlade
     class CompilesComponentHelpers
       def compileShouldRender args
         if args&.count != 1
-          raise StandardError.new "Should render statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+          raise RBladeTemplateError.new "Should render statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
 
         "unless(#{args[0]});return'';end;"
@@ -63,7 +63,7 @@ module RBlade
           /x).reject(&:empty?)
 
           if key.nil? || value.nil?
-            raise StandardError.new "Props statement: invalid property hash"
+            raise RBladeTemplateError.new "Props statement: invalid property hash"
           end
           props[key] = value
         end
