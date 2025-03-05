@@ -135,10 +135,17 @@ class CompilesComponentsTest < TestCase
 
   def test_end_tag_checking
     exception = assert_raises Exception do
-      assert_compiles_to "<x-button>",
-        nil,
-        ""
+      assert_compiles_to "<x-button>", nil, ""
     end
     assert_equal "Unexpected end of document. Expecting </x-button>", exception.to_s
+    exception = assert_raises Exception do
+      assert_compiles_to "</x-button>", nil, ""
+    end
+    assert_equal "Unexpected closing tag </x-button>", exception.to_s
+
+    exception = assert_raises Exception do
+      assert_compiles_to "<x-button><x-link></x-button>", nil, ""
+    end
+    assert_equal "Unexpected closing tag </x-button>, expecting </x-link>", exception.to_s
   end
 end

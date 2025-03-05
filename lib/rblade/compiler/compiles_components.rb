@@ -51,11 +51,11 @@ module RBlade
     def compile_token_end token
       component = @component_stack.pop
       if component.nil?
-        raise RBladeTemplateError.new "Unexpected closing tag (#{token.value[:name]})"
+        raise RBladeTemplateError.new "Unexpected closing tag </x-#{token.value[:name]}>"
       end
 
       if token.type == :component_end && token.value[:name] != component[:name]
-        raise RBladeTemplateError.new "Unexpected closing tag (#{token.value[:name]}) expecting #{component[:name]}"
+        raise RBladeTemplateError.new "Unexpected closing tag </x-#{token.value[:name]}>, expecting </x-#{component[:name]}>"
       end
 
       "_out;end;"
