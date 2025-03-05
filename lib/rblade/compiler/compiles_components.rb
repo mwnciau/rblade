@@ -79,11 +79,11 @@ module RBlade
     end
 
     def process_string_attribute(string)
-      string.split(/(\{\{.*?\}\})/).map do |substring|
+      string.split(/((?<!@)\{\{.*?\}\})/).map do |substring|
         if substring.start_with?('{{') && substring.end_with?('}}')
           "(#{substring[2..-3]}).to_s"
         else
-          "'#{RBlade.escape_quotes(substring)}'"
+          "'#{RBlade.escape_quotes(substring.gsub(/@\{\{/, '{{'))}'"
         end
       end.join '<<'
     end

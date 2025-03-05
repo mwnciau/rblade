@@ -90,6 +90,16 @@ class TokenizesComponentsTest < TestCase
     assert_tokenizes_to "<x-a b='{{'>", [{name: "a", attributes: [{name: "b", value: "{{", type: "string"}]}]
   end
 
+  def test_escaped_string_interpolation
+    assert_tokenizes_to "<x-a b=@{{a}}>", [{name: "a", attributes: [{name: "b", value: "@{{a}}", type: "string"}]}]
+    assert_tokenizes_to "<x-a b='@{{a}}'>", [{name: "a", attributes: [{name: "b", value: "@{{a}}", type: "string"}]}]
+    assert_tokenizes_to "<x-a b=\"@{{a}}\">", [{name: "a", attributes: [{name: "b", value: "@{{a}}", type: "string"}]}]
+
+    assert_tokenizes_to "<x-a b=@{{a c=}}>", [{name: "a", attributes: [{name: "b", value: "@{{a", type: "string"}, {name: "c", value: "}}", type: "string"}]}]
+    assert_tokenizes_to "<x-a b='@{{a' c='}}'>", [{name: "a", attributes: [{name: "b", value: "@{{a", type: "string"}, {name: "c", value: "}}", type: "string"}]}]
+    assert_tokenizes_to "<x-a b=\"@{{a\" c=\"}}\">", [{name: "a", attributes: [{name: "b", value: "@{{a", type: "string"}, {name: "c", value: "}}", type: "string"}]}]
+  end
+
   def test_class
     multiline_hash = '{
       "block w-full h-full": maximized,
