@@ -12,7 +12,7 @@ module RBlade
 
         i = 0
         while i < segments.count
-          if segments[i] == "</" && segments[i + 1]&.match(/x[-:]/)
+          if segments[i] == "</" && segments[i + 1]&.match?(/x[-:]/)
             segments[i] = Token.new(type: :component_end, value: {name: segments[i + 1][2..]})
 
             segments.delete_at i + 1
@@ -20,7 +20,7 @@ module RBlade
           elsif segments[i] == "<//>"
             segments[i] = Token.new(type: :component_unsafe_end)
             i += 1
-          elsif segments[i] == "<" && segments[i + 1]&.match(/x[-:]/)
+          elsif segments[i] == "<" && segments[i + 1]&.match?(/x[-:]/)
             name = segments[i + 1][2..]
             raw_attributes = (segments[i + 2] != ">") ? tokenizeAttributes(segments[i + 2]) : nil
 
@@ -66,7 +66,7 @@ module RBlade
           attributes.push({type: "attributes", value: raw_attributes[i + 1]})
           i += 3
         else
-          attribute = {name:}
+          attribute = {}
 
           if raw_attributes[i + 1] == "="
             attribute[:value] = raw_attributes[i + 2]
@@ -78,18 +78,28 @@ module RBlade
           # The "::" at the start of attributes is used to escape attribute names beginning with ":"
           if name[0..1] == "::"
             attribute[:type] = "string"
-            attribute[:name].delete_prefix! ":"
+            attribute[:name] = name[1..-1]
+            attributes.push(attribute)
+            next
+          end
+
+          # If the entire value is a single interpolated string, make this a ruby value
+          if attribute[:value]&.match?(/\A\{\{([^}]|(?!\}\})\})*\}\}\Z/)
+            attribute[:type] = "ruby"
+            attribute[:name] = name
+            attribute[:value] = attribute[:value][2..-3]
             attributes.push(attribute)
             next
           end
 
           if name[0] == ":"
             attribute[:type] = attribute[:value].nil? ? "pass_through" : "ruby"
-            attribute[:name].delete_prefix! ":"
+            attribute[:name] = name[1..-1]
             attributes.push(attribute)
             next
           end
 
+          attribute[:name] = name
           attribute[:type] = if attribute[:value].nil?
             "empty"
           else
