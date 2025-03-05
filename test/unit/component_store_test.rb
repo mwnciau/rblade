@@ -2,7 +2,7 @@ require "test_case"
 require "rblade/compiler"
 require "rblade/component_store"
 
-class BladeTemplatingTest < TestCase
+class ComponentStoreTest < TestCase
   def setup
     super
 
@@ -14,26 +14,25 @@ class BladeTemplatingTest < TestCase
     component_method2 = RBlade::ComponentStore.component "link"
     component_method3 = RBlade::ComponentStore.component "button"
 
-    assert_equal "RBlade::ComponentStore::C0", component_method
-    assert_equal "RBlade::ComponentStore::C1", component_method2
-    assert_equal "RBlade::ComponentStore::C0", component_method3
+    assert_equal "_rblade_components.c_button", component_method
+    assert_equal "_rblade_components.c_link", component_method2
+    assert_equal "_rblade_components.c_button", component_method3
 
     compiled_code = RBlade::ComponentStore.get
 
-    assert compiled_code.match("::C0")
-    assert compiled_code.match("::C1")
-    assert !compiled_code.match("::C2")
+    assert_equal 1, compiled_code.scan("def c_button(").count
+    assert_equal 1, compiled_code.scan("def c_link(").count
   end
 
   def test_clear
     RBlade::ComponentStore.component "button"
-    assert RBlade::ComponentStore.get.match("::C0")
+    assert RBlade::ComponentStore.get.match("def c_button")
 
     RBlade::ComponentStore.clear
     assert_equal "", RBlade::ComponentStore.get
 
     RBlade::ComponentStore.component "link"
-    assert !RBlade::ComponentStore.get.match("::C1")
+    assert !RBlade::ComponentStore.get.match("def c_button")
   end
 
   def test_extensions_index
@@ -69,9 +68,8 @@ class BladeTemplatingTest < TestCase
 
     compiled_code = RBlade::ComponentStore.get
 
-    assert compiled_code.match("::C0")
-    assert compiled_code.match("::C1")
-    assert compiled_code.match("::C2")
-    assert !compiled_code.match("::C3")
+    assert_equal 1, compiled_code.scan("def c_component_store_test_relative_names(").size
+    assert_equal 1, compiled_code.scan("def c_component_store_test_relative_names__success(").size
+    assert_equal 1, compiled_code.scan("def c_component_store_test_relative_names__component(").size
   end
 end

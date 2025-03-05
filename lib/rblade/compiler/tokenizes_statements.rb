@@ -50,8 +50,8 @@ module RBlade
             tokenizeStatement! segments, i
             handleSpecialCases! segments, i
 
-            segments.delete_at i + 1 if segments[i + 1]&.match /\s/
-            if segments[i - 1].is_a?(Token) && segments[i - 1].type == :unprocessed && segments[i - 1].value.match(/\s/)
+            segments.delete_at i + 1 if segments[i + 1]&.match? /\s/
+            if segments[i - 1].is_a?(Token) && segments[i - 1].type == :unprocessed && segments[i - 1].value.match?(/\s/)
               segments.delete_at i - 1
               i -= 1
             end
@@ -60,7 +60,7 @@ module RBlade
             segments[i] = Token.new(type: :unprocessed, value: segments[i] + segments[i + 1])
             segments.delete_at i + 1
 
-            if segments.count > i + 2 && segments[i + 1].match(/\A[ \t]*\Z/) && segments[i + 2][0] == "("
+            if segments.count > i + 2 && segments[i + 1].match?(/\A[ \t]*\Z/) && segments[i + 2][0] == "("
               segments[i].value += segments[i + 1] + segments[i + 2]
               segments.delete_at i + 1
               segments.delete_at i + 1
@@ -88,7 +88,7 @@ module RBlade
       statement_name = segments.delete_at i + 1
 
       # Remove optional whitespace
-      if segments.count > i + 2 && segments[i + 1].match(/\A[ \t]*\Z/) && segments[i + 2][0] == "("
+      if segments.count > i + 2 && segments[i + 1].match?(/\A[ \t]*\Z/) && segments[i + 2][0] == "("
         segments.delete_at i + 1
       end
 

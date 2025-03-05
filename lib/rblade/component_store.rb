@@ -4,28 +4,6 @@ module RBlade
   FILE_EXTENSIONS = [".rblade", ".html.rblade"]
 
   class ComponentStore
-    class Component
-      def initialize(attributes)
-        @attributes = RBlade::AttributesManager.new(attributes)
-      end
-
-      attr_accessor :attributes
-
-      def render(params, session, flash, cookies, &)
-        slot = capture_slots(&) if block_given?
-
-        compiled_component(slot, params, session, flash, cookies)
-      end
-
-      private
-
-      def capture_slots
-        RBlade::SlotManager.new yield(+"", ->(name, attributes, &block) do
-          @attributes[name] = RBlade::SlotManager.new(block.call(+""), attributes)
-        end)
-      end
-    end
-
     # Retrieve the method name for a component, and compile it if it hasn't already been compiled
     def self.component full_name
       # If this is a relative path, prepend with the previous component name's base
@@ -68,7 +46,9 @@ module RBlade
     end
 
     def self.get
-      @@component_definitions
+      return "" if @@component_definitions.empty?
+
+      "_rblade_components=Class.new do;#{@@component_definitions}end.new;"
     end
 
     def self.clear
@@ -97,14 +77,17 @@ module RBlade
     end
     private_class_method :find_component_file
 
-    def self.compile_component(name, code)
-      @@component_method_names[name] = "RBlade::ComponentStore::C#{@@component_method_names.count}"
+    def self.compile_component(name, template)
+      escaped_name = name.gsub(/[^0-9a-zA-Z_]/) do |match|
+        # Convert invalid characters to hex
+        (match == ".") ? "__" : "_#{match.unpack1("H*")}_"
+      end
 
-      compiled_component = RBlade::Compiler.compileString(code)
+      compiled_component = RBlade::Compiler.compileString(template)
 
-      @@component_definitions << "class #{@@component_method_names[name]} < RBlade::ComponentStore::Component;private def compiled_component(slot,params,session,flash,cookies);_out=+'';_stacks=[];#{compiled_component}RBlade::StackManager.get(_stacks)+_out;end;end;"
+      @@component_definitions << "def c_#{escaped_name}(attributes,params,session,flash,cookies,_rblade_components);slot=if block_given?;RBlade::SlotManager.new yield(+'',->(name, slot_attributes, &block)do;attributes[name]=RBlade::SlotManager.new(block.call(+''), slot_attributes);end);end;_out=+'';_stacks=[];#{compiled_component}RBlade::StackManager.get(_stacks)+_out;end;"
 
-      @@component_method_names[name]
+      @@component_method_names[name] = "_rblade_components.c_#{escaped_name}"
     end
     private_class_method :compile_component
 

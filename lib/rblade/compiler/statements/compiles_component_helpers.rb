@@ -83,7 +83,7 @@ module RBlade
 
       # Automatically detect if a variable is a slot by looking for "<var>.attributes"
       def variableIsSlot name, tokens
-        tokens.any? { |token| token.value.to_s.match "#{name}.attributes" }
+        tokens.any? { |token| token.value.to_s.match? "#{name}.attributes" }
       end
     end
   end
