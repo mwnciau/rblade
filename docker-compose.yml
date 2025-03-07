@@ -1,6 +1,6 @@
 services:
   blade:
-    image: ruby:3.3.4
+    image: ruby:3.4.2
     working_dir: /var/source
     volumes:
       - .:/var/source
