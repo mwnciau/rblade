@@ -50,7 +50,7 @@ module RBlade
             tokenizeStatement! segments, i
             handleSpecialCases! segments, i
 
-            segments.delete_at i + 1 if segments[i + 1]&.match? /\s/
+            segments.delete_at(i + 1) if segments[i + 1]&.match?(/\s/)
             if segments[i - 1].is_a?(Token) && segments[i - 1].type == :unprocessed && segments[i - 1].value.match?(/\s/)
               segments.delete_at i - 1
               i -= 1

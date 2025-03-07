@@ -85,7 +85,9 @@ module RBlade
 
       compiled_component = RBlade::Compiler.compileString(template)
 
-      @@component_definitions << "def c_#{escaped_name}(attributes,params,session,flash,cookies,_rblade_components);slot=if block_given?;RBlade::SlotManager.new yield(+'',->(name, slot_attributes, &block)do;attributes[name]=RBlade::SlotManager.new(block.call(+''), slot_attributes);end);end;_out=+'';_stacks=[];#{compiled_component}RBlade::StackManager.get(_stacks)+_out;end;"
+      slot_assignment = compiled_component.match?(/\Wslot\W/) ? "slot=" : ""
+
+      @@component_definitions << "def c_#{escaped_name}(attributes,params,session,flash,cookies,_rblade_components);#{slot_assignment}if block_given?;RBlade::SlotManager.new yield(+'',->(name, slot_attributes, &block)do;attributes[name]=RBlade::SlotManager.new(block.call(+''), slot_attributes);end);end;_out=+'';_stacks=[];#{compiled_component}RBlade::StackManager.get(_stacks)+_out;end;"
 
       @@component_method_names[name] = "_rblade_components.c_#{escaped_name}"
     end

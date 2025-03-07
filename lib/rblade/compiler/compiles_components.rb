@@ -91,7 +91,7 @@ module RBlade
         else
           "'#{RBlade.escape_quotes(substring.gsub(/@\{\{/, '{{'))}'"
         end
-      end.join '<<'
+      end.join('<<').prepend('+')
     end
   end
 end

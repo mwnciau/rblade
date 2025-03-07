@@ -119,13 +119,13 @@ class CompilesPrintsTest < TestCase
   end
 
   def self.block_helper_func
-    output = "2"
+    output = +"2"
     output << yield
     output << "4"
   end
 
   def self.block_helper_func_with_arg
-    output = "2"
+    output = +"2"
     output << (yield "3")
     output << "4"
   end

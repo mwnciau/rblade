@@ -1,6 +1,7 @@
 require "test_case"
 require "rblade/compiler"
 require "rblade/component_store"
+require "benchmark"
 
 class BladeBenchmarkingTest < TestCase
   def setup
@@ -13,7 +14,7 @@ class BladeBenchmarkingTest < TestCase
     # Benchmarking: set this to a higher number to test the performance of the compiler
     n = 1
     compiled_string = RBlade::Compiler.compileString("<x-benchmark/>")
-    Benchmark.bm do |bm|
+    Benchmark.bmbm do |bm|
       bm.report("compile") { (1..n).each { RBlade::Compiler.compileString("benchmark") } }
       bm.report("execute") { (1..n).each { run_compiled_string(compiled_string) } }
     end
@@ -21,7 +22,6 @@ class BladeBenchmarkingTest < TestCase
 
   def run_compiled_string(compiled_string)
     locals ||= %(
-      # frozen_string_literal: true
       extend ActionView::Helpers;
       foo = "FOO";
       bar = "BAR";

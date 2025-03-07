@@ -111,7 +111,7 @@ module RBlade
         return classes_1
       end
 
-      classes_combined = classes_1
+      classes_combined = +classes_1
       unless classes_combined.end_with? " "
         classes_combined << " "
       end
@@ -128,7 +128,7 @@ module RBlade
         return styles_1
       end
 
-      styles_combined = styles_1
+      styles_combined = +styles_1
       unless styles_combined.end_with? ";"
         styles_combined << ";"
       end

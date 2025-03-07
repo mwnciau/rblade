@@ -2,9 +2,9 @@ require "test_case"
 
 class CompilesRubyTest < TestCase
   def test_block_ruby
-    assert_compiles_to "@ruby _out = 'cake' @endruby", "_out = 'cake';", "cake"
-    assert_compiles_to "@ruby _out = 'cake';@endruby", "_out = 'cake';", "cake"
-    assert_compiles_to "@ruby _out = 'cake'@endruby", "_out = 'cake';", "cake"
+    assert_compiles_to "@ruby _out = +'cake' @endruby", "_out = +'cake';", "cake"
+    assert_compiles_to "@ruby _out = +'cake';@endruby", "_out = +'cake';", "cake"
+    assert_compiles_to "@ruby _out = +'cake'@endruby", "_out = +'cake';", "cake"
 
     assert_compiles_to "foo @ruby _out << 'bar' @endruby baz", nil, "foobarbaz"
     assert_compiles_to "foo  @ruby _out << 'bar' @endruby  baz", nil, "foo bar baz"
@@ -17,9 +17,9 @@ class CompilesRubyTest < TestCase
   end
 
   def test_escaped_block_ruby
-    assert_compiles_to "@@ruby _out = 'cake' @endruby", nil, "@ruby _out = 'cake' @endruby"
-    assert_compiles_to "@@ruby _out = 'cake';@endruby", nil, "@ruby _out = 'cake';@endruby"
-    assert_compiles_to "@@ruby _out = 'cake'@endruby", nil, "@ruby _out = 'cake'@endruby"
+    assert_compiles_to "@@ruby _out = +'cake' @endruby", nil, "@ruby _out = +'cake' @endruby"
+    assert_compiles_to "@@ruby _out = +'cake';@endruby", nil, "@ruby _out = +'cake';@endruby"
+    assert_compiles_to "@@ruby _out = +'cake'@endruby", nil, "@ruby _out = +'cake'@endruby"
 
     assert_compiles_to "foo @@ruby _out << 'bar' @endruby baz", nil, "foo @ruby _out << 'bar' @endruby baz"
 
@@ -31,9 +31,9 @@ class CompilesRubyTest < TestCase
   end
 
   def test_erb_style_tags
-    assert_compiles_to "<% _out = 'cake' %>", "_out = 'cake';", "cake"
-    assert_compiles_to "<% _out = 'cake';%>", "_out = 'cake';", "cake"
-    assert_compiles_to "<% _out = 'cake'%>", "_out = 'cake';", "cake"
+    assert_compiles_to "<% _out = +'cake' %>", "_out = +'cake';", "cake"
+    assert_compiles_to "<% _out = +'cake';%>", "_out = +'cake';", "cake"
+    assert_compiles_to "<% _out = +'cake'%>", "_out = +'cake';", "cake"
 
     assert_compiles_to "foo<% _out << 'bar' %>baz", nil, "foobarbaz"
     assert_compiles_to "foo <% _out << 'bar' %> baz", nil, "foo bar baz"
@@ -44,13 +44,13 @@ class CompilesRubyTest < TestCase
   end
 
   def test_erb_style_tags_with_no_spaces
-    assert_compiles_to "<%_out = 'cake'%>", "_out = 'cake';", "cake"
+    assert_compiles_to "<%_out = +'cake'%>", "_out = +'cake';", "cake"
   end
 
   def test_escaped_erb_style_tags
-    assert_compiles_to "<%% _out = 'cake' %%>", nil, "<% _out = 'cake' %>"
-    assert_compiles_to "<%% _out = 'cake';%%>", nil, "<% _out = 'cake';%>"
-    assert_compiles_to "<%% _out = 'cake'%%>", nil, "<% _out = 'cake'%>"
+    assert_compiles_to "<%% _out = +'cake' %%>", nil, "<% _out = +'cake' %>"
+    assert_compiles_to "<%% _out = +'cake';%%>", nil, "<% _out = +'cake';%>"
+    assert_compiles_to "<%% _out = +'cake'%%>", nil, "<% _out = +'cake'%>"
 
     assert_compiles_to "foo <%% _out << 'bar' %%> baz", nil, "foo <% _out << 'bar' %> baz"
 
