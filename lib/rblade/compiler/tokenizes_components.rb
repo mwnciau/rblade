@@ -78,7 +78,7 @@ module RBlade
           # The "::" at the start of attributes is used to escape attribute names beginning with ":"
           if name[0..1] == "::"
             attribute[:type] = "string"
-            attribute[:name] = name[1..-1]
+            attribute[:name] = name[1..]
             attributes.push(attribute)
             next
           end
@@ -94,7 +94,7 @@ module RBlade
 
           if name[0] == ":"
             attribute[:type] = attribute[:value].nil? ? "pass_through" : "ruby"
-            attribute[:name] = name[1..-1]
+            attribute[:name] = name[1..]
             attributes.push(attribute)
             next
           end

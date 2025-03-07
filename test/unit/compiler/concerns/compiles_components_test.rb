@@ -111,9 +111,9 @@ class CompilesComponentsTest < TestCase
   def test_interpolated_attributes
     assert_compiles_to "<x-compiles_components_test.props firstName=\"{{ \"bob\" }}\"/>", nil, "bob"
     assert_compiles_to "<x-compiles_components_test.props firstName='b{{ 'o' }}b'/>", nil, "bob"
-    assert_compiles_to "<x-compiles_components_test.props firstName=\{{ \"b\" }}{{'o'}}{{ 'B'.downcase }}/>", nil, "bob"
+    assert_compiles_to "<x-compiles_components_test.props firstName={{ \"b\" }}{{'o'}}{{ 'B'.downcase }}/>", nil, "bob"
     assert_compiles_to "<x-compiles_components_test.props firstName=\"{{2}}\"/>", nil, "2"
-    
+
     assert_compiles_to "<x-compiles_components_test.props firstName=\"{{\"/>", nil, "{{"
 
     assert_compiles_to "<x-compiles_components_test.props firstName=\"{{ '\"' }}\"/>", nil, "&quot;"

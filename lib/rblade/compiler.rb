@@ -79,14 +79,14 @@ module RBlade
         token = tokens[i]
         if token.type == :unprocessed || token.type == :raw_text
           output << "_out<<'"
-          
+
           # Merge together consecutive prints
-          while tokens[i + 1]&.type == :unprocessed || tokens[i + 1]&.type == :raw_text 
+          while tokens[i + 1]&.type == :unprocessed || tokens[i + 1]&.type == :raw_text
             output << RBlade.escape_quotes(token.value)
             i += 1
             token = tokens[i]
           end
-          
+
           output << RBlade.escape_quotes(token.value)
           output << "';"
         else
