@@ -9,7 +9,8 @@ class TestCase < Minitest::Test
   RBlade::ComponentStore.add_path(File.join(File.dirname(__FILE__), "fixtures"))
 
   def assert_compiles_to template, expected_code = nil, expected_result = nil, locals = nil
-    compiled_string = RBlade::Compiler.compileString(template)
+    component_store = RBlade::ComponentStore.new
+    compiled_string = RBlade::Compiler.compileString(template, component_store)
 
     if expected_code
       assert_equal expected_code, compiled_string

@@ -43,7 +43,7 @@ module RBlade
   end
 
   class Compiler
-    def self.compileString(string_template)
+    def self.compileString(string_template, component_store)
       tokens = [Token.new(:unprocessed, string_template)]
 
       CompilesVerbatim.new.compile! tokens
@@ -54,7 +54,7 @@ module RBlade
       TokenizesStatements.new.tokenize! tokens
       CompilesStatements.new.compile! tokens
 
-      component_compiler = CompilesComponents.new
+      component_compiler = CompilesComponents.new(component_store)
       component_compiler.compile! tokens
       component_compiler.ensure_all_tags_closed
 

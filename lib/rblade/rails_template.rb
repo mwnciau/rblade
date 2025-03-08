@@ -12,7 +12,7 @@ require "rblade/helpers/style_manager"
 module RBlade
   class RailsTemplate
     def call(template, source = nil)
-      RBlade::ComponentStore.clear
+      component_store = RBlade::ComponentStore.new
       RBlade::StackManager.clear
 
       unless template.nil?
@@ -23,14 +23,12 @@ module RBlade
           .tr("/", ".")
 
         # Let the component store know about the current view for relative components
-        RBlade::ComponentStore.view_name(
-          "view::#{view_name}"
-        )
+        component_store.view_name("view::#{view_name}")
       end
       setup = "_out=+'';_stacks=[];$_once_tokens=[];"
-      code = RBlade::Compiler.compileString(source || template.source)
+      code = RBlade::Compiler.compileString(source, component_store)
       setdown = "RBlade::StackManager.get(_stacks) + _out"
-      setup + ComponentStore.get + code + setdown
+      setup + component_store.get + code + setdown
     end
   end
 end

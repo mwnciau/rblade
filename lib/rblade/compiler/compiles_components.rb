@@ -4,9 +4,10 @@ require "rblade/component_store"
 
 module RBlade
   class CompilesComponents
-    def initialize
+    def initialize(component_store)
       @component_count = 0
       @component_stack = []
+      @component_store = component_store
     end
 
     def compile!(tokens)
@@ -44,7 +45,7 @@ module RBlade
       if component[:name].start_with? "slot::"
         "_slot.call(:'#{RBlade.escape_quotes(component[:name].delete_prefix("slot::"))}', {#{attributes.join(",")}}) do |_out|;"
       else
-        "_out<<#{ComponentStore.component(component[:name])}(RBlade::AttributesManager.new({#{attributes.join(",")}}),params,session,flash,cookies,_rblade_components) do |_out,_slot|;"
+        "_out<<#{@component_store.component(component[:name])}(RBlade::AttributesManager.new({#{attributes.join(",")}}),params,session,flash,cookies,_rblade_components) do |_out,_slot|;"
       end
     end
 

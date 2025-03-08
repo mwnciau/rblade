@@ -6,16 +6,14 @@ require "benchmark"
 class BladeBenchmarkingTest < TestCase
   def setup
     super
-
-    RBlade::ComponentStore.clear
   end
 
   def test_performance
     # Benchmarking: set this to a higher number to test the performance of the compiler
     n = 1
-    compiled_string = RBlade::Compiler.compileString("<x-benchmark/>")
+    compiled_string = RBlade::Compiler.compileString("<x-benchmark/>", RBlade::ComponentStore.new)
     Benchmark.bmbm do |bm|
-      bm.report("compile") { (1..n).each { RBlade::Compiler.compileString("benchmark") } }
+      bm.report("compile") { (1..n).each { RBlade::Compiler.compileString("benchmark", RBlade::ComponentStore.new) } }
       bm.report("execute") { (1..n).each { run_compiled_string(compiled_string) } }
     end
   end
