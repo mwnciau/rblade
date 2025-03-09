@@ -25,10 +25,8 @@ module RBlade
         # Let the component store know about the current view for relative components
         component_store.view_name("view::#{view_name}")
       end
-      setup = "_out=+'';_stacks=[];$_once_tokens=[];"
-      code = RBlade::Compiler.compileString(source, component_store)
-      setdown = "RBlade::StackManager.get(_stacks) + _out"
-      setup + component_store.get + code + setdown
+
+      -"_stacks=[];@_rblade_once_tokens=[];#{component_store.get}#{RBlade::Compiler.compileString(source, component_store)}@output_buffer.raw_buffer.prepend(RBlade::StackManager.get(_stacks))"
     end
   end
 end

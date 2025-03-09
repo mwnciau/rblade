@@ -2,23 +2,24 @@
 
 module RBlade
   class StackManager
-    def self.initialize stack_name, before_stack
+    def self.initialize stack_name, output_buffer
       @@stacks[stack_name] ||= Stack.new
-      @@stacks[stack_name].set_before_stack before_stack
+      @@stacks[stack_name].set_before_stack -output_buffer.raw_buffer
+      output_buffer.raw_buffer.clear
     end
 
     def self.clear
       @@stacks = {}
     end
 
-    def self.push stack_name
+    def self.push(stack_name, output_buffer, &)
       @@stacks[stack_name] ||= Stack.new
-      @@stacks[stack_name].push yield(+"")
+      @@stacks[stack_name].push output_buffer.capture(&)
     end
 
-    def self.prepend stack_name
+    def self.prepend(stack_name, output_buffer, &)
       @@stacks[stack_name] ||= Stack.new
-      @@stacks[stack_name].prepend yield(+"")
+      @@stacks[stack_name].prepend output_buffer.capture(&)
     end
 
     def self.get(stacks)

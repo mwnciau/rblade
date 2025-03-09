@@ -43,9 +43,9 @@ module RBlade
       attributes = compile_attributes token.value[:attributes]
 
       if component[:name].start_with? "slot::"
-        "_slot.call(:'#{RBlade.escape_quotes(component[:name].delete_prefix("slot::"))}', {#{attributes.join(",")}}) do |_out|;"
+        "_slot.call(:'#{RBlade.escape_quotes(component[:name].delete_prefix("slot::"))}', {#{attributes.join(",")}}) do;"
       else
-        "_out<<#{@component_store.component(component[:name])}(RBlade::AttributesManager.new({#{attributes.join(",")}})) do |_out,_slot|;"
+        "#{@component_store.component(component[:name])}(RBlade::AttributesManager.new({#{attributes.join(",")}})) do |_slot|;"
       end
     end
 
@@ -59,7 +59,7 @@ module RBlade
         raise RBladeTemplateError.new "Unexpected closing tag </x-#{token.value[:name]}>, expecting </x-#{component[:name]}>"
       end
 
-      "_out;end;"
+      "end;"
     end
 
     def compile_attributes attributes

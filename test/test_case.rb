@@ -1,6 +1,8 @@
 require "minitest/autorun"
 require "minitest/reporters"
 require "rblade/rails_template"
+require "action_view/buffers"
+require "action_view/flows"
 require "action_view/helpers"
 
 class TestCase < Minitest::Test
@@ -19,6 +21,9 @@ class TestCase < Minitest::Test
     if expected_result
       mod = Module.new do
         extend ActionView::Helpers
+
+        @output_buffer = ActionView::OutputBuffer.new
+        @view_flow = ActionView::OutputFlow.new
 
         def self.params
           {email: "user@example.com"}

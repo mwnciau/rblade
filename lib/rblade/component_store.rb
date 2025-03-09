@@ -86,7 +86,7 @@ module RBlade
 
       slot_assignment = compiled_component.match?(/\Wslot\W/) ? "slot=" : ""
 
-      @component_definitions << "def self._rblade_component_#{escaped_name}(attributes);#{slot_assignment}if block_given?;RBlade::SlotManager.new yield(+'',->(name, slot_attributes, &block)do;attributes[name]=RBlade::SlotManager.new(block.call(+''), slot_attributes);end);end;_out=+'';_stacks=[];#{compiled_component}RBlade::StackManager.get(_stacks)+_out;end;"
+      @component_definitions << "def self._rblade_component_#{escaped_name}(attributes,&);#{slot_assignment}if block_given?;RBlade::SlotManager.new(@output_buffer.capture(->(name, slot_attributes, &slot_block)do;attributes[name]=RBlade::SlotManager.new(@output_buffer.capture(&slot_block), slot_attributes);end,&));end;_stacks=[];@output_buffer.raw_buffer<<@output_buffer.capture do;#{compiled_component}@output_buffer.raw_buffer.prepend(RBlade::StackManager.get(_stacks));end;end;"
 
       @component_method_names[name] = "_rblade_component_#{escaped_name}"
     end

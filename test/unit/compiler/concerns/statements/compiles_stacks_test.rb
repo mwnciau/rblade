@@ -3,8 +3,13 @@ require "test_case"
 class CompilesStacksTest < TestCase
   def test_stack
     assert_compiles_to "@stack('stack')",
-      "RBlade::StackManager.initialize('stack', _out);_stacks.push('stack');_out=+'';",
+      "RBlade::StackManager.initialize('stack', @output_buffer);_stacks.push('stack');",
       ""
+  end
+
+  def test_push_prepend_dont_output
+    assert_compiles_to "@push('stack') 12345 @endpush", nil, ""
+    assert_compiles_to "@prepend('stack') 12345 @endpush", nil, ""
   end
 
   def test_prepends_come_before_pushes

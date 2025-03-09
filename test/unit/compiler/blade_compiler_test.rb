@@ -1,8 +1,8 @@
 require "test_case"
 require "rblade/compiler"
 
-class BladeTemplatingTest < TestCase
+class BladeCompilerTest < TestCase
   def test_strings_are_escaped
-    assert_compiles_to %(\\'), "_out<<'\\\\\\'';", %(\\')
+    assert_compiles_to %(\\'), "@output_buffer.raw_buffer<<'\\\\\\'';", %(\\')
   end
 end
