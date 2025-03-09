@@ -1,4 +1,4 @@
-## 2.0.0 [UNRELEASED]
+## 2.0.0 [2025-03-09]
 - Add check for unclosed tags
 - Add string interpolation for component attributes
 - Improve runtime performance
