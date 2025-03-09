@@ -38,7 +38,7 @@ module RBlade
         end
 
         token.value = if handler.is_a? Proc
-          "@output_buffer.raw_buffer<<'#{RBlade.escape_quotes(handler.call(*handler_arguments).to_s)}';"
+          "@output_buffer.raw_buffer<<-'#{RBlade.escape_quotes(handler.call(*handler_arguments).to_s)}';"
         else
           handler.call(*handler_arguments)
         end

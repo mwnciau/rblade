@@ -10,11 +10,11 @@ class CompilesComponentHelpersTest < TestCase
   end
 
   def test_should_render
-    assert_compiles_to "@shouldRender(true) rendered", "unless(true);return'';end;@output_buffer.raw_buffer<<'rendered';", "rendered"
-    assert_compiles_to "@shouldRender(false) rendered", "unless(false);return'';end;@output_buffer.raw_buffer<<'rendered';", ""
+    assert_compiles_to "@shouldRender(true) rendered", "unless(true);return'';end;@output_buffer.raw_buffer<<-'rendered';", "rendered"
+    assert_compiles_to "@shouldRender(false) rendered", "unless(false);return'';end;@output_buffer.raw_buffer<<-'rendered';", ""
 
-    assert_compiles_to "rendered @shouldRender(true)", "@output_buffer.raw_buffer<<'rendered';unless(true);return'';end;", "rendered"
-    assert_compiles_to "rendered @shouldRender(false)", "@output_buffer.raw_buffer<<'rendered';unless(false);return'';end;", ""
+    assert_compiles_to "rendered @shouldRender(true)", "@output_buffer.raw_buffer<<-'rendered';unless(true);return'';end;", "rendered"
+    assert_compiles_to "rendered @shouldRender(false)", "@output_buffer.raw_buffer<<-'rendered';unless(false);return'';end;", ""
   end
 
   def test_should_render_component

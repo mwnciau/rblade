@@ -73,9 +73,9 @@ class CompilesRubyTest < TestCase
     assert_ruby_found "@rubyhi @endruby", false
     assert_ruby_found "a@ruby @endruby", false
 
-    assert_compiles_to ">@ruby RUBY @endruby", "@output_buffer.raw_buffer<<'>';RUBY;"
-    assert_compiles_to "'@ruby RUBY @endruby", "@output_buffer.raw_buffer<<'\\'';RUBY;"
-    assert_compiles_to ".@ruby RUBY @endruby", "@output_buffer.raw_buffer<<'.';RUBY;"
+    assert_compiles_to ">@ruby RUBY @endruby", "@output_buffer.raw_buffer<<-'>';RUBY;"
+    assert_compiles_to "'@ruby RUBY @endruby", "@output_buffer.raw_buffer<<-'\\'';RUBY;"
+    assert_compiles_to ".@ruby RUBY @endruby", "@output_buffer.raw_buffer<<-'.';RUBY;"
   end
 
   def test_directive_variations

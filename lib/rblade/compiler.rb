@@ -69,7 +69,7 @@ module RBlade
       while i < tokens.count
         token = tokens[i]
         if token.type == :unprocessed || token.type == :raw_text
-          output << "@output_buffer.raw_buffer<<'"
+          output << "@output_buffer.raw_buffer<<-'"
 
           # Merge together consecutive prints
           while tokens[i + 1]&.type == :unprocessed || tokens[i + 1]&.type == :raw_text

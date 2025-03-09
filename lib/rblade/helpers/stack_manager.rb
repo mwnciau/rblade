@@ -4,7 +4,7 @@ module RBlade
   class StackManager
     def self.initialize stack_name, output_buffer
       @@stacks[stack_name] ||= Stack.new
-      @@stacks[stack_name].set_before_stack -output_buffer.raw_buffer
+      @@stacks[stack_name].set_before_stack(-output_buffer.raw_buffer)
       output_buffer.raw_buffer.clear
     end
 

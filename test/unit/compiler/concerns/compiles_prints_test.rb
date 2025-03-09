@@ -27,46 +27,46 @@ class CompilesPrintsTest < TestCase
 
   def test_expression
     assert_compiles_to "{{ foo + bar << 'BAZ' }}", "@output_buffer.append=foo + bar << 'BAZ';", "FOOBARBAZ"
-    assert_compiles_to %q({{ "foo" + 'bar' }}), %q[@output_buffer.append="foo" + 'bar';], "foobar"
-    assert_compiles_to %q({{ "#{foo}" }}), %q[@output_buffer.append="#{foo}";], "FOO" # standard:disable Lint/InterpolationCheck
+    assert_compiles_to %q({{ "foo" + 'bar' }}), %q(@output_buffer.append="foo" + 'bar';), "foobar"
+    assert_compiles_to '{{ "#{foo}" }}', '@output_buffer.append="#{foo}";', "FOO" # standard:disable Lint/InterpolationCheck
     assert_compiles_to "{{ 'a' * 3 }}", "@output_buffer.append='a' * 3;", "aaa"
 
     assert_compiles_to "{!! foo + bar << 'BAZ' !!}", "@output_buffer.raw_buffer<<(foo + bar << 'BAZ').to_s;", "FOOBARBAZ"
     assert_compiles_to %q({!! "foo" + 'bar' !!}), %q[@output_buffer.raw_buffer<<("foo" + 'bar').to_s;], "foobar"
-    assert_compiles_to %q({!! "#{foo}" !!}), %q[@output_buffer.raw_buffer<<("#{foo}").to_s;], "FOO" # standard:disable Lint/InterpolationCheck
+    assert_compiles_to '{!! "#{foo}" !!}', '@output_buffer.raw_buffer<<("#{foo}").to_s;', "FOO" # standard:disable Lint/InterpolationCheck
     assert_compiles_to "{!! 'a' * 3 !!}", "@output_buffer.raw_buffer<<('a' * 3).to_s;", "aaa"
   end
 
   def test_multiple
-    assert_compiles_to "{{'foo'}}bar", "@output_buffer.append='foo';@output_buffer.raw_buffer<<'bar';", "foobar"
-    assert_compiles_to "foo{{'bar'}}", "@output_buffer.raw_buffer<<'foo';@output_buffer.append='bar';", "foobar"
+    assert_compiles_to "{{'foo'}}bar", "@output_buffer.append='foo';@output_buffer.raw_buffer<<-'bar';", "foobar"
+    assert_compiles_to "foo{{'bar'}}", "@output_buffer.raw_buffer<<-'foo';@output_buffer.append='bar';", "foobar"
     assert_compiles_to "foo{{
     'bar'
-    }}baz", "@output_buffer.raw_buffer<<'foo';@output_buffer.append='bar';@output_buffer.raw_buffer<<'baz';", "foobarbaz"
+    }}baz", "@output_buffer.raw_buffer<<-'foo';@output_buffer.append='bar';@output_buffer.raw_buffer<<-'baz';", "foobarbaz"
 
-    assert_compiles_to "{!!'foo'!!}bar", "@output_buffer.raw_buffer<<('foo').to_s;@output_buffer.raw_buffer<<'bar';", "foobar"
-    assert_compiles_to "foo{!!'bar'!!}", "@output_buffer.raw_buffer<<'foo';@output_buffer.raw_buffer<<('bar').to_s;", "foobar"
+    assert_compiles_to "{!!'foo'!!}bar", "@output_buffer.raw_buffer<<('foo').to_s;@output_buffer.raw_buffer<<-'bar';", "foobar"
+    assert_compiles_to "foo{!!'bar'!!}", "@output_buffer.raw_buffer<<-'foo';@output_buffer.raw_buffer<<('bar').to_s;", "foobar"
     assert_compiles_to "foo{!!
     'bar'
-    !!}baz", "@output_buffer.raw_buffer<<'foo';@output_buffer.raw_buffer<<('bar').to_s;@output_buffer.raw_buffer<<'baz';", "foobarbaz"
+    !!}baz", "@output_buffer.raw_buffer<<-'foo';@output_buffer.raw_buffer<<('bar').to_s;@output_buffer.raw_buffer<<-'baz';", "foobarbaz"
   end
 
   def test_escaped
-    assert_compiles_to "@{{foo}}", "@output_buffer.raw_buffer<<'{{foo}}';", "{{foo}}"
-    assert_compiles_to "@{{ foo }}", "@output_buffer.raw_buffer<<'{{ foo }}';", "{{ foo }}"
+    assert_compiles_to "@{{foo}}", "@output_buffer.raw_buffer<<-'{{foo}}';", "{{foo}}"
+    assert_compiles_to "@{{ foo }}", "@output_buffer.raw_buffer<<-'{{ foo }}';", "{{ foo }}"
     assert_compiles_to "@{{
       foo
-      }}", "@output_buffer.raw_buffer<<'{{
+      }}", "@output_buffer.raw_buffer<<-'{{
       foo
       }}';", "{{
       foo
       }}"
 
-    assert_compiles_to "@{!!foo!!}", "@output_buffer.raw_buffer<<'{!!foo!!}';", "{!!foo!!}"
-    assert_compiles_to "@{!! foo !!}", "@output_buffer.raw_buffer<<'{!! foo !!}';", "{!! foo !!}"
+    assert_compiles_to "@{!!foo!!}", "@output_buffer.raw_buffer<<-'{!!foo!!}';", "{!!foo!!}"
+    assert_compiles_to "@{!! foo !!}", "@output_buffer.raw_buffer<<-'{!! foo !!}';", "{!! foo !!}"
     assert_compiles_to "@{!!
         foo
-        !!}", "@output_buffer.raw_buffer<<'{!!
+        !!}", "@output_buffer.raw_buffer<<-'{!!
         foo
         !!}';", "{!!
         foo
@@ -74,8 +74,8 @@ class CompilesPrintsTest < TestCase
   end
 
   def test_dangerous_strings
-    assert_compiles_to %q({{ '"\'\\\\\\'' }}), %q[@output_buffer.append='"\'\\\\\\'';], "&quot;&#39;\\&#39;"
-    assert_compiles_to %q({{ '<&"\'>' }}), %q[@output_buffer.append='<&"\'>';], "&lt;&amp;&quot;&#39;&gt;"
+    assert_compiles_to %q({{ '"\'\\\\\\'' }}), %q(@output_buffer.append='"\'\\\\\\'';), "&quot;&#39;\\&#39;"
+    assert_compiles_to %q({{ '<&"\'>' }}), %q(@output_buffer.append='<&"\'>';), "&lt;&amp;&quot;&#39;&gt;"
     assert_compiles_to %q(@{{ '"\'\\\\\\'' }}), nil, %q({{ '"\\'\\\\\\'' }})
 
     assert_compiles_to %q({!! '"\'\\\\\\'' !!}), %q[@output_buffer.raw_buffer<<('"\'\\\\\\'').to_s;], %q("'\\')
@@ -98,8 +98,8 @@ class CompilesPrintsTest < TestCase
 
   def test_limitations
     # The end tag cannot appear within the print
-    assert_compiles_to "{{ 'foo}}' }}", "@output_buffer.append='foo;@output_buffer.raw_buffer<<'\\' }}';"
-    assert_compiles_to "<%= 'foo%>' %>", "@output_buffer.append='foo;@output_buffer.raw_buffer<<'\\' %>';"
+    assert_compiles_to "{{ 'foo}}' }}", "@output_buffer.append='foo;@output_buffer.raw_buffer<<-'\\' }}';"
+    assert_compiles_to "<%= 'foo%>' %>", "@output_buffer.append='foo;@output_buffer.raw_buffer<<-'\\' %>';"
 
     # A workaround to this is using the alternative syntax
     assert_compiles_to "<%= 'foo}}' %>", "@output_buffer.append='foo}}';", "foo}}"

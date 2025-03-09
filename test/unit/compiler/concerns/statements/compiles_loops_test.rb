@@ -45,17 +45,17 @@ class CompilesLoopsTest < TestCase
 
   def test_for_else
     assert_compiles_to "@forelse(i in []) {{ i }} @empty 0 @endforelse",
-      "_looped_1=false;for i in [];_looped_1=true;@output_buffer.append=i;end;if !_looped_1;@output_buffer.raw_buffer<<'0';end;",
+      "_looped_1=false;for i in [];_looped_1=true;@output_buffer.append=i;end;if !_looped_1;@output_buffer.raw_buffer<<-'0';end;",
       "0"
 
     assert_compiles_to "@forelse(i in 1..1) {{ i }} @empty 0 @endforelse",
-      "_looped_1=false;for i in 1..1;_looped_1=true;@output_buffer.append=i;end;if !_looped_1;@output_buffer.raw_buffer<<'0';end;",
+      "_looped_1=false;for i in 1..1;_looped_1=true;@output_buffer.append=i;end;if !_looped_1;@output_buffer.raw_buffer<<-'0';end;",
       "1"
   end
 
   def test_nested_for_else
     assert_compiles_to "@forelse(i in 1..1) @forelse(i in []) {{ i }} @empty 8 @endforelse @empty 9 @endforelse",
-      "_looped_1=false;for i in 1..1;_looped_1=true;_looped_2=false;for i in [];_looped_2=true;@output_buffer.append=i;end;if !_looped_2;@output_buffer.raw_buffer<<'8';end;end;if !_looped_1;@output_buffer.raw_buffer<<'9';end;",
+      "_looped_1=false;for i in 1..1;_looped_1=true;_looped_2=false;for i in [];_looped_2=true;@output_buffer.append=i;end;if !_looped_2;@output_buffer.raw_buffer<<-'8';end;end;if !_looped_1;@output_buffer.raw_buffer<<-'9';end;",
       "8"
   end
 
@@ -71,19 +71,19 @@ class CompilesLoopsTest < TestCase
 
   def test_eachelse
     assert_compiles_to "@eachElse(a in []) {{ a }} @empty 0 @endEach",
-      "_looped_1=false;[].each do |a|;_looped_1=true;@output_buffer.append=a;end;if !_looped_1;@output_buffer.raw_buffer<<'0';end;",
+      "_looped_1=false;[].each do |a|;_looped_1=true;@output_buffer.append=a;end;if !_looped_1;@output_buffer.raw_buffer<<-'0';end;",
       "0"
 
     assert_compiles_to "@eachElse(a in [1]) {{ a }} @empty 0 @endEach",
-      "_looped_1=false;[1].each do |a|;_looped_1=true;@output_buffer.append=a;end;if !_looped_1;@output_buffer.raw_buffer<<'0';end;",
+      "_looped_1=false;[1].each do |a|;_looped_1=true;@output_buffer.append=a;end;if !_looped_1;@output_buffer.raw_buffer<<-'0';end;",
       "1"
 
     assert_compiles_to "@eachElse(a, b in {}) {{ a }}{{ b }} @empty 0 @endEach",
-      "_looped_1=false;{}.each do |a,b|;_looped_1=true;@output_buffer.append=a;@output_buffer.append=b;end;if !_looped_1;@output_buffer.raw_buffer<<'0';end;",
+      "_looped_1=false;{}.each do |a,b|;_looped_1=true;@output_buffer.append=a;@output_buffer.append=b;end;if !_looped_1;@output_buffer.raw_buffer<<-'0';end;",
       "0"
 
     assert_compiles_to "@eachElse(a, b in {a:1}) {{ a }}{{ b }} @empty 0 @endEach",
-      "_looped_1=false;{a:1}.each do |a,b|;_looped_1=true;@output_buffer.append=a;@output_buffer.append=b;end;if !_looped_1;@output_buffer.raw_buffer<<'0';end;",
+      "_looped_1=false;{a:1}.each do |a,b|;_looped_1=true;@output_buffer.append=a;@output_buffer.append=b;end;if !_looped_1;@output_buffer.raw_buffer<<-'0';end;",
       "a1"
   end
 
@@ -111,27 +111,27 @@ class CompilesLoopsTest < TestCase
 
   def test_eachwithindexelse
     assert_compiles_to "@eachWithIndexElse(a in []) {{ a }} @empty 0 @endEach",
-      "_looped_1=false;[].each_with_index do |a|;_looped_1=true;@output_buffer.append=a;end;if !_looped_1;@output_buffer.raw_buffer<<'0';end;",
+      "_looped_1=false;[].each_with_index do |a|;_looped_1=true;@output_buffer.append=a;end;if !_looped_1;@output_buffer.raw_buffer<<-'0';end;",
       "0"
 
     assert_compiles_to "@eachWithIndexElse(a in [1]) {{ a }} @empty 0 @endEach",
-      "_looped_1=false;[1].each_with_index do |a|;_looped_1=true;@output_buffer.append=a;end;if !_looped_1;@output_buffer.raw_buffer<<'0';end;",
+      "_looped_1=false;[1].each_with_index do |a|;_looped_1=true;@output_buffer.append=a;end;if !_looped_1;@output_buffer.raw_buffer<<-'0';end;",
       "1"
 
     assert_compiles_to "@eachWithIndexElse(a, b in {}) {{ a }}{{ b }} @empty 0 @endEach",
-      "_looped_1=false;{}.each_with_index do |a,b|;_looped_1=true;@output_buffer.append=a;@output_buffer.append=b;end;if !_looped_1;@output_buffer.raw_buffer<<'0';end;",
+      "_looped_1=false;{}.each_with_index do |a,b|;_looped_1=true;@output_buffer.append=a;@output_buffer.append=b;end;if !_looped_1;@output_buffer.raw_buffer<<-'0';end;",
       "0"
 
     assert_compiles_to "@eachWithIndexElse(a, b in {a:1}) {{ a }}{{ b }} @empty 0 @endEach",
-      "_looped_1=false;{a:1}.each_with_index do |a,b|;_looped_1=true;@output_buffer.append=a;@output_buffer.append=b;end;if !_looped_1;@output_buffer.raw_buffer<<'0';end;",
+      "_looped_1=false;{a:1}.each_with_index do |a,b|;_looped_1=true;@output_buffer.append=a;@output_buffer.append=b;end;if !_looped_1;@output_buffer.raw_buffer<<-'0';end;",
       "[:a, 1]0"
 
     assert_compiles_to "@eachWithIndexElse(a, b, c in {}) {{ a }}{{ b }}{{ c }} @empty 0 @endEach",
-      "_looped_1=false;{}.each_with_index do |_ivar,c|;a,b=_ivar;_looped_1=true;@output_buffer.append=a;@output_buffer.append=b;@output_buffer.append=c;end;if !_looped_1;@output_buffer.raw_buffer<<'0';end;",
+      "_looped_1=false;{}.each_with_index do |_ivar,c|;a,b=_ivar;_looped_1=true;@output_buffer.append=a;@output_buffer.append=b;@output_buffer.append=c;end;if !_looped_1;@output_buffer.raw_buffer<<-'0';end;",
       "0"
 
     assert_compiles_to "@eachWithIndexElse(a, b, c in {a:1}) {{ a }}{{ b }}{{ c }} @empty 0 @endEach",
-      "_looped_1=false;{a:1}.each_with_index do |_ivar,c|;a,b=_ivar;_looped_1=true;@output_buffer.append=a;@output_buffer.append=b;@output_buffer.append=c;end;if !_looped_1;@output_buffer.raw_buffer<<'0';end;",
+      "_looped_1=false;{a:1}.each_with_index do |_ivar,c|;a,b=_ivar;_looped_1=true;@output_buffer.append=a;@output_buffer.append=b;@output_buffer.append=c;end;if !_looped_1;@output_buffer.raw_buffer<<-'0';end;",
       "a10"
   end
 end

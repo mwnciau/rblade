@@ -96,7 +96,7 @@ module RBlade
           raise RBladeTemplateError.new "Checked statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
 
-        "if #{args[0]};@output_buffer.raw_buffer<<'checked';end;"
+        "if #{args[0]};@output_buffer.raw_buffer<<-'checked';end;"
       end
 
       def compileDisabled args
@@ -104,7 +104,7 @@ module RBlade
           raise RBladeTemplateError.new "Disabled statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
 
-        "if #{args[0]};@output_buffer.raw_buffer<<'disabled';end;"
+        "if #{args[0]};@output_buffer.raw_buffer<<-'disabled';end;"
       end
 
       def compileReadonly args
@@ -112,7 +112,7 @@ module RBlade
           raise RBladeTemplateError.new "Readonly statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
 
-        "if #{args[0]};@output_buffer.raw_buffer<<'readonly';end;"
+        "if #{args[0]};@output_buffer.raw_buffer<<-'readonly';end;"
       end
 
       def compileRequired args
@@ -120,7 +120,7 @@ module RBlade
           raise RBladeTemplateError.new "Required statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
 
-        "if #{args[0]};@output_buffer.raw_buffer<<'required';end;"
+        "if #{args[0]};@output_buffer.raw_buffer<<-'required';end;"
       end
 
       def compileSelected args
@@ -128,7 +128,7 @@ module RBlade
           raise RBladeTemplateError.new "Selected statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
 
-        "if #{args[0]};@output_buffer.raw_buffer<<'selected';end;"
+        "if #{args[0]};@output_buffer.raw_buffer<<-'selected';end;"
       end
 
       def compileEnv args
