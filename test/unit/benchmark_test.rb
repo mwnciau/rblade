@@ -17,6 +17,7 @@ class BladeBenchmarkingTest < TestCase
     mod = Module.new do
       extend ActionView::Helpers
 
+      @_rblade_stack_manager = RBlade::StackManager.new
       @output_buffer = ActionView::OutputBuffer.new
       @view_flow = ActionView::OutputFlow.new
 

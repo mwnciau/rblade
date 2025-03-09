@@ -24,7 +24,7 @@ module RBlade
         @once_counter += 1
         once_id = args[1].nil? ? ":_#{@once_counter}" : args[1]
 
-        "(@_rblade_once_tokens.include? #{once_id}) || @_rblade_once_tokens<<#{once_id} && RBlade::StackManager.push(#{args[0]}, @output_buffer) do;"
+        "(@_rblade_once_tokens.include? #{once_id}) || @_rblade_once_tokens<<#{once_id} && @_rblade_stack_manager.push(#{args[0]}, @output_buffer) do;"
       end
 
       def compilePrependOnce args
@@ -34,7 +34,7 @@ module RBlade
         @once_counter += 1
         once_id = args[1].nil? ? ":_#{@once_counter}" : args[1]
 
-        "(@_rblade_once_tokens.include? #{once_id}) || @_rblade_once_tokens<<#{once_id} && RBlade::StackManager.prepend(#{args[0]}, @output_buffer) do;"
+        "(@_rblade_once_tokens.include? #{once_id}) || @_rblade_once_tokens<<#{once_id} && @_rblade_stack_manager.prepend(#{args[0]}, @output_buffer) do;"
       end
     end
   end

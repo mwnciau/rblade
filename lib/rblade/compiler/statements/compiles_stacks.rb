@@ -8,7 +8,7 @@ module RBlade
           raise RBladeTemplateError.new "Stack statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
 
-        "RBlade::StackManager.initialize(#{args[0]}, @output_buffer);_stacks.push(#{args[0]});"
+        "@_rblade_stack_manager.initialize_stack(#{args[0]}, @output_buffer);_stacks.push(#{args[0]});"
       end
 
       def compilePrepend args
@@ -16,7 +16,7 @@ module RBlade
           raise RBladeTemplateError.new "Prepend statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
 
-        "RBlade::StackManager.prepend(#{args[0]}, @output_buffer) do;"
+        "@_rblade_stack_manager.prepend(#{args[0]}, @output_buffer) do;"
       end
 
       def compilePrependIf args
@@ -24,7 +24,7 @@ module RBlade
           raise RBladeTemplateError.new "Prepend if statement: wrong number of arguments (given #{args&.count}, expecting 2)"
         end
 
-        "(#{args[0]}) && RBlade::StackManager.prepend(#{args[1]}, @output_buffer) do;"
+        "(#{args[0]}) && @_rblade_stack_manager.prepend(#{args[1]}, @output_buffer) do;"
       end
 
       def compilePush args
@@ -32,7 +32,7 @@ module RBlade
           raise RBladeTemplateError.new "Push statement: wrong number of arguments (given #{args&.count}, expecting 1)"
         end
 
-        "RBlade::StackManager.push(#{args[0]}, @output_buffer) do;"
+        "@_rblade_stack_manager.push(#{args[0]}, @output_buffer) do;"
       end
 
       def compilePushIf args
@@ -40,7 +40,7 @@ module RBlade
           raise RBladeTemplateError.new "Push if statement: wrong number of arguments (given #{args&.count || 0}, expecting 2)"
         end
 
-        "(#{args[0]}) && RBlade::StackManager.push(#{args[1]}, @output_buffer) do;"
+        "(#{args[0]}) && @_rblade_stack_manager.push(#{args[1]}, @output_buffer) do;"
       end
     end
   end

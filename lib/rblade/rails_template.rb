@@ -13,7 +13,6 @@ module RBlade
   class RailsTemplate
     def call(template, source = nil)
       component_store = RBlade::ComponentStore.new
-      RBlade::StackManager.clear
 
       unless template.nil?
         view_name = template.short_identifier
@@ -26,7 +25,7 @@ module RBlade
         component_store.view_name("view::#{view_name}")
       end
 
-      -"_stacks=[];@_rblade_once_tokens=[];#{component_store.get}#{RBlade::Compiler.compileString(source, component_store)}@output_buffer.raw_buffer.prepend(RBlade::StackManager.get(_stacks))"
+      -"_stacks=[];@_rblade_once_tokens=[];@_rblade_stack_manager=RBlade::StackManager.new;#{component_store.get}#{RBlade::Compiler.compileString(source, component_store)}@output_buffer.raw_buffer.prepend(@_rblade_stack_manager.get(_stacks))"
     end
   end
 end
