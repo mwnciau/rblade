@@ -8,7 +8,6 @@ require "rblade/compiler/compiles_verbatim"
 require "rblade/compiler/compiles_statements"
 require "rblade/compiler/tokenizes_components"
 require "rblade/compiler/tokenizes_statements"
-require "rblade/helpers/html_string"
 require "active_support/core_ext/string/output_safety"
 
 Token = Struct.new(:type, :value)
@@ -23,13 +22,7 @@ module RBlade
     string.gsub(/['\\\x0]/, '\\\\\0')
   end
 
-  def self.e(string)
-    if string.is_a?(HtmlString) || string.is_a?(ActiveSupport::SafeBuffer)
-      string
-    else
-      h(string)
-    end
-  end
+  class RBladeTemplateError < StandardError; end
 
   # Register a new custom directive by providing a class and method that will compile the directive into ruby code.
   #
@@ -41,7 +34,7 @@ module RBlade
   end
 
   class Compiler
-    def self.compileString(string_template)
+    def self.compileString(string_template, component_store)
       tokens = [Token.new(:unprocessed, string_template)]
 
       CompilesVerbatim.new.compile! tokens
@@ -51,7 +44,10 @@ module RBlade
       CompilesPrints.new.compile! tokens
       TokenizesStatements.new.tokenize! tokens
       CompilesStatements.new.compile! tokens
-      CompilesComponents.new.compile! tokens
+
+      component_compiler = CompilesComponents.new(component_store)
+      component_compiler.compile! tokens
+      component_compiler.ensure_all_tags_closed
 
       compileTokens tokens
     end
@@ -69,12 +65,25 @@ module RBlade
     def self.compileTokens tokens
       output = +""
 
-      tokens.each do |token|
-        output << if token.type == :unprocessed || token.type == :raw_text
-          "_out<<'#{RBlade.escape_quotes(token.value)}';"
+      i = 0
+      while i < tokens.count
+        token = tokens[i]
+        if token.type == :unprocessed || token.type == :raw_text
+          output << "@output_buffer.raw_buffer<<-'"
+
+          # Merge together consecutive prints
+          while tokens[i + 1]&.type == :unprocessed || tokens[i + 1]&.type == :raw_text
+            output << RBlade.escape_quotes(token.value)
+            i += 1
+            token = tokens[i]
+          end
+
+          output << RBlade.escape_quotes(token.value)
+          output << "';"
         else
-          token.value
+          output << token.value
         end
+        i += 1
       end
 
       output

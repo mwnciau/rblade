@@ -1,6 +1,13 @@
-## 1.2.2 [UNRELEASED]
+## 2.0.0 [UNRELEASED]
+- Add check for unclosed tags
+- Add string interpolation for component attributes
+- Improve runtime performance
+- Switch to using @output_buffer for full ERB compatibility
 - Update dependencies
-- Fixed redundant unfreezing of interpolated string
+- Fix issue with "end" inside multi-line print blocks
+- Fix frozen string literal warnings
+- Fix redundant unfreezing of interpolated string
+- Fix whitespace being removed for non-statements
 
 ## 1.2.1 [2024-10-31]
 - Fix issue with @props directive when defining multiple properties without braces

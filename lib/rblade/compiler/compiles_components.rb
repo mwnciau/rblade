@@ -4,9 +4,10 @@ require "rblade/component_store"
 
 module RBlade
   class CompilesComponents
-    def initialize
+    def initialize(component_store)
       @component_count = 0
       @component_stack = []
+      @component_store = component_store
     end
 
     def compile!(tokens)
@@ -25,60 +26,40 @@ module RBlade
       end
     end
 
+    def ensure_all_tags_closed
+      unless @component_stack.empty?
+        raise RBladeTemplateError.new("Unexpected end of document. Expecting </x-#{@component_stack.last[:name]}>")
+      end
+    end
+
     private
 
     def compile_token_start token
       component = {
-        name: token.value[:name],
-        index: @component_stack.count
+        name: token.value[:name]
       }
       @component_stack << component
 
       attributes = compile_attributes token.value[:attributes]
 
-      code = "_c#{component[:index]}_swap=_out;_out=+'';"
-      code << "_c#{component[:index]}_attr={#{attributes.join(",")}};"
-
-      code
+      if component[:name].start_with? "slot::"
+        "_slot.call(:'#{RBlade.escape_quotes(component[:name].delete_prefix("slot::"))}', {#{attributes.join(",")}}) do;"
+      else
+        "#{@component_store.component(component[:name])}(RBlade::AttributesManager.new({#{attributes.join(",")}})) do |_slot|;"
+      end
     end
 
     def compile_token_end token
       component = @component_stack.pop
       if component.nil?
-        raise StandardError.new "Unexpected closing tag (#{token.value[:name]})"
+        raise RBladeTemplateError.new "Unexpected closing tag </x-#{token.value[:name]}>"
       end
+
       if token.type == :component_end && token.value[:name] != component[:name]
-        raise StandardError.new "Unexpected closing tag (#{token.value[:name]}) expecting #{component[:name]}"
+        raise RBladeTemplateError.new "Unexpected closing tag </x-#{token.value[:name]}>, expecting </x-#{component[:name]}>"
       end
 
-      namespace = nil
-      name = component[:name]
-      if name.match? "::"
-        namespace, name = component[:name].split("::")
-      end
-
-      if namespace == "slot"
-        compile_slot_end name, component
-      else
-        compile_component_end component
-      end
-    end
-
-    def compile_slot_end name, component
-      parent = @component_stack.last
-
-      code = "_c#{parent[:index]}_attr[:'#{RBlade.escape_quotes(name)}']=RBlade::SlotManager.new(_out,_c#{component[:index]}_attr);"
-      code << "_out=_c#{component[:index]}_swap;_c#{component[:index]}_swap=nil;_c#{component[:index]}_attr=nil;"
-
-      code
-    end
-
-    def compile_component_end component
-      code = "_slot=RBlade::SlotManager.new(_out);_out=_c#{component[:index]}_swap;"
-      code << "_out<<#{ComponentStore.component(component[:name])}(_slot,_c#{component[:index]}_attr,params,session,flash,cookies);"
-      code << "_slot=nil;_c#{component[:index]}_swap=nil;_c#{component[:index]}_attr=nil;"
-
-      code
+      "end;"
     end
 
     def compile_attributes attributes
@@ -91,7 +72,7 @@ module RBlade
         when "attributes"
           "**(#{attribute[:value]})"
         when "string"
-          "'#{attribute[:name]}': '#{RBlade.escape_quotes(attribute[:value])}'"
+          "'#{attribute[:name]}': #{process_string_attribute(attribute[:value])}"
         when "ruby"
           "'#{attribute[:name]}': (#{attribute[:value]})"
         when "pass_through"
@@ -99,9 +80,19 @@ module RBlade
         when "empty"
           "'#{attribute[:name]}': true"
         else
-          raise StandardError.new "Component compiler: unexpected attribute type (#{attribute[:type]})"
+          raise RBladeTemplateError.new "Component compiler: unexpected attribute type (#{attribute[:type]})"
         end
       end
+    end
+
+    def process_string_attribute(string)
+      string.split(/((?<!@)\{\{.*?\}\})/).map do |substring|
+        if substring.start_with?("{{") && substring.end_with?("}}")
+          "(#{substring[2..-3]}).to_s"
+        else
+          "'#{RBlade.escape_quotes(substring.gsub(/@\{\{/, "{{"))}'"
+        end
+      end.join("<<").prepend("+")
     end
   end
 end

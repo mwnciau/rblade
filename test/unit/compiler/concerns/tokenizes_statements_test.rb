@@ -78,17 +78,20 @@ class TokenizesStatementsTest < TestCase
   def test_boundaries
     # Should be compiled
     assert_compiles_to "\n@end", "end;"
-    assert_compiles_to "\n\n@end", "_out<<'\n';end;"
-    assert_compiles_to "a @end", "_out<<'a';end;"
-    assert_compiles_to ">@end", "_out<<'>';end;"
-    assert_compiles_to "'@end", "_out<<'\\'';end;"
+    assert_compiles_to "\n\n@end", "@output_buffer.raw_buffer<<-'\n';end;"
+    assert_compiles_to "a @end", "@output_buffer.raw_buffer<<-'a';end;"
+    assert_compiles_to ">@end", "@output_buffer.raw_buffer<<-'>';end;"
+    assert_compiles_to "'@end", "@output_buffer.raw_buffer<<-'\\'';end;"
     assert_compiles_to "\n@end?", "end;"
 
     # Should not be compiled
-    assert_compiles_to "a@end", "_out<<'a@end';"
-    assert_compiles_to "1@end", "_out<<'1@end';"
+    assert_compiles_to "a@end", "@output_buffer.raw_buffer<<-'a@end';"
+    assert_compiles_to "1@end", "@output_buffer.raw_buffer<<-'1@end';"
 
-    # Should paretly be compiled
-    assert_compiles_to "@end@end", "end;_out<<'@end';"
+    # Should partly be compiled
+    assert_compiles_to "@end@end", "end;@output_buffer.raw_buffer<<-'@end';"
+
+    # Whitespace should not be trimmed for non-statements
+    assert_compiles_to " @cake ", "@output_buffer.raw_buffer<<-' @cake ';"
   end
 end

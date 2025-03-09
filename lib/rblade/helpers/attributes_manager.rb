@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-require "rblade/helpers/html_string"
-
 module RBlade
-  class AttributesManager < HtmlString
+  class AttributesManager
     @attributes = {}
     def initialize attributes
       @attributes = attributes
@@ -35,16 +33,20 @@ module RBlade
       @attributes.respond_to?(method_name)
     end
 
-    def to_s attributes = nil
+    def html_safe?
+      true
+    end
+
+    def to_str attributes = nil
       attributes ||= @attributes
 
       attributes.map do |key, value|
         (value == true) ? key : "#{key}=\"#{h(value)}\""
-      end.join " "
+      end.join(" ")
     end
 
-    def to_str
-      to_s
+    def to_s
+      self
     end
 
     def only(keys)
@@ -111,7 +113,7 @@ module RBlade
         return classes_1
       end
 
-      classes_combined = classes_1
+      classes_combined = +classes_1
       unless classes_combined.end_with? " "
         classes_combined << " "
       end
@@ -128,7 +130,7 @@ module RBlade
         return styles_1
       end
 
-      styles_combined = styles_1
+      styles_combined = +styles_1
       unless styles_combined.end_with? ";"
         styles_combined << ";"
       end

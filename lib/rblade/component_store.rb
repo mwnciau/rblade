@@ -1,22 +1,28 @@
 # frozen_string_literal: true
 
 module RBlade
-  FILE_EXTENSIONS = [".rblade", ".html.rblade"]
-
   class ComponentStore
+    FILE_EXTENSIONS = [".rblade", ".html.rblade"]
+
+    def initialize
+      @component_definitions = +""
+      @component_name_stack = []
+      @component_method_names = {}
+    end
+
     # Retrieve the method name for a component, and compile it if it hasn't already been compiled
-    def self.component full_name
+    def component(full_name)
       # If this is a relative path, prepend with the previous component name's base
       if full_name.start_with? "."
-        full_name = @@component_name_stack.last.gsub(/\.[^\.]+$/, "") + full_name
+        full_name = @component_name_stack.last.gsub(/\.[^\.]+\Z/, "") + full_name
       end
 
       # Ensure each component is only compiled once
-      unless @@component_method_names[full_name].nil?
-        return @@component_method_names[full_name]
+      unless @component_method_names[full_name].nil?
+        return @component_method_names[full_name]
       end
 
-      @@component_name_stack << full_name
+      @component_name_stack << full_name
 
       namespace = nil
       name = full_name
@@ -26,36 +32,32 @@ module RBlade
       end
 
       method_name = compile_component full_name, File.read(find_component_file(namespace, name))
-      @@component_name_stack.pop
+      @component_name_stack.pop
 
       method_name
     end
 
-    def self.add_path path, namespace = nil
+    def self.add_path(path, namespace = nil)
       path = path.to_s
-      if !path.end_with? "/"
-        path += "/"
+      unless path.end_with? "/"
+        path << "/"
       end
 
       @@template_paths[namespace] ||= []
       @@template_paths[namespace] << path
     end
 
-    def self.view_name view_name
-      @@component_name_stack.push view_name
+    def view_name(view_name)
+      @component_name_stack.push view_name
     end
 
-    def self.get
-      @@component_definitions
+    def get
+      @component_definitions
     end
 
-    def self.clear
-      @@component_definitions = +""
-      @@component_method_names = {}
-      @@component_name_stack = []
-    end
+    private
 
-    def self.find_component_file namespace, name
+    def find_component_file(namespace, name)
       file_path = name.tr ".", "/"
 
       @@template_paths[namespace]&.each do |base_path|
@@ -65,32 +67,30 @@ module RBlade
           end
           if File.exist? base_path + file_path + "/index" + extension
             # Account for index files for relative components
-            @@component_name_stack << @@component_name_stack.pop + ".index"
+            @component_name_stack << @component_name_stack.pop + ".index"
             return "#{base_path}#{file_path}/index#{extension}"
           end
         end
       end
 
-      raise StandardError.new "Unknown component #{namespace}::#{name}"
+      raise RBladeTemplateError.new "Unknown component #{namespace}::#{name}"
     end
-    private_class_method :find_component_file
 
-    def self.compile_component(name, code)
-      @@component_method_names[name] = "_c#{@@component_method_names.count}"
+    def compile_component(name, template)
+      escaped_name = name.gsub(/[^0-9a-zA-Z_]/) do |match|
+        # Convert invalid characters to hex
+        (match == ".") ? "__" : "_#{match.unpack1("H*")}_"
+      end
 
-      compiled_component = RBlade::Compiler.compileString(code)
+      compiled_component = RBlade::Compiler.compileString(template, self)
 
-      @@component_definitions << "def #{@@component_method_names[name]}(slot,attributes,params,session,flash,cookies);_out=+'';_stacks=[];attributes=RBlade::AttributesManager.new(attributes);#{compiled_component}RBlade::StackManager.get(_stacks) + _out;end;"
+      slot_assignment = compiled_component.match?(/\Wslot\W/) ? "slot=" : ""
 
-      @@component_method_names[name]
+      @component_definitions << "def self._rblade_component_#{escaped_name}(attributes,&);#{slot_assignment}if block_given?;RBlade::SlotManager.new(@output_buffer.capture(->(name, slot_attributes, &slot_block)do;attributes[name]=RBlade::SlotManager.new(@output_buffer.capture(&slot_block), slot_attributes);end,&));end;_stacks=[];@output_buffer.raw_buffer<<@output_buffer.capture do;#{compiled_component}@output_buffer.raw_buffer.prepend(@_rblade_stack_manager.get(_stacks));end;end;"
+
+      @component_method_names[name] = "_rblade_component_#{escaped_name}"
     end
-    private_class_method :compile_component
 
-    private
-
-    @@component_definitions = +""
-    @@component_name_stack = []
-    @@component_method_names = {}
     @@template_paths = {}
   end
 end

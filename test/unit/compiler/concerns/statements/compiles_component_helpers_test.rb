@@ -10,11 +10,11 @@ class CompilesComponentHelpersTest < TestCase
   end
 
   def test_should_render
-    assert_compiles_to "@shouldRender(true) rendered", "unless(true);return'';end;_out<<'rendered';", "rendered"
-    assert_compiles_to "@shouldRender(false) rendered", "unless(false);return'';end;_out<<'rendered';", ""
+    assert_compiles_to "@shouldRender(true) rendered", "unless(true);return'';end;@output_buffer.raw_buffer<<-'rendered';", "rendered"
+    assert_compiles_to "@shouldRender(false) rendered", "unless(false);return'';end;@output_buffer.raw_buffer<<-'rendered';", ""
 
-    assert_compiles_to "rendered @shouldRender(true)", "_out<<'rendered';unless(true);return'';end;", "rendered"
-    assert_compiles_to "rendered @shouldRender(false)", "_out<<'rendered';unless(false);return'';end;", ""
+    assert_compiles_to "rendered @shouldRender(true)", "@output_buffer.raw_buffer<<-'rendered';unless(true);return'';end;", "rendered"
+    assert_compiles_to "rendered @shouldRender(false)", "@output_buffer.raw_buffer<<-'rendered';unless(false);return'';end;", ""
   end
 
   def test_should_render_component
@@ -24,11 +24,11 @@ class CompilesComponentHelpersTest < TestCase
 
   def test_props_hash
     assert_props_compiles_to "@props({b: 'default'}) {{ b }}",
-      "attributes.default(:'b', 'default');b=attributes.delete :'b';_out<<RBlade.e(b);",
+      "attributes.default(:'b', 'default');b=attributes.delete :'b';@output_buffer.append=b;",
       "default"
 
     assert_props_compiles_to "@props({a: 'default'}) {{ a }}",
-      "attributes.default(:'a', 'default');a=attributes.delete :'a';_out<<RBlade.e(a);",
+      "attributes.default(:'a', 'default');a=attributes.delete :'a';@output_buffer.append=a;",
       "A"
 
     assert_props_compiles_to "@props({a: 'default', b:false,}) {{ a }} {{ b }}", nil, "A false"
@@ -41,11 +41,11 @@ class CompilesComponentHelpersTest < TestCase
 
   def test_props_without_hash
     assert_props_compiles_to "@props(b: 'default') {{ b }}",
-      "attributes.default(:'b', 'default');b=attributes.delete :'b';_out<<RBlade.e(b);",
+      "attributes.default(:'b', 'default');b=attributes.delete :'b';@output_buffer.append=b;",
       "default"
 
     assert_props_compiles_to "@props(a: 'default') {{ a }}",
-      "attributes.default(:'a', 'default');a=attributes.delete :'a';_out<<RBlade.e(a);",
+      "attributes.default(:'a', 'default');a=attributes.delete :'a';@output_buffer.append=a;",
       "A"
 
     assert_props_compiles_to "@props(a: 'default', b:false) {{ a }} {{ b }}", nil, "A false"
@@ -59,13 +59,13 @@ class CompilesComponentHelpersTest < TestCase
   def test_required
     exception = assert_raises Exception do
       assert_props_compiles_to "@props({b: required}) {{ b }}",
-        "if !attributes.has?(:'b');raise \"Props statement: b is not defined\";end;b=attributes.delete :'b';_out<<RBlade.e(b);",
+        "if !attributes.has?(:'b');raise \"Props statement: b is not defined\";end;b=attributes.delete :'b';@output_buffer.append=b;",
         ""
     end
     assert_equal "Props statement: b is not defined", exception.to_s
 
     assert_props_compiles_to "@props({a: required}) {{ a }}",
-      "if !attributes.has?(:'a');raise \"Props statement: a is not defined\";end;a=attributes.delete :'a';_out<<RBlade.e(a);",
+      "if !attributes.has?(:'a');raise \"Props statement: a is not defined\";end;a=attributes.delete :'a';@output_buffer.append=a;",
       "A"
   end
 

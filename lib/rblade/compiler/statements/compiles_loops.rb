@@ -9,7 +9,7 @@ module RBlade
 
       def compileBreak args
         if args&.count&.> 1
-          raise StandardError.new "Break statement: wrong number of arguments (given #{args.count}, expecting 0 or 1)"
+          raise RBladeTemplateError.new "Break statement: wrong number of arguments (given #{args.count}, expecting 0 or 1)"
         end
 
         if args.nil?
@@ -21,13 +21,13 @@ module RBlade
 
       def compileEach args
         if args.nil? || args.count > 2
-          raise StandardError.new "Each statement: wrong number of arguments (given #{args&.count || 0}, expecting 1 or 2)"
+          raise RBladeTemplateError.new "Each statement: wrong number of arguments (given #{args&.count || 0}, expecting 1 or 2)"
         end
         last_arg, collection = args.pop.split(" in ")
         args.push(last_arg)
 
         if collection.nil?
-          raise StandardError.new "Each statement: collection not found (expecting 'in')"
+          raise RBladeTemplateError.new "Each statement: collection not found (expecting 'in')"
         end
 
         "#{collection}.each do |#{args.join(",")}|;"
@@ -35,13 +35,13 @@ module RBlade
 
       def compileEachWithIndex args
         if args.nil? || args.count > 3
-          raise StandardError.new "Each with index statement: wrong number of arguments (given #{args&.count || 0}, expecting 1 to 3)"
+          raise RBladeTemplateError.new "Each with index statement: wrong number of arguments (given #{args&.count || 0}, expecting 1 to 3)"
         end
         last_arg, collection = args.pop.split(" in ")
         args.push(last_arg)
 
         if collection.nil?
-          raise StandardError.new "Each with index statement: collection not found (expecting 'in')"
+          raise RBladeTemplateError.new "Each with index statement: collection not found (expecting 'in')"
         end
 
         # Special case for 3 arguments: the first 2 arguments are the key/value pair in a Hash, and
@@ -55,13 +55,13 @@ module RBlade
 
       def compileEachElse args
         if args.nil? || args.count > 2
-          raise StandardError.new "Each else statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+          raise RBladeTemplateError.new "Each else statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
         last_arg, collection = args.pop.split(" in ")
         args.push(last_arg)
 
         if collection.nil?
-          raise StandardError.new "Each else statement: collection not found (expecting 'in')"
+          raise RBladeTemplateError.new "Each else statement: collection not found (expecting 'in')"
         end
 
         @loop_else_counter += 1
@@ -71,13 +71,13 @@ module RBlade
 
       def compileEachWithIndexElse args
         if args.nil? || args.count > 3
-          raise StandardError.new "Each with index statement: wrong number of arguments (given #{args&.count || 0}, expecting 1 to 3)"
+          raise RBladeTemplateError.new "Each with index statement: wrong number of arguments (given #{args&.count || 0}, expecting 1 to 3)"
         end
         last_arg, collection = args.pop.split(" in ")
         args.push(last_arg)
 
         if collection.nil?
-          raise StandardError.new "Each with index statement: collection not found (expecting 'in')"
+          raise RBladeTemplateError.new "Each with index statement: collection not found (expecting 'in')"
         end
 
         @loop_else_counter += 1
@@ -93,7 +93,7 @@ module RBlade
 
       def compileFor args
         if args&.count != 1
-          raise StandardError.new "For statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+          raise RBladeTemplateError.new "For statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
 
         "for #{args[0]};"
@@ -101,7 +101,7 @@ module RBlade
 
       def compileForElse args
         if args&.count != 1
-          raise StandardError.new "For else statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+          raise RBladeTemplateError.new "For else statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
         @loop_else_counter += 1
 
@@ -110,7 +110,7 @@ module RBlade
 
       def compileEmpty args
         unless args.nil?
-          raise StandardError.new "Empty statement: wrong number of arguments (given #{args.count}, expecting 0)"
+          raise RBladeTemplateError.new "Empty statement: wrong number of arguments (given #{args.count}, expecting 0)"
         end
 
         @loop_else_counter -= 1
@@ -120,7 +120,7 @@ module RBlade
 
       def compileNext args
         if args&.count&.> 1
-          raise StandardError.new "Next statement: wrong number of arguments (given #{args.count}, expecting 0 or 1)"
+          raise RBladeTemplateError.new "Next statement: wrong number of arguments (given #{args.count}, expecting 0 or 1)"
         end
 
         if args.nil?
@@ -132,7 +132,7 @@ module RBlade
 
       def compileUntil args
         if args&.count != 1
-          raise StandardError.new "Until statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+          raise RBladeTemplateError.new "Until statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
 
         "until #{args[0]};"
@@ -140,7 +140,7 @@ module RBlade
 
       def compileWhile args
         if args&.count != 1
-          raise StandardError.new "While statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+          raise RBladeTemplateError.new "While statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
 
         "while #{args[0]};"

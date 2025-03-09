@@ -7,9 +7,9 @@ class CompilesStatementsTest < TestCase
   end
 
   def test_escaping
-    assert_compiles_to "@@end", "_out<<'@end';"
-    assert_compiles_to "@@this(12345)", "_out<<'@this';_out<<'(12345)';"
-    assert_compiles_to "@@this(@end)", "_out<<'@this';_out<<'(';end;_out<<')';"
+    assert_compiles_to "@@end", "@output_buffer.raw_buffer<<-'@end';"
+    assert_compiles_to "@@this(12345)", "@output_buffer.raw_buffer<<-'@this(12345)';"
+    assert_compiles_to "@@this(@end)", "@output_buffer.raw_buffer<<-'@this(';end;@output_buffer.raw_buffer<<-')';"
   end
 
   def test_statements_are_case_insensitive
@@ -21,11 +21,11 @@ class CompilesStatementsTest < TestCase
   end
 
   def test_does_not_parse_invalid_statements
-    assert_compiles_to "@not_a_real_directive", "_out<<'@not_a_real_directive';"
-    assert_compiles_to "@not_a_real_directive()", "_out<<'@not_a_real_directive()';"
-    assert_compiles_to "@not_a_real_directive(1, 2, 3)", "_out<<'@not_a_real_directive(1, 2, 3)';"
-    assert_compiles_to "@not_a_real_directive  (1, 2, 3)", "_out<<'@not_a_real_directive  (1, 2, 3)';"
-    assert_compiles_to "@not_a_real_directive   (1, 2, 3)", "_out<<'@not_a_real_directive   (1, 2, 3)';"
+    assert_compiles_to "@not_a_real_directive", "@output_buffer.raw_buffer<<-'@not_a_real_directive';"
+    assert_compiles_to "@not_a_real_directive()", "@output_buffer.raw_buffer<<-'@not_a_real_directive()';"
+    assert_compiles_to "@not_a_real_directive(1, 2, 3)", "@output_buffer.raw_buffer<<-'@not_a_real_directive(1, 2, 3)';"
+    assert_compiles_to "@not_a_real_directive  (1, 2, 3)", "@output_buffer.raw_buffer<<-'@not_a_real_directive  (1, 2, 3)';"
+    assert_compiles_to "@not_a_real_directive   (1, 2, 3)", "@output_buffer.raw_buffer<<-'@not_a_real_directive   (1, 2, 3)';"
   end
 
   def test_register_directive_handler

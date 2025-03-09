@@ -1,21 +1,24 @@
 # frozen_string_literal: true
 
 require "rblade/helpers/attributes_manager"
-require "rblade/helpers/html_string"
 
 module RBlade
-  class SlotManager < HtmlString
+  class SlotManager
     def initialize content, attributes = nil
       @content = content
       @attributes = attributes && AttributesManager.new(attributes)
     end
 
+    def html_safe?
+      true
+    end
+
     def to_s
-      @content
+      self
     end
 
     def to_str
-      to_s
+      @content
     end
 
     def method_missing(method, *)

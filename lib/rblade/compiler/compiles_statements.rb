@@ -38,7 +38,7 @@ module RBlade
         end
 
         token.value = if handler.is_a? Proc
-          "_out<<'#{RBlade.escape_quotes(handler.call(*handler_arguments).to_s)}';"
+          "@output_buffer.raw_buffer<<-'#{RBlade.escape_quotes(handler.call(*handler_arguments).to_s)}';"
         else
           handler.call(*handler_arguments)
         end
@@ -73,7 +73,7 @@ module RBlade
           ## Fallback to the default end handler
           handler_class, handler_method = @@statement_handlers["end"]
         else
-          raise StandardError.new "Unhandled statement: @#{name}"
+          raise RBladeTemplateError.new "Unhandled statement: @#{name}"
         end
       end
 
@@ -106,12 +106,6 @@ module RBlade
       "empty" => [CompilesLoops, :compileEmpty],
       "empty?" => [CompilesConditionals, :compileEmpty],
       "end" => [CompilesStatements, :compileEnd],
-      "endprepend" => [CompilesStacks, :compileEndPrepend],
-      "endprependif" => [CompilesStacks, :compileEndPrependIf],
-      "endprependonce" => [CompilesOnce, :compileEndPrependOnce],
-      "endpush" => [CompilesStacks, :compileEndPush],
-      "endpushif" => [CompilesStacks, :compileEndPushIf],
-      "endpushonce" => [CompilesOnce, :compileEndPushOnce],
       "env" => [CompilesConditionals, :compileEnv],
       "for" => [CompilesLoops, :compileFor],
       "forelse" => [CompilesLoops, :compileForElse],

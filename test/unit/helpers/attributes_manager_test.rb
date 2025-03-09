@@ -2,7 +2,7 @@ require "test_case"
 require "rblade/compiler"
 require "rblade/helpers/attributes_manager"
 
-class BladeTemplatingTest < TestCase
+class AttributesManagerTest < TestCase
   def test_attributes_to_s
     assert_compiles_to "<x-attributes/>", nil, "<div ></div>"
     assert_compiles_to "<x-attributes a/>", nil, "<div a></div>"
@@ -81,13 +81,13 @@ class BladeTemplatingTest < TestCase
   end
 
   def test_class_method
-    assert_equal 'class="block mt-2"', RBlade::AttributesManager.new({}).class("block mt-2").to_s
-    assert_equal 'class="block mt-2"', RBlade::AttributesManager.new({}).class(["block", "mt-2"]).to_s
-    assert_equal 'class="block mt-2"', RBlade::AttributesManager.new({}).class({block: true, "mt-2": true, "mb-6": false}).to_s
+    assert_equal 'class="block mt-2"', RBlade::AttributesManager.new({}).class("block mt-2").to_str
+    assert_equal 'class="block mt-2"', RBlade::AttributesManager.new({}).class(["block", "mt-2"]).to_str
+    assert_equal 'class="block mt-2"', RBlade::AttributesManager.new({}).class({block: true, "mt-2": true, "mb-6": false}).to_str
 
-    assert_equal 'class="relative block mt-2"', RBlade::AttributesManager.new({class: "relative"}).class("block mt-2").to_s
-    assert_equal 'class="relative block mt-2"', RBlade::AttributesManager.new({class: "relative"}).class(["block", "mt-2"]).to_s
-    assert_equal 'class="relative block mt-2"', RBlade::AttributesManager.new({class: "relative"}).class({block: true, "mt-2": true, "mb-6": false}).to_s
+    assert_equal 'class="relative block mt-2"', RBlade::AttributesManager.new({class: "relative"}).class("block mt-2").to_str
+    assert_equal 'class="relative block mt-2"', RBlade::AttributesManager.new({class: "relative"}).class(["block", "mt-2"]).to_str
+    assert_equal 'class="relative block mt-2"', RBlade::AttributesManager.new({class: "relative"}).class({block: true, "mt-2": true, "mb-6": false}).to_str
   end
 
   def test_style
@@ -145,7 +145,7 @@ class BladeTemplatingTest < TestCase
     attributes = attributes.select { |key, value| value == "1" }
 
     assert attributes.is_a?(RBlade::AttributesManager)
-    assert_equal 'a="1"', attributes.to_s
+    assert_equal 'a="1"', attributes.to_str
   end
 
   def test_slice
@@ -154,7 +154,7 @@ class BladeTemplatingTest < TestCase
     attributes = attributes.slice :a
 
     assert attributes.is_a?(RBlade::AttributesManager)
-    assert_equal 'a="1"', attributes.to_s
+    assert_equal 'a="1"', attributes.to_str
   end
 
   def test_missing_method

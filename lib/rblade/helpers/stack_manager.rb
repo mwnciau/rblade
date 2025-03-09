@@ -2,37 +2,37 @@
 
 module RBlade
   class StackManager
-    def self.initialize stack_name, before_stack
-      @@stacks[stack_name] ||= Stack.new
-      @@stacks[stack_name].set_before_stack before_stack
+    def initialize
+      @stacks = {}
     end
 
-    def self.clear
-      @@stacks = {}
+    def initialize_stack(stack_name, output_buffer)
+      @stacks[stack_name] ||= Stack.new
+      @stacks[stack_name].set_before_stack(-output_buffer.raw_buffer)
+      output_buffer.raw_buffer.clear
     end
 
-    def self.push stack_name, code
-      @@stacks[stack_name] ||= Stack.new
-      @@stacks[stack_name].push code.to_s
+    def clear
+      @stacks = {}
     end
 
-    def self.prepend stack_name, code
-      @@stacks[stack_name] ||= Stack.new
-      @@stacks[stack_name].prepend code.to_s
+    def push(stack_name, output_buffer, &)
+      @stacks[stack_name] ||= Stack.new
+      @stacks[stack_name].push output_buffer.capture(&)
     end
 
-    def self.get(stacks)
+    def prepend(stack_name, output_buffer, &)
+      @stacks[stack_name] ||= Stack.new
+      @stacks[stack_name].prepend output_buffer.capture(&)
+    end
+
+    def get(stacks)
       stacks.map do |name|
-        out = @@stacks[name].to_s
-        @@stacks.delete name
-
-        out
+        @stacks.delete(name).to_s
       end.join
     end
 
     private
-
-    @@stacks = {}
 
     class Stack
       def initialize

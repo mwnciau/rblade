@@ -1,3 +1,4 @@
+@props('colours': required)
 <x-.layout title="Colours">
   @each(colour, i in colours.map.with_index.to_h)
     @if(colour[:current])

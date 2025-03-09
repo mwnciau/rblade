@@ -10,7 +10,7 @@ module RBlade
         next(token) if token.type != :unprocessed
 
         segments = token.value.split(/
-          \s?(?<!\w)
+          (\s)?(?<!\w)
           (?:
             (?:
               (@@)
@@ -25,7 +25,7 @@ module RBlade
               )?
             )
           )
-          \s?
+          (\s)?
         /mx)
 
         parseSegments! segments
@@ -49,12 +49,18 @@ module RBlade
           if CompilesStatements.has_handler(segments[i + 1])
             tokenizeStatement! segments, i
             handleSpecialCases! segments, i
+
+            segments.delete_at(i + 1) if segments[i + 1]&.match?(/\A\s\Z/)
+            if segments[i - 1].is_a?(Token) && segments[i - 1].type == :unprocessed && segments[i - 1].value.match?(/\A\s\Z/)
+              segments.delete_at i - 1
+              i -= 1
+            end
           else
             # For unhandled statements, restore the original string
             segments[i] = Token.new(type: :unprocessed, value: segments[i] + segments[i + 1])
             segments.delete_at i + 1
 
-            if segments.count > i + 2 && segments[i + 1].match(/^[ \t]*$/) && segments[i + 2][0] == "("
+            if segments.count > i + 2 && segments[i + 1].match?(/\A[ \t]*\Z/) && segments[i + 2][0] == "("
               segments[i].value += segments[i + 1] + segments[i + 2]
               segments.delete_at i + 1
               segments.delete_at i + 1
@@ -82,7 +88,7 @@ module RBlade
       statement_name = segments.delete_at i + 1
 
       # Remove optional whitespace
-      if segments.count > i + 2 && segments[i + 1].match(/^[ \t]*$/) && segments[i + 2][0] == "("
+      if segments.count > i + 2 && segments[i + 1].match?(/\A[ \t]*\Z/) && segments[i + 2][0] == "("
         segments.delete_at i + 1
       end
 

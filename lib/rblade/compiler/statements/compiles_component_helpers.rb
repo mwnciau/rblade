@@ -7,7 +7,7 @@ module RBlade
     class CompilesComponentHelpers
       def compileShouldRender args
         if args&.count != 1
-          raise StandardError.new "Should render statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
+          raise RBladeTemplateError.new "Should render statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
 
         "unless(#{args[0]});return'';end;"
@@ -43,7 +43,7 @@ module RBlade
         prop_strings.each do |prop|
           prop.strip!
 
-          key, value = prop.split(/^
+          key, value = prop.split(/\A
             (?:
               '(.+)':
               |
@@ -63,7 +63,7 @@ module RBlade
           /x).reject(&:empty?)
 
           if key.nil? || value.nil?
-            raise StandardError.new "Props statement: invalid property hash"
+            raise RBladeTemplateError.new "Props statement: invalid property hash"
           end
           props[key] = value
         end
@@ -74,7 +74,7 @@ module RBlade
       RUBY_RESERVED_KEYWORDS = %w[__FILE__ __LINE__ alias and begin BEGIN break case class def defined? do else elsif end END ensure false for if in module next nil not or redo rescue retry return self super then true undef unless until when while yield].freeze
 
       def isValidVariableName key
-        return false unless key.match?(/^[a-zA-Z_][a-zA-Z0-9_]*$/)
+        return false unless key.match?(/\A[a-zA-Z_][a-zA-Z0-9_]*\Z/)
 
         return false if RUBY_RESERVED_KEYWORDS.include? key
 
@@ -83,7 +83,7 @@ module RBlade
 
       # Automatically detect if a variable is a slot by looking for "<var>.attributes"
       def variableIsSlot name, tokens
-        tokens.any? { |token| token.value.to_s.match "#{name}.attributes" }
+        tokens.any? { |token| token.value.to_s.match? "#{name}.attributes" }
       end
     end
   end
