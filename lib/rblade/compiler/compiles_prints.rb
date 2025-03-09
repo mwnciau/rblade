@@ -56,7 +56,7 @@ module RBlade
 
     def create_token(expression, escape_html)
       # Don't try to print ends
-      if expression.match?(/\A\s*(?:\}|end(?![:alnum:]_]|[^\0-\177]))/i)
+      if expression.match?(/\A\s*(?:}|end(?![[:alnum:]_]|[^\0-\177]))/i)
         return Token.new(:print, "#{expression};")
       end
 
