@@ -126,11 +126,8 @@ class CompilesComponentsTest < TestCase
     assert_compiles_to "<x-compiles_components_test.props firstName=\"@{{\"/>", nil, "{{"
   end
 
-  def test_rails_variables_are_passed
-    assert_compiles_to "<x-compiles_components_test.cookies/>", nil, "true"
-    assert_compiles_to "<x-compiles_components_test.flash/>", nil, "Request successful"
+  def test_module_methods_are_accessible
     assert_compiles_to "<x-compiles_components_test.params/>", nil, "user@example.com"
-    assert_compiles_to "<x-compiles_components_test.session/>", nil, "4"
   end
 
   def test_end_tag_checking

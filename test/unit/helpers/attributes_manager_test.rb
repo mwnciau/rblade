@@ -2,7 +2,7 @@ require "test_case"
 require "rblade/compiler"
 require "rblade/helpers/attributes_manager"
 
-class BladeTemplatingTest < TestCase
+class AttributesManagerTest < TestCase
   def test_attributes_to_s
     assert_compiles_to "<x-attributes/>", nil, "<div ></div>"
     assert_compiles_to "<x-attributes a/>", nil, "<div a></div>"

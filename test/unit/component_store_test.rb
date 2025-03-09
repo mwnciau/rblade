@@ -14,15 +14,15 @@ class ComponentStoreTest < TestCase
     component_method2 = @component_store.component "link"
     component_method3 = @component_store.component "button"
 
-    assert_equal "_rblade_components.c_button", component_method
-    assert_equal "_rblade_components.c_link", component_method2
-    assert_equal "_rblade_components.c_button", component_method3
+    assert_equal "_rblade_component_button", component_method
+    assert_equal "_rblade_component_link", component_method2
+    assert_equal "_rblade_component_button", component_method3
 
     compiled_code = @component_store.get
 
     #    assert_equal "", compiled_code
-    assert_equal 1, compiled_code.scan("def c_button(").count
-    assert_equal 1, compiled_code.scan("def c_link(").count
+    assert_equal 1, compiled_code.scan("def self._rblade_component_button(").count
+    assert_equal 1, compiled_code.scan("def self._rblade_component_link(").count
   end
 
   def test_extensions_index
@@ -58,8 +58,8 @@ class ComponentStoreTest < TestCase
 
     compiled_code = @component_store.get
 
-    assert_equal 1, compiled_code.scan("def c_component_store_test_relative_names(").size
-    assert_equal 1, compiled_code.scan("def c_component_store_test_relative_names__success(").size
-    assert_equal 1, compiled_code.scan("def c_component_store_test_relative_names__component(").size
+    assert_equal 1, compiled_code.scan("def self._rblade_component_component_store_test_relative_names(").size
+    assert_equal 1, compiled_code.scan("def self._rblade_component_component_store_test_relative_names__success(").size
+    assert_equal 1, compiled_code.scan("def self._rblade_component_component_store_test_relative_names__component(").size
   end
 end

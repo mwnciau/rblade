@@ -17,16 +17,17 @@ class TestCase < Minitest::Test
     end
 
     if expected_result
-      locals ||= %(
-        extend ActionView::Helpers;
-        foo = "FOO";
-        bar = "BAR";
-        params = {email: "user@example.com"};
-        session = {user_id: 4};
-        flash = {notice: "Request successful"};
-        cookies = {accept_cookies: true};
-      )
-      result = Class.new.instance_eval(locals + RBlade::RailsTemplate.new.call(nil, template))
+      mod = Module.new do
+        extend ActionView::Helpers
+
+        def self.params
+          {email: "user@example.com"}
+        end
+      end
+
+      locals ||= 'foo = "FOO";bar = "BAR";'
+
+      result = mod.module_eval(locals + RBlade::RailsTemplate.new.call(nil, template))
 
       assert_equal expected_result, result
     end

@@ -45,7 +45,7 @@ module RBlade
       if component[:name].start_with? "slot::"
         "_slot.call(:'#{RBlade.escape_quotes(component[:name].delete_prefix("slot::"))}', {#{attributes.join(",")}}) do |_out|;"
       else
-        "_out<<#{@component_store.component(component[:name])}(RBlade::AttributesManager.new({#{attributes.join(",")}}),params,session,flash,cookies,_rblade_components) do |_out,_slot|;"
+        "_out<<#{@component_store.component(component[:name])}(RBlade::AttributesManager.new({#{attributes.join(",")}})) do |_out,_slot|;"
       end
     end
 
