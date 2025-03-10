@@ -71,6 +71,12 @@ class TokenizesComponentsTest < TestCase
     >', [{name: "a", attributes: [{name: "b", value: "c", type: "string"}]}]
   end
 
+  def test_tokenize_empty_attributes
+    assert_tokenizes_to "<x-a attribute=''>", [{name: "a", attributes: [{name: "attribute", value: "", type: "string"}]}]
+    assert_tokenizes_to '<x-a attribute="">', [{name: "a", attributes: [{name: "attribute", value: "", type: "string"}]}]
+    assert_tokenizes_to '<x-a attribute="">hello</x-a>', [{name: "a", attributes: [{name: "attribute", value: "", type: "string"}]}, "hello", {name: "a"}]
+  end
+
   def test_tokenize_string_interpolation
     assert_tokenizes_to "<x-a b=a{{ b }}c>", [{name: "a", attributes: [{name: "b", value: "a{{ b }}c", type: "string"}]}]
     assert_tokenizes_to "<x-a b=a{b}c>", [{name: "a", attributes: [{name: "b", value: "a{b}c", type: "string"}]}]
