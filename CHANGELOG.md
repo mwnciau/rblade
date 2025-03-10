@@ -1,3 +1,6 @@
+## 2.0.2 [2025-03-10]
+- Fix issue with empty component attributes
+
 ## 2.0.1 [2025-03-10]
 - Fix broken gem build
 
