@@ -57,7 +57,7 @@ module RBlade
         end
       end
 
-      return nil if arguments.count == 1 && arguments.first == ""
+      return nil if arguments.count == 1 && arguments[0] == ""
 
       arguments
     end
