@@ -109,18 +109,17 @@ class CompilesComponentsTest < TestCase
   end
 
   def test_interpolated_attributes
-    assert_compiles_to "<x-compiles_components_test.props firstName=\"{{ \"bob\" }}\"/>", nil, "bob"
+    assert_compiles_to "<x-compiles_components_test.props firstName=\"{{ foo }}\"/>", nil, "FOO"
     assert_compiles_to "<x-compiles_components_test.props firstName='b{{ 'o' }}b'/>", nil, "bob"
     assert_compiles_to "<x-compiles_components_test.props firstName={{ \"b\" }}{{'o'}}{{ 'B'.downcase }}/>", nil, "bob"
     assert_compiles_to "<x-compiles_components_test.props firstName=\"{{2}}\"/>", nil, "2"
+    assert_compiles_to "<x-compiles_components_test.props firstName=\" {{ foo }}\"/>", nil, " FOO"
+    assert_compiles_to "<x-compiles_components_test.props firstName=\"{{ foo }} \"/>", nil, "FOO "
+    assert_compiles_to "<x-compiles_components_test.props firstName=\"{{}}\"/>", nil, ""
 
     assert_compiles_to "<x-compiles_components_test.props firstName=\"{{\"/>", nil, "{{"
 
     assert_compiles_to "<x-compiles_components_test.props firstName=\"{{ '\"' }}\"/>", nil, "&quot;"
-  end
-
-  def test_empty_attributes
-    assert_compiles_to '<x-button type="">hello</x-button>', nil, '<button class="button" type="">hello</button>'
   end
 
   def test_escaped_interpolated_attributes
@@ -128,6 +127,12 @@ class CompilesComponentsTest < TestCase
     assert_compiles_to "<x-compiles_components_test.props firstName=\"@{{2}}\"/>", nil, "{{2}}"
 
     assert_compiles_to "<x-compiles_components_test.props firstName=\"@{{\"/>", nil, "{{"
+
+    assert_compiles_to "<x-compiles_components_test.props firstName=\"{{ foo }}@{{2}}\"/>", nil, "FOO{{2}}"
+  end
+
+  def test_empty_attributes
+    assert_compiles_to '<x-button type="">hello</x-button>', nil, '<button class="button" type="">hello</button>'
   end
 
   def test_module_methods_are_accessible
