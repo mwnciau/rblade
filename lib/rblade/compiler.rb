@@ -12,11 +12,6 @@ require "active_support/core_ext/string/output_safety"
 
 Token = Struct.new(:type, :value)
 
-if !defined?(h)
-  require "erb/escape"
-  define_method(:h, ERB::Escape.instance_method(:html_escape))
-end
-
 module RBlade
   def self.escape_quotes string
     string.gsub(/['\\\x0]/, '\\\\\0')
