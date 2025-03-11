@@ -7,10 +7,10 @@ class BladeCompilerTest < TestCase
   end
 
   def test_escape_quotes
-    assert_equal "\\'", RBlade::escape_quotes("'")
-    assert_equal "\\'Hello, World!\\'", RBlade::escape_quotes("'Hello, World!'")
+    assert_equal "\\'", RBlade.escape_quotes("'")
+    assert_equal "\\'Hello, World!\\'", RBlade.escape_quotes("'Hello, World!'")
 
-    assert_equal "", RBlade::escape_quotes("")
-    assert_equal "\\\x0", RBlade::escape_quotes("\x0")
+    assert_equal "", RBlade.escape_quotes("")
+    assert_equal "\\\x0", RBlade.escape_quotes("\x0")
   end
 end

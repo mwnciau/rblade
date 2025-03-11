@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require "test_case"
 require "rblade/compiler"
 require "rblade/component_store"
 require "benchmark"
 
-class BladeBenchmarkingTest < TestCase
+class BenchmarkTest < TestCase
   def setup
     super
   end

@@ -41,7 +41,7 @@ module RBlade
       attributes ||= @attributes
 
       attributes.map do |key, value|
-        (value == true) ? key : "#{key}=\"#{CGI::escape_html(value)}\""
+        (value == true) ? key : "#{key}=\"#{CGI.escape_html(value)}\""
       end.join(" ")
     end
 
@@ -72,7 +72,7 @@ module RBlade
     def class(new_classes)
       new_classes = ClassManager.new(new_classes).to_s
       attributes = @attributes.dup
-      attributes[:class] = mergeClasses attributes[:class], new_classes
+      attributes[:class] = merge_classes attributes[:class], new_classes
 
       AttributesManager.new attributes
     end
@@ -82,12 +82,12 @@ module RBlade
 
       @attributes.each do |key, value|
         if key == :class && !new_attributes[key].nil?
-          new_attributes[key] = mergeClasses(new_attributes[key], value.to_s)
+          new_attributes[key] = merge_classes(new_attributes[key], value.to_s)
           next
         end
 
         if key == :style && !new_attributes[key].nil?
-          new_attributes[key] = mergeStyles(new_attributes[key], value.to_s)
+          new_attributes[key] = merge_styles(new_attributes[key], value.to_s)
           next
         end
 
@@ -105,7 +105,7 @@ module RBlade
 
     private
 
-    def mergeClasses(classes_1, classes_2)
+    def merge_classes(classes_1, classes_2)
       if classes_1.nil?
         return classes_2
       end
@@ -122,7 +122,7 @@ module RBlade
       classes_combined
     end
 
-    def mergeStyles(styles_1, styles_2)
+    def merge_styles(styles_1, styles_2)
       if styles_1.nil?
         return styles_2
       end
