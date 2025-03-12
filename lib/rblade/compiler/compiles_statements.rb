@@ -23,7 +23,7 @@ module RBlade
 
         name = token.value[:name]
         arguments = token.value[:arguments]
-        handler = getHandler(name)
+        handler_class, handler = get_handler(name)
 
         handler_arguments = []
         handler.parameters.each do |parameter|
@@ -37,7 +37,7 @@ module RBlade
           end
         end
 
-        token.value = if handler.is_a? Proc
+        token.value = if handler_class == "proc"
           "@output_buffer.raw_buffer<<-'#{RBlade.escape_quotes(handler.call(*handler_arguments).to_s)}';"
         else
           handler.call(*handler_arguments)
@@ -59,13 +59,17 @@ module RBlade
       @@statement_handlers[name.tr("_", "").downcase] = ["proc", block]
     end
 
+    def self.register_raw_handler(name, &block)
+      @@statement_handlers[name.tr("_", "").downcase] = ["raw_proc", block]
+    end
+
     private
 
-    def getHandler(name)
+    def get_handler(name)
       handler_class, handler_method = @@statement_handlers[name.tr("_", "").downcase]
 
-      if handler_class == "proc"
-        return handler_method
+      if handler_class == "proc" || handler_class == "raw_proc"
+        return [handler_class, handler_method]
       end
 
       if !handler_class&.method_defined?(handler_method)
@@ -83,7 +87,7 @@ module RBlade
         @@handler_instances[handler_class] ||= handler_class.new
       end
 
-      @@handler_instances[handler_class].method(handler_method)
+      [handler_class, @@handler_instances[handler_class].method(handler_method)]
     end
 
     @@handler_instances = {}

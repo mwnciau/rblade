@@ -14,7 +14,9 @@ class TestCase < Minitest::Test
     component_store = RBlade::ComponentStore.new
     compiled_string = RBlade::Compiler.compileString(template, component_store)
 
-    if expected_code
+    if expected_code.is_a?(Regexp)
+      assert compiled_string.match? expected_code
+    elsif expected_code.is_a?(String)
       assert_equal expected_code, compiled_string
     end
 

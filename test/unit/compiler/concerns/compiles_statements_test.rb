@@ -49,6 +49,22 @@ class CompilesStatementsTest < TestCase
     assert_compiles_to "@custom_directive_with_tokens", nil, "custom_directive_with_tokens"
   end
 
+  def test_register_raw_directive_handler
+    RBlade.register_raw_directive_handler("true?") { "if true;" }
+    RBlade.register_raw_directive_handler("not?") { |args| "if !#{args[0]};" }
+
+    assert_compiles_to "@true? cake @end", /if true;/, "cake"
+    assert_compiles_to "@not?(true) cake @end", /if !true;/, ""
+    assert_compiles_to "@not?(false) cake @end", /if !false;/, "cake"
+    assert_compiles_to "@not?(foo == bar) cake @end", /if !foo == bar;/, ""
+    assert_compiles_to "@not?((foo == bar))cake @end", /if !\(foo == bar\);/, "cake"
+
+    assert_compiles_to "@TRUE? cake @end", nil, "cake"
+    assert_compiles_to "@tR_uE? cake @end", nil, "cake"
+    assert_compiles_to "@true?() cake @end", nil, "cake"
+    assert_compiles_to "@true?cake @endTrue?", nil, "cake"
+  end
+
   def test_sum_directive_used_in_readme
     RBlade.register_directive_handler("sum") do |args|
       args.inject(0) { |sum, num| sum + num.to_i }

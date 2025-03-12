@@ -19,13 +19,22 @@ module RBlade
 
   class RBladeTemplateError < StandardError; end
 
-  # Register a new custom directive by providing a class and method that will compile the directive into ruby code.
+  # Register a new custom directive by providing a proc that will return a value to be output
   #
   # @param [String] name The directive tag without the "@", e.g. "if" for the "@if" directive
-  # @param [Proc] block The block that will return the compiled ruby code for the directive. Any arguments will be passed to this Proc as an array.
+  # @param [Proc] block The block that will return the compiled ruby code for the directive. Can accept `:args`, `:tokens` and `:token_index` as arguments.
   # @return [void]
   def self.register_directive_handler(name, &)
     CompilesStatements.register_handler(name, &)
+  end
+
+  # Register a new custom directive by providing a proc that will return ruby code to add to the template. The code must end in a semi-colon.
+  #
+  # @param [String] name The directive tag without the "@", e.g. "if" for the "@if" directive
+  # @param [Proc] block The block that will return the compiled ruby code for the directive. Can accept `:args`, `:tokens` and `:token_index` as arguments.
+  # @return [void]
+  def self.register_raw_directive_handler(name, &)
+    CompilesStatements.register_raw_handler(name, &)
   end
 
   class Compiler
@@ -43,7 +52,6 @@ module RBlade
       component_compiler = CompilesComponents.new(component_store)
       component_compiler.compile! tokens
       component_compiler.ensure_all_tags_closed
-
       compileTokens tokens
     end
 
