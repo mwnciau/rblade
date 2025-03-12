@@ -1,3 +1,8 @@
+## 2.1.0 [UNRELEASED]
+- Add ability to add raw directive handlers that add ruby code to the template
+- Improve performance of regular expressions
+- Fix issue with component tokenizer hanging
+
 ## 2.0.2 [2025-03-10]
 - Fix issue with empty component attributes
 

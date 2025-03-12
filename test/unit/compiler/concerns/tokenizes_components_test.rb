@@ -81,6 +81,7 @@ class TokenizesComponentsTest < TestCase
     assert_tokenizes_to "<x-a b=a{{ b }}c>", [{name: "a", attributes: [{name: "b", value: "a{{ b }}c", type: "string"}]}]
     assert_tokenizes_to "<x-a b=a{b}c>", [{name: "a", attributes: [{name: "b", value: "a{b}c", type: "string"}]}]
     assert_tokenizes_to "<x-a b={{ a }}{{ b }}{{ c }}>", [{name: "a", attributes: [{name: "b", value: "{{ a }}{{ b }}{{ c }}", type: "string"}]}]
+    assert_tokenizes_to "<x-a b={{>", [{name: "a", attributes: [{name: "b", value: "{{", type: "string"}]}]
 
     assert_tokenizes_to '<x-a b="a{{ b }}c">', [{name: "a", attributes: [{name: "b", value: "a{{ b }}c", type: "string"}]}]
     assert_tokenizes_to '<x-a b="a{ b }c">', [{name: "a", attributes: [{name: "b", value: "a{ b }c", type: "string"}]}]
@@ -167,5 +168,9 @@ class TokenizesComponentsTest < TestCase
         {name: ":escaped", value: "I only have one colon", type: "string"}
       ]}
     ]
+  end
+
+  def test_invalid_syntax
+    assert_compiles_to '<x-.related-panels.panel :colour="colours[(i+1) % colours.count]/>', nil, '<x-.related-panels.panel :colour="colours[(i+1) % colours.count]/>'
   end
 end
