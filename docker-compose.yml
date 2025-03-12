@@ -4,4 +4,7 @@ services:
     working_dir: /var/source
     volumes:
       - .:/var/source
-      - ./storage/bundle_cache:/usr/local/bundle
+      - ruby-gems:/usr/local/bundle
+
+volumes:
+  ruby-gems:
