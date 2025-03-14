@@ -46,7 +46,7 @@ class CompilesStatementsTest < TestCase
     assert_compiles_to "@custom_directive_with_args(1,2,3)", nil, "1,2,3"
     assert_compiles_to "@custom_directive_with_args('\\'\"')", nil, "'\\'\"'"
 
-    assert_compiles_to "@custom_directive_with_tokens", nil, "custom_directive_with_tokens"
+    assert_compiles_to "@custom_directive_with_tokens", nil, "customdirectivewithtokens"
   end
 
   def test_register_raw_directive_handler

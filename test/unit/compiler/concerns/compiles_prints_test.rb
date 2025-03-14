@@ -71,6 +71,26 @@ class CompilesPrintsTest < TestCase
         !!}';", "{!!
         foo
         !!}"
+
+    assert_compiles_to "<%%=foo%>", "@output_buffer.raw_buffer<<-'<%=foo%>';", "<%=foo%>"
+    assert_compiles_to "<%%= foo %>", "@output_buffer.raw_buffer<<-'<%= foo %>';", "<%= foo %>"
+    assert_compiles_to "<%%=
+      foo
+      %>", "@output_buffer.raw_buffer<<-'<%=
+      foo
+      %>';", "<%=
+      foo
+      %>"
+
+    assert_compiles_to "<%%==foo%>", "@output_buffer.raw_buffer<<-'<%==foo%>';", "<%==foo%>"
+    assert_compiles_to "<%%== foo %>", "@output_buffer.raw_buffer<<-'<%== foo %>';", "<%== foo %>"
+    assert_compiles_to "<%%==
+      foo
+      %>", "@output_buffer.raw_buffer<<-'<%==
+      foo
+      %>';", "<%==
+      foo
+      %>"
   end
 
   def test_dangerous_strings

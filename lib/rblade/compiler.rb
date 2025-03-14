@@ -2,8 +2,7 @@
 
 require "rblade/compiler/compiles_comments"
 require "rblade/compiler/compiles_components"
-require "rblade/compiler/compiles_prints"
-require "rblade/compiler/compiles_ruby"
+require "rblade/compiler/compiles_injections"
 require "rblade/compiler/compiles_verbatim"
 require "rblade/compiler/compiles_statements"
 require "rblade/compiler/tokenizes_components"
@@ -43,9 +42,8 @@ module RBlade
 
       CompilesVerbatim.new.compile! tokens
       CompilesComments.new.compile! tokens
-      CompilesRuby.new.compile! tokens
       TokenizesComponents.new.tokenize! tokens
-      CompilesPrints.new.compile! tokens
+      CompilesInjections.new.compile! tokens
       TokenizesStatements.new.tokenize! tokens
       CompilesStatements.new.compile! tokens
 

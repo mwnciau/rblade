@@ -46,8 +46,9 @@ module RBlade
 
           i += 1
         elsif segment == "@"
-          if CompilesStatements.has_handler(segments[i + 1])
-            tokenize_statement! segments, i
+          statement_handle = segments[i + 1].downcase.tr "_", ""
+          if CompilesStatements.has_handler(statement_handle)
+            tokenize_statement! statement_handle, segments, i
             handle_special_cases! segments, i
 
             segments.delete_at(i + 1) if segments[i + 1]&.match?(/\A\s\z/)
@@ -83,9 +84,9 @@ module RBlade
       segments
     end
 
-    def tokenize_statement!(segments, i)
-      statement_data = {name: segments[i + 1]}
-      statement_name = segments.delete_at i + 1
+    def tokenize_statement!(handle, segments, i)
+      segments.delete_at i + 1
+      statement_data = {name: handle}
 
       # Remove optional whitespace
       if segments.count > i + 2 && segments[i + 1].match?(/\A[ \t]*+\z/) && segments[i + 2][0] == "("
@@ -93,7 +94,7 @@ module RBlade
       end
 
       if segments.count > i + 1 && segments[i + 1][0] == "("
-        arguments = tokenize_arguments! statement_name, segments, i + 1
+        arguments = tokenize_arguments! handle, segments, i + 1
 
         unless arguments.nil?
           statement_data[:arguments] = arguments
@@ -112,7 +113,7 @@ module RBlade
       end
     end
 
-    def tokenize_arguments!(statement_name, segments, segment_index)
+    def tokenize_arguments!(statement_handle, segments, segment_index)
       success = expand_segment_to_end_parenthesis! segments, segment_index
 
       # If no matching parentheses were found, so we combine the argument string with the next segment
@@ -129,7 +130,7 @@ module RBlade
       argument_string = segments[segment_index][1..-2]
 
       # Special case for the props statement: remove the wrapping braces if they exist
-      if statement_name == "props"
+      if statement_handle == "props"
         if argument_string.start_with?("{") && argument_string.end_with?("}")
           argument_string = argument_string[1..-2]
         end

@@ -34,6 +34,8 @@ module RBlade
             handler_arguments.push tokens
           when :token_index
             handler_arguments.push token_index
+          else
+            handler_arguments.push nil
           end
         end
 
@@ -51,22 +53,21 @@ module RBlade
     end
 
     def self.has_handler(name)
-      name = name.downcase
-      @@statement_handlers[name.tr("_", "")].present? || name.start_with?("end")
+      statement_handlers[name].present? || (name.start_with?("end") && name != "endruby")
     end
 
     def self.register_handler(name, &block)
-      @@statement_handlers[name.tr("_", "").downcase] = ["proc", block]
+      statement_handlers[name.tr("_", "").downcase] = ["proc", block]
     end
 
     def self.register_raw_handler(name, &block)
-      @@statement_handlers[name.tr("_", "").downcase] = ["raw_proc", block]
+      statement_handlers[name.tr("_", "").downcase] = ["raw_proc", block]
     end
 
     private
 
     def get_handler(name)
-      handler_class, handler_method = @@statement_handlers[name.tr("_", "").downcase]
+      handler_class, handler_method = statement_handlers[name]
 
       if handler_class == "proc" || handler_class == "raw_proc"
         return [handler_class, handler_method]
@@ -75,24 +76,24 @@ module RBlade
       if !handler_class&.method_defined?(handler_method)
         if name.start_with? "end"
           ## Fallback to the default end handler
-          handler_class, handler_method = @@statement_handlers["end"]
+          handler_class, handler_method = statement_handlers["end"]
         else
           raise RBladeTemplateError.new "Unhandled statement: @#{name}"
         end
       end
 
       if handler_class == CompilesStatements
-        @@handler_instances[handler_class] = self
+        handler_instances[handler_class] = self
       else
-        @@handler_instances[handler_class] ||= handler_class.new
+        handler_instances[handler_class] ||= handler_class.new
       end
 
-      [handler_class, @@handler_instances[handler_class].method(handler_method)]
+      [handler_class, handler_instances[handler_class].method(handler_method)]
     end
 
-    @@handler_instances = {}
+    cattr_accessor :handler_instances, default: {}
 
-    @@statement_handlers = {
+    cattr_accessor :statement_handlers, default: {
       "blank?" => [CompilesConditionals, :compileBlank],
       "break" => [CompilesLoops, :compileBreak],
       "case" => [CompilesConditionals, :compileCase],

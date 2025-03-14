@@ -61,28 +61,22 @@ class CompilesRubyTest < TestCase
     %> baz"
   end
 
-  def assert_ruby_found(template, expected = true)
-    tokens = [Token.new(:unprocessed, template)]
-    RBlade::CompilesRuby.new.compile!(tokens)
-
-    assert_equal expected, tokens.any? { |t| t.type == :ruby }
-  end
-
-  def test_boundaries
-    assert_ruby_found "@rubyhi@endruby", false
-    assert_ruby_found "@rubyhi @endruby", false
-    assert_ruby_found "a@ruby @endruby", false
+  def test_ruby_boundaries
+    assert_compiles_to "@rubyhi@endruby", "@output_buffer.raw_buffer<<-'@rubyhi@endruby';"
+    assert_compiles_to "@rubyhi @endruby", "@output_buffer.raw_buffer<<-'@rubyhi @endruby';"
+    assert_compiles_to "a@ruby @endruby", "@output_buffer.raw_buffer<<-'a@ruby @endruby';"
 
     assert_compiles_to ">@ruby RUBY @endruby", "@output_buffer.raw_buffer<<-'>';RUBY;"
     assert_compiles_to "'@ruby RUBY @endruby", "@output_buffer.raw_buffer<<-'\\'';RUBY;"
     assert_compiles_to ".@ruby RUBY @endruby", "@output_buffer.raw_buffer<<-'.';RUBY;"
   end
 
-  def test_directive_variations
-    assert_ruby_found "@ruby hi @endruby"
-    assert_ruby_found "@RUBY hi @ENDRUBY"
-    assert_ruby_found "@ruby hi @endRuby"
-    assert_ruby_found "@Ruby hi @EndRuby"
-    assert_ruby_found "@ruby hi @end_ruby"
+  def test_ruby_directive_variations
+    assert_compiles_to "@ruby some ruby @endruby", "some ruby;"
+    assert_compiles_to "@RUBY some ruby @ENDRUBY", "some ruby;"
+    assert_compiles_to "@ruby some ruby @endRuby", "some ruby;"
+    assert_compiles_to "@Ruby some ruby @EndRuby", "some ruby;"
+    assert_compiles_to "@ruby some ruby @end_ruby", "some ruby;"
+    assert_compiles_to "@ruby some ruby @eNd_RuBy", "some ruby;"
   end
 end
