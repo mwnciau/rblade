@@ -12,7 +12,7 @@ class BenchmarkTest < TestCase
 
   # Benchmark is disabled by default. Remove the leading underscore to run.
   def _test_performance
-    version = Gem::Specification::load("rblade.gemspec").version.to_s
+    version = Gem::Specification.load("rblade.gemspec").version.to_s
 
     component_store = RBlade::ComponentStore.new
     compiled_string = RBlade::Compiler.compileString("<x-benchmark :colours/>", component_store)
