@@ -10,6 +10,11 @@ class AttributesManagerTest < TestCase
     assert_compiles_to "@ruby(name='bob')<x-attributes a=b :c=name/>",
       nil,
       '<div a="b" c="bob"></div>'
+
+    assert_compiles_to "<x-attributes a=1/>", nil, '<div a="1"></div>'
+    assert_compiles_to "<x-attributes :a=1/>", nil, '<div a="1"></div>'
+    assert_compiles_to "<x-attributes a={{ 1 }}/>", nil, '<div a="1"></div>'
+
   end
 
   def test_only
@@ -49,9 +54,13 @@ class AttributesManagerTest < TestCase
       nil,
       '<div class="font-bold" style="font-size: 10px;font-weight: bold" a="cake"></div>'
   end
-
+  
   def test_chain
     assert_compiles_to "<x-attributes_chain a=A c=C/>", nil, '<div a="A" c="d"></div>'
+  end
+  
+  def test_slot_as_attribute
+    assert_compiles_to "<x-attributes_slot>my string<//>", nil, '<div slot="my string"></div>'
   end
 
   def test_class

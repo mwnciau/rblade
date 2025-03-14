@@ -41,7 +41,7 @@ module RBlade
       attributes ||= @attributes
 
       attributes.map do |key, value|
-        (value == true) ? key : "#{key}=\"#{CGI.escape_html(value)}\""
+        (value == true) ? key : "#{key}=\"#{CGI.escape_html(value.to_s)}\""
       end.join(" ")
     end
 
