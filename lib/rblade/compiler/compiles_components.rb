@@ -86,7 +86,7 @@ module RBlade
     end
 
     def process_string_attribute(string)
-      result = string.split(/((?<!@)\{\{.*?\}\})/).map do |substring|
+      result = string.split(/((?<!@)\{\{(?:[^}]++|\})*?\}\})/).map do |substring|
         if substring.start_with?("{{") && substring.end_with?("}}")
           "(#{substring[2..-3]}).to_s"
         elsif !substring.empty?

@@ -8,15 +8,15 @@ module RBlade
 
         segments = token.value.split(/
           # @ escapes blade style tags
-          (@)(@ruby.+?@end_?ruby)
+          (@)(@ruby(?:[^@]++|@)+?@?@end_?ruby)
           |
           # <%% and %%> are escape ERB style tags
-          (<%%)(.+?)(%%>)
+          (<%%)((?:[^%]++|%)+?)(%%>)
           |
-          \s?(?<!\w)(@ruby)\s+(.+?)[\s;]*(@end_?ruby)(?!\w)\s?
+          \s?(?<!\w)(@ruby)\s++((?:[^@]++|@)+?)[\s;]*+(@end_?ruby)(?!\w)\s?
           |
-          (<%)(?!=)\s*(.+?)[\s;]*(%>)
-        /xmi)
+          (<%)(?!=)\s*+((?:[^%]++|%)+?)[\s;]*+(%>)
+        /xi)
 
         i = 0
         while i < segments.count

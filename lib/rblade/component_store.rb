@@ -14,7 +14,7 @@ module RBlade
     def component(full_name)
       # If this is a relative path, prepend with the previous component name's base
       if full_name.start_with? "."
-        full_name = @component_name_stack.last.gsub(/\.[^\.]+\Z/, "") + full_name
+        full_name = @component_name_stack.last.gsub(/\.[^\.]++\z/, "") + full_name
       end
 
       # Ensure each component is only compiled once
@@ -43,8 +43,8 @@ module RBlade
         path << "/"
       end
 
-      @@template_paths[namespace] ||= []
-      @@template_paths[namespace] << path
+      template_paths[namespace] ||= []
+      template_paths[namespace] << path
     end
 
     def view_name(view_name)
@@ -60,7 +60,7 @@ module RBlade
     def find_component_file(namespace, name)
       file_path = name.tr ".", "/"
 
-      @@template_paths[namespace]&.each do |base_path|
+      template_paths[namespace]&.each do |base_path|
         FILE_EXTENSIONS.each do |extension|
           if File.exist? base_path + file_path + extension
             return "#{base_path}#{file_path}#{extension}"
@@ -91,6 +91,8 @@ module RBlade
       @component_method_names[name] = "_rblade_component_#{escaped_name}"
     end
 
-    @@template_paths = {}
+    private
+
+    cattr_accessor :template_paths, default: {}
   end
 end

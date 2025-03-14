@@ -4,7 +4,7 @@ require "rblade/helpers/attributes_manager"
 
 module RBlade
   class SlotManager
-    def initialize content, attributes = nil
+    def initialize(content, attributes = nil)
       @content = content
       @attributes = attributes && AttributesManager.new(attributes)
     end

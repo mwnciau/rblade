@@ -2,7 +2,7 @@
 
 module RBlade
   class StyleManager
-    def initialize styles
+    def initialize(styles)
       if styles.is_a? String
         @styles = styles.strip
         unless @styles == "" || @styles.end_with?(";")

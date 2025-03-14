@@ -6,8 +6,8 @@ module RBlade
       tokens.each do |token|
         next if token.type != :unprocessed
 
-        token.value.gsub!(/\{\{--.*?--\}\}/m, "")
-        token.value.gsub!(/<%#.*?%>/m, "")
+        token.value.gsub!(/\{\{--(?:[^-]++|-)*?--}}/, "")
+        token.value.gsub!(/<%#(?:[^%]++|-)*?%>/, "")
       end
     end
   end

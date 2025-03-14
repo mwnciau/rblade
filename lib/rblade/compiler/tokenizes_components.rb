@@ -84,7 +84,7 @@ module RBlade
           end
 
           # If the entire value is a single interpolated string, make this a ruby value
-          if attribute[:value]&.match?(/\A\{\{([^}]|(?!\}\})\})*\}\}\Z/)
+          if attribute[:value]&.match?(/\A\{\{([^}]++|(?!\}\})\})*\}\}\z/)
             attribute[:type] = "ruby"
             attribute[:name] = name
             attribute[:value] = attribute[:value][2..-3]
@@ -163,7 +163,7 @@ module RBlade
         )
         |
         (<\/\/>)
-      /xm)
+      /x)
     end
 
     def tokenizeAttributes segment
@@ -197,7 +197,7 @@ module RBlade
           )
         )
         (?=\s|$)
-      /xm).flatten.compact
+      /x).flatten.compact
     end
   end
 end

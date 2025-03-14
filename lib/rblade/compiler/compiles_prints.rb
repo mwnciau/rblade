@@ -25,7 +25,8 @@ module RBlade
 
         start_token_escaped = Regexp.escape start_token
         end_token_escaped = Regexp.escape end_token
-        segments = token.value.split(/(?:(@)(#{start_token_escaped}.+?#{end_token_escaped})|(#{start_token_escaped})\s*(.+?)\s*(#{end_token_escaped}))/m)
+        possessive_content = /(?:[^#{end_token[0]}\s]++|[#{end_token[0]}\s])+?/x
+        segments = token.value.split(/(?:(@)(#{start_token_escaped}#{possessive_content}#{end_token_escaped})|(#{start_token_escaped})\s*+(#{possessive_content})\s*+(#{end_token_escaped}))/x)
 
         i = 0
         while i < segments.count
@@ -56,7 +57,7 @@ module RBlade
 
     def create_token(expression, escape_html)
       # Don't try to print ends
-      if expression.match?(/\A\s*(?:}|end(?![[:alnum:]_]|[^\0-\177]))/i)
+      if expression.match?(/\A\s*+(?:}|end(?![[:alnum:]_]|[^\0-\177]))/i)
         return Token.new(:print, "#{expression};")
       end
 
@@ -64,14 +65,14 @@ module RBlade
         "@output_buffer.append=#{expression};"
       # If this is a block, don't wrap in parentheses
       elsif expression.match?(/
-        (?:\{|do)\s*
+        (?:\{|do)\s*+
         (
-          \|\s*
-          [a-zA-Z0-9_]+\s*
-          (,\s*[a-zA-Z0-9_]+)?\s*
-          \|\s*
+          \|\s*+
+          [a-zA-Z0-9_]++\s*+
+          (,\s*+[a-zA-Z0-9_]++)?\s*+
+          \|\s*+
         )?
-        \Z/x)
+        \z/x)
         "@output_buffer.safe_expr_append=#{expression};"
       else
         "@output_buffer.raw_buffer<<(#{expression}).to_s;"

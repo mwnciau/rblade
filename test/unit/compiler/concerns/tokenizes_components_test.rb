@@ -94,6 +94,11 @@ class TokenizesComponentsTest < TestCase
     assert_tokenizes_to "<x-a b='a{{ \"b\" }}c'>", [{name: "a", attributes: [{name: "b", value: "a{{ \"b\" }}c", type: "string"}]}]
     assert_tokenizes_to "<x-a b='a{{ 'b' }}c'>", [{name: "a", attributes: [{name: "b", value: "a{{ 'b' }}c", type: "string"}]}]
     assert_tokenizes_to "<x-a b='{{'>", [{name: "a", attributes: [{name: "b", value: "{{", type: "string"}]}]
+
+    assert_tokenizes_to '<x-a b="}}">', [{name: "a", attributes: [{name: "b", value: "}}", type: "string"}]}]
+    assert_tokenizes_to '<x-a b="{{asd">', [{name: "a", attributes: [{name: "b", value: "{{asd", type: "string"}]}]
+    assert_tokenizes_to "<x-a b='asd{{'>", [{name: "a", attributes: [{name: "b", value: "asd{{", type: "string"}]}]
+    assert_tokenizes_to '<x-a b="{{ {a: "b"} }}c">', [{name: "a", attributes: [{name: "b", value: '{{ {a: "b"} }}c', type: "string"}]}]
   end
 
   def test_tokenize_string_interpolation_to_ruby
