@@ -9,37 +9,33 @@ module RBlade
 
     private
 
-    def compile_regular_prints!(tokens)
-      compile_prints! tokens, "{{", "}}", true
-      compile_prints! tokens, "<%=", "%>", true
-    end
-
     def compile_unsafe_prints!(tokens)
-      compile_prints! tokens, "{!!", "!!}"
-      compile_prints! tokens, "<%==", "%>"
+      compile_prints! tokens, /\A(@?)\{!!\z/, /(@?\{!!)(\s*+(?:[^!]++|!)+?\s*+)(!!})/
+      compile_prints! tokens, /\A<%(%?)==\z/, /(<%%?==)(\s*+(?:[^%]++|%)+?\s*+)(%>)/
     end
 
-    def compile_prints!(tokens, start_token, end_token, escape_html = false)
+    def compile_regular_prints!(tokens)
+      compile_prints! tokens, /\A(@?)\{\{\z/, /(@?\{\{)(\s*+(?:[^}]++|})+?\s*+)(}})/, true
+      compile_prints! tokens, /\A<%(%?)=\z/, /(<%%?=)(\s*+(?:[^%]++|%)+?\s*+)(%>)/, true
+    end
+
+    def compile_prints!(tokens, start_token, regex, escape_html = false)
       tokens.map! do |token|
         next(token) if token.type != :unprocessed
 
-        start_token_escaped = Regexp.escape start_token
-        end_token_escaped = Regexp.escape end_token
-        possessive_content = /(?:[^#{end_token[0]}\s]++|[#{end_token[0]}\s])+?/x
-        segments = token.value.split(/(?:(@)(#{start_token_escaped}#{possessive_content}#{end_token_escaped})|(#{start_token_escaped})\s*+(#{possessive_content})\s*+(#{end_token_escaped}))/x)
+        segments = token.value.split(regex)
 
         i = 0
         while i < segments.count
-          if segments[i] == "@"
-            segments.delete_at i
-            segments[i] = Token.new(type: :raw_text, value: segments[i])
+          if segments[i].match start_token
+            if $1 != ""
+              segments[i] = Token.new(type: :raw_text, value: "#{segments[i].sub($1, "")}#{segments[i + 1]}#{segments[i + 2]}")
+            else
+              segments[i] = create_token(segments[i + 1].strip, escape_html)
+            end
 
-            i += 1
-          elsif segments[i] == start_token
-            segments.delete_at i
             segments.delete_at i + 1
-
-            segments[i] = create_token(segments[i], escape_html)
+            segments.delete_at i + 1
 
             i += 1
           elsif !segments[i].nil? && segments[i] != ""
@@ -57,7 +53,7 @@ module RBlade
 
     def create_token(expression, escape_html)
       # Don't try to print ends
-      if expression.match?(/\A\s*+(?:}|end(?![[:alnum:]_]|[^\0-\177]))/i)
+      if expression.match?(/\A(?:}|end(?![[:alnum:]_]|[^\0-\177]))/i)
         return Token.new(:print, "#{expression};")
       end
 
@@ -70,7 +66,7 @@ module RBlade
           \|\s*+
           [a-zA-Z0-9_]++\s*+
           (,\s*+[a-zA-Z0-9_]++)?\s*+
-          \|\s*+
+          \|
         )?
         \z/x)
         "@output_buffer.safe_expr_append=#{expression};"
