@@ -304,12 +304,12 @@ The `@class` directive conditionally adds CSS classes. The directive accepts a H
     hasError = true;
 @endRuby
 
-<span @class({
+<span @class(
     "p-4": true,
     "font-bold": isActive,
     "text-gray-500": !isActive,
     "bg-red": hasError,
-})></span>
+)></span>
 
 <span class="p-4 text-gray-500 bg-red"></span>
 ```
@@ -321,10 +321,10 @@ Likewise, the `@style` directive can be used to conditionally add inline CSS sty
     isActive = true;
 @endRuby
 
-<span @style({
+<span @style(
     "background-color: red": true,
     "font-weight: bold" => isActive,
-})></span>
+)></span>
 
 <span style="background-color: red; font-weight: bold;"></span>
 ```
@@ -432,9 +432,7 @@ In some situations, it's useful to embed Ruby code into your views. You can use 
 <a name="custom-directives"></a>
 ### Custom Directives
 
-RBlade also allows you to define your own directives using the `RBlade.register_directive_handler`
-method. When the compiler encounters the custom directive, it will call the provided block and
-output the returned value.
+RBlade also allows you to define your own output directives using the `RBlade.register_directive_handler` method. When the compiler encounters the custom directive, it will call the provided block and output the returned value.
 
 ```rblade
 RBlade::register_directive_handler('sum') do |args|
@@ -444,6 +442,17 @@ end
 @sum(1)       -> 1
 @sum(1, 2)    -> 3
 @sum(1, 2, 3) -> 6
+```
+
+The `RBlade.register_raw_directive_handler` method allows you to register a directive that outputs raw Ruby code into the template. When the compiler encounters the custom directive, it will call the provided block insert the returned value into the template. The returned ruby code must end in a semicolon, `;`.
+
+```rblade
+RBlade::register_raw_directive_handler('not') do |args|
+  "if !(#{args[0]});"
+end
+
+@not(true) 1 @endNot    -> ""
+@not(false) 1 @endNot   -> "1"
 ```
 
 <a name="comments"></a>
@@ -506,11 +515,25 @@ Namespaced components can be rendered using the namespace as a prefix to the nam
 <a name="passing-data-to-components"></a>
 ### Passing Data to Components
 
-You can pass data to RBlade components using HTML attributes. Hard-coded strings can be passed to the component using simple HTML attribute strings. Ruby expressions and variables should be passed to the component via attributes that use the `:` character as a prefix:
+You can pass data to RBlade components using HTML-style attributes. Within these attributes, you can use `{{ ... }}` to insert Ruby code.
+
+If the attribute name begins with a colon, `:`, the contents are parsed as Ruby.
 
 ```rblade
-<x-alert type="error" :message="message"/>
+@ruby(what = 'Something')
+@ruby(message = "#{what} happened!")
+
+{{-- The message attribute will be identical in all of the following components --}}
+<x-alert message="Something happened!"/>
+<x-alert message="{{ what }} happened!"/>
+<x-alert :message="message"/>
+<x-alert :message/>
+<x-alert message={{ message }}/>
+<x-alert message="{{ message }}"/>
 ```
+
+> [!NOTE]  
+> When using print blocks within an attribute, e.g. `{{ {hash: true} }}`, the contents will be converted to a string. If the print block is the entirety of the attribute, or the attribute name starts with a colon, the contents are passed through as-is.
 
 #### Component Properties
 
@@ -552,9 +575,13 @@ When passing attributes to components, you can also use a "short attribute" synt
 <a name="escaping-attribute-rendering"></a>
 #### Escaping Attribute Rendering
 
-Since some JavaScript frameworks such as Alpine.js also use colon-prefixed attributes, you can use a double colon (`::`) prefix to inform RBlade that the attribute is not a Ruby expression. For example, given the following component:
+Since some JavaScript frameworks such as Alpine.js also use colon-prefixed attributes, you can use a double colon (`::`) prefix to inform RBlade that the attribute is not a Ruby expression. For example, given the following template:
 
 ```rblade
+# The button component:
+<button {{ attributes }}>{{ slot }}</button>
+
+# Our template
 <x-button ::class="{ danger: isDeleting }">
     Submit
 </x-button>
@@ -591,7 +618,7 @@ All of the attributes that are not part of the component's constructor will auto
 Sometimes you can need to specify default values for attributes or merge additional values into some of the component's attributes. To accomplish this, you can use the attribute manager's `merge` method. This method is particularly useful for defining a set of default CSS classes that should always be applied to a component:
 
 ```rblade
-<div {{ attributes.merge({"class": "alert alert-#{type}"}) }}>
+<div {{ attributes.merge("class": "alert alert-#{type}") }}>
     {{ message }}
 </div>
 ```
@@ -618,7 +645,7 @@ Both the `class` and `style` attributes are combined this way when using the `at
 When merging attributes that are not `class` or `style`, the values provided to the `merge` method will be considered the "default" values of the attribute. However, unlike the `class` and `style` attributes, these defaults will be overwritten if the attribute is defined in the component tag. For example:
 
 ```rblade
-<button {{ attributes.merge({type: "button"}) }}>
+<button {{ attributes.merge(type: "button") }}>
     {{ slot }}
 </button>
 ```
@@ -645,7 +672,7 @@ The rendered HTML of the `button` component in this example would be:
 Sometimes you may wish to merge classes if a given condition is `true`. You can accomplish this via the `class` method, which accepts a Hash of classes where the array key contains the class or classes you wish to add, while the value is a boolean expression:
 
 ```rblade
-<div {{ attributes.class({'p-4': true, 'bg-red': hasError}) }}>
+<div {{ attributes.class('p-4': true, 'bg-red': hasError) }}>
     {{ message }}
 </div>
 ```
@@ -653,7 +680,7 @@ Sometimes you may wish to merge classes if a given condition is `true`. You can 
 If you need to merge other attributes onto your component, you can chain the `merge` method onto the `class` method:
 
 ```rblade
-<button {{ attributes.class({'bg-red': hasError}).merge({type: 'button'}) }}>
+<button {{ attributes.class('bg-red': hasError).merge(type: 'button') }}>
     {{ slot }}
 </button>
 ```
