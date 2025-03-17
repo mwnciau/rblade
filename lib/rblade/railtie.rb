@@ -39,7 +39,7 @@ module RBlade
 
         locals = {
           attributes: RBlade::AttributesManager.new(attributes),
-          slot: block.nil? ? "" : capture(&block),
+          slot: block.nil? ? "" : capture(&block)
         }
 
         render template: path, locals:

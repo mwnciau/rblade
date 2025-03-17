@@ -118,6 +118,6 @@ class CompilesComponentHelpersTest < TestCase
     assert_partial_compiles_to "<% content_for :cake, 'choccy' %>@props(cake: required){{ cake }}", "choccy"
 
     # Directly assigned locals should override content_for content
-    assert_partial_compiles_to "<% content_for :cake, 'not choccy' %>@props(cake: required){{ cake }}", "choccy", locals: {cake: 'choccy'}
+    assert_partial_compiles_to "<% content_for :cake, 'not choccy' %>@props(cake: required){{ cake }}", "choccy", locals: {cake: "choccy"}
   end
 end

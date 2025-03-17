@@ -42,7 +42,7 @@ class TestCase < Minitest::Test
     if args[:exception] || expected_result
       mod = module_context
 
-      mod.module_eval("def self._compiled_component(local_assigns);#{RBlade::RailsTemplate.new.call(nil, template)}end")
+      mod.module_eval("def self._compiled_component(local_assigns);#{RBlade::RailsTemplate.new.call(nil, template)}end", __FILE__, __LINE__)
 
       if args[:exception]
         exception = assert_raises Exception do
@@ -79,13 +79,13 @@ class TestCase < Minitest::Test
       def self.render(**args)
         template = File.read("/var/source/test/fixtures#{args[:template]}.rblade")
 
-        local_assigns = {}
-        attributes = args[:locals][:attributes]
-        slot = args[:locals][:slot]
+        local_assigns = {} # standard:disable Lint/UselessAssignment
+        attributes = args[:locals][:attributes] # standard:disable Lint/UselessAssignment
+        slot = args[:locals][:slot] # standard:disable Lint/UselessAssignment
 
         options = OpenStruct.new(
           short_identifier: args[:template].delete_prefix("/"),
-          locals: ['attributes', 'slot']
+          locals: ["attributes", "slot"]
         )
 
         capture do

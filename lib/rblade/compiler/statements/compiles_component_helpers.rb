@@ -17,7 +17,7 @@ module RBlade
         props = extract_props args
         props.map do |key, value|
           compiled_code = if RBlade.direct_component_rendering
-            +"if !attributes.has?(:'#{RBlade.escape_quotes(key)}') && content_for?(:'#{RBlade.escape_quotes(key)}');attributes[:'#{RBlade.escape_quotes(key)}']=content_for :'#{RBlade.escape_quotes(key)}';end;"
+            "if !attributes.has?(:'#{RBlade.escape_quotes(key)}') && content_for?(:'#{RBlade.escape_quotes(key)}');attributes[:'#{RBlade.escape_quotes(key)}']=content_for :'#{RBlade.escape_quotes(key)}';end;"
           else
             +""
           end

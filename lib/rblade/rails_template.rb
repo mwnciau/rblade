@@ -26,8 +26,8 @@ module RBlade
 
       preamble = +"_stacks=[];@_rblade_once_tokens=[];@_rblade_stack_manager=RBlade::StackManager.new;"
       if RBlade.direct_component_rendering
-        # If the attributes are slot are already set, this is likely a component rendering, and we don't need this code
-        unless template&.locals == ['attributes', 'slot']
+        # If the attributes and slot are already set, we don't need to assign them
+        unless template&.locals&.include?("attributes") && template.locals.include?("slot")
           preamble << "attributes=RBlade::AttributesManager.new(local_assigns);slot||=yield if block_given?;slot=attributes.delete(:slot) if slot.blank?;"
         end
       end

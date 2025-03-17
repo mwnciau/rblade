@@ -7,7 +7,6 @@ class ViewHelpersTest < TestCase
     assert_compiles_to "<%= component 'button' do \"cake\" end %>", nil, "<button class=\"button\">cake</button>"
     assert_compiles_to "<%= component 'button', type: 'submit' %>", nil, "<button class=\"button\" type=\"submit\"></button>"
 
-
     assert_compiles_to "<%= component 'nested_button' do '1234' end %>", nil, "<button class=\"button block\" type=\"button\">1234</button>"
     assert_compiles_to "<%= component 'relative_button' %>", nil, "<button class=\"button\">relative</button>"
   end
@@ -16,7 +15,6 @@ class ViewHelpersTest < TestCase
     assert_partial_compiles_to "<%= component 'button' %>", "<button class=\"button\"></button>"
     assert_partial_compiles_to "<%= component 'button' do \"cake\" end %>", "<button class=\"button\">cake</button>"
     assert_partial_compiles_to "<%= component 'button', type: 'submit' %>", "<button class=\"button\" type=\"submit\"></button>"
-
 
     assert_partial_compiles_to "<%= component 'nested_button' do '1234' end %>", "<button class=\"button block\" type=\"button\">1234</button>"
     assert_partial_compiles_to "<%= component 'relative_button' %>", "<button class=\"button\">relative</button>"

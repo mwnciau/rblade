@@ -156,17 +156,17 @@ class CompilesComponentsTest < TestCase
   end
 
   def test_partial_assigns_locals
-    assert_partial_compiles_to "@props(cake: required){{ cake }}", "choccy", locals: {cake: 'choccy'}
+    assert_partial_compiles_to "@props(cake: required){{ cake }}", "choccy", locals: {cake: "choccy"}
 
     # When enabled, components rendered normally should still work
-    assert_partial_compiles_to "<x-simple_button label='choccy'/>", "<button>choccy</button>", locals: {cake: 'not choccy'}
+    assert_partial_compiles_to "<x-simple_button label=\"choccy\"/>", "<button>choccy</button>", locals: {cake: "not choccy"}
   end
 
   def test_partial_assigns_slot
-    assert_partial_compiles_to "{{ slot }}", "choccy" do "choccy" end
-    assert_partial_compiles_to "{{ slot }}", "choccy", locals: {slot: 'choccy'}
+    assert_partial_compiles_to("{{ slot }}", "choccy") { "choccy" }
+    assert_partial_compiles_to "{{ slot }}", "choccy", locals: {slot: "choccy"}
 
     # When enabled, components rendered normally should still work
-    assert_partial_compiles_to "<x-button>choccy<//>", "<button class=\"button\">choccy</button>" do "not choccy" end
+    assert_partial_compiles_to("<x-button>choccy<//>", "<button class=\"button\">choccy</button>") { "not choccy" }
   end
 end
