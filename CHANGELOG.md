@@ -1,6 +1,7 @@
-## 2.1.0 [2025-03-14]
+## 3.0.0 [UNRELEASED]
 - Add ability to add raw directive handlers that add ruby code to the template
 - Add `RBlade.direct_component_rendering` option to allow RBlade components to be rendered directly
+- Add `component` view helper for rendering RBlade components in other templates
 - Improve performance of regular expressions
 - Update README
 - Fix issue with component tokenizer hanging
