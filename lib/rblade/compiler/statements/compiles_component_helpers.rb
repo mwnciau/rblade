@@ -21,8 +21,7 @@ module RBlade
           else
             +""
           end
-          # `_required` is deprecated. Use `required`. To be removed in 3.0.0
-          compiled_code << if value == "_required" || value == "required"
+          compiled_code << if value == "required"
             "if !attributes.has?(:'#{RBlade.escape_quotes(key)}');raise \"Props statement: #{key} is not defined\";end;"
           else
             "attributes.default(:'#{RBlade.escape_quotes(key)}', #{value});"
