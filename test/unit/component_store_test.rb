@@ -49,6 +49,10 @@ class ComponentStoreTest < TestCase
     assert_compiles_to "<x-component_store_test_relative_names.component/>",
       nil,
       "success!"
+
+    assert_compiles_to "<x-relative_button/>",
+      nil,
+      '<button class="button">relative</button>'
   end
 
   def test_relative_names_compiles_once

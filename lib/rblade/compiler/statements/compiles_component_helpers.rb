@@ -5,7 +5,7 @@ require "rblade/helpers/tokenizer"
 module RBlade
   class CompilesStatements
     class CompilesComponentHelpers
-      def compileShouldRender args
+      def compileShouldRender(args)
         if args&.count != 1
           raise RBladeTemplateError.new "Should render statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
@@ -13,18 +13,23 @@ module RBlade
         "unless(#{args[0]});return'';end;"
       end
 
-      def compileProps args, tokens
-        props = extractProps args
+      def compileProps(args, tokens)
+        props = extract_props args
         props.map do |key, value|
-          # `_required` is deprecated. Use `required`. To be removed in 2.0.0
-          compiled_code = if value == "_required" || value == "required"
+          compiled_code = if RBlade.direct_component_rendering
+            +"if !attributes.has?(:'#{RBlade.escape_quotes(key)}') && content_for?(:'#{RBlade.escape_quotes(key)}');attributes[:'#{RBlade.escape_quotes(key)}']=content_for :'#{RBlade.escape_quotes(key)}';end;"
+          else
+            +""
+          end
+          # `_required` is deprecated. Use `required`. To be removed in 3.0.0
+          compiled_code << if value == "_required" || value == "required"
             "if !attributes.has?(:'#{RBlade.escape_quotes(key)}');raise \"Props statement: #{key} is not defined\";end;"
           else
             "attributes.default(:'#{RBlade.escape_quotes(key)}', #{value});"
           end
 
-          if isValidVariableName key
-            compiled_code += if variableIsSlot key, tokens
+          if is_valid_variable_name key
+            compiled_code << if variableIsSlot key, tokens
               "#{key}=RBlade::SlotManager.wrap(attributes.delete :'#{RBlade.escape_quotes(key)}');"
             else
               "#{key}=attributes.delete :'#{RBlade.escape_quotes(key)}';"
@@ -37,7 +42,7 @@ module RBlade
 
       private
 
-      def extractProps prop_strings
+      def extract_props(prop_strings)
         props = {}
 
         prop_strings.each do |prop|
@@ -73,7 +78,7 @@ module RBlade
 
       RUBY_RESERVED_KEYWORDS = %w[__FILE__ __LINE__ alias and begin BEGIN break case class def defined? do else elsif end END ensure false for if in module next nil not or redo rescue retry return self super then true undef unless until when while yield].freeze
 
-      def isValidVariableName key
+      def is_valid_variable_name(key)
         return false unless key.match?(/\A[a-zA-Z_][a-zA-Z0-9_]*\z/)
 
         return false if RUBY_RESERVED_KEYWORDS.include? key

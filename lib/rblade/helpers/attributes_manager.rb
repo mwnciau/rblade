@@ -2,7 +2,8 @@
 
 module RBlade
   class AttributesManager
-    @attributes = {}
+    delegate :delete, to: :@attributes
+
     def initialize attributes
       @attributes = attributes
     end

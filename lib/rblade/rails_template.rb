@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails"
 require "rblade/compiler"
 require "rblade/component_store"
 require "rblade/helpers/attributes_manager"
@@ -25,7 +24,15 @@ module RBlade
         component_store.view_name("view::#{view_name}")
       end
 
-      -"_stacks=[];@_rblade_once_tokens=[];@_rblade_stack_manager=RBlade::StackManager.new;#{component_store.get}#{RBlade::Compiler.compileString(source, component_store)}@output_buffer.raw_buffer.prepend(@_rblade_stack_manager.get(_stacks))"
+      preamble = +"_stacks=[];@_rblade_once_tokens=[];@_rblade_stack_manager=RBlade::StackManager.new;"
+      if RBlade.direct_component_rendering
+        # If the attributes are slot are already set, this is likely a component rendering, and we don't need this code
+        unless template&.locals == ['attributes', 'slot']
+          preamble << "attributes=RBlade::AttributesManager.new(local_assigns);slot||=yield if block_given?;slot=attributes.delete(:slot) if slot.blank?;"
+        end
+      end
+
+      -"#{preamble}#{component_store.get}#{RBlade::Compiler.compileString(source, component_store)}@output_buffer.raw_buffer.prepend(@_rblade_stack_manager.get(_stacks));@output_buffer;"
     end
   end
 end

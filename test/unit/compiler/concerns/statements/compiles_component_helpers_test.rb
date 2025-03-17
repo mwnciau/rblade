@@ -107,4 +107,17 @@ class CompilesComponentHelpersTest < TestCase
 
     assert_compiles_to "<x-#{component} nilSlot='123'/>", nil, "  123 "
   end
+
+  def test_partials_props_uses_content_for
+    # When enabled, components rendered normally should still work
+    assert_partial_compiles_to "@props(cake: 'choccy'){{ cake }}", "choccy"
+    assert_partial_compiles_to "@props(cake: required){{ cake }}", exception: "Props statement: cake is not defined"
+
+    # content_for content should override defaults and not cause errors when props are required
+    assert_partial_compiles_to "<% content_for :cake, 'choccy' %>@props(cake: 'not choccy'){{ cake }}", "choccy"
+    assert_partial_compiles_to "<% content_for :cake, 'choccy' %>@props(cake: required){{ cake }}", "choccy"
+
+    # Directly assigned locals should override content_for content
+    assert_partial_compiles_to "<% content_for :cake, 'not choccy' %>@props(cake: required){{ cake }}", "choccy", locals: {cake: 'choccy'}
+  end
 end

@@ -60,6 +60,7 @@ For a quick overview of RBlade's capabilities, refer to the [reference file](REF
     + [Old Input](#old-input)
     + [Method Field](#method-field)
   * [Stacks](#stacks)
+  * [Using RBlade Components As Partials](#rblade-partials)
 
 <a name="displaying-data"></a>
 ## Displaying Data
@@ -954,4 +955,23 @@ If you would like to prepend content onto the beginning of a stack, you should u
 @prepend('scripts')
     This will be first...
 @endPrepend
+```
+
+
+<a name="rblade-partials"></a>
+## Using RBlade Components As Partials
+
+You might want to use RBlade components within other templates, e.g. if you are using a component library that uses them. By default, RBlade components cannot be rendered directly, but this can be enabled using the `direct_component_rendering` option. 
+
+```ruby
+# config/initializers/rblade.rb
+
+# Enable partial rendering of RBlade components
+RBlade.direct_component_rendering = true
+```
+
+Once enabled, RBlade components can be rendered using `render partial: ...`. Block contents are passed to the component as `slot`, `attributes` is initialized using `local_assigns`, and the `@props` directive will look for content set using `content_for`.
+
+```erb
+
 ```

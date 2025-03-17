@@ -1,0 +1,2 @@
+@props(label: required)
+<button>{{ label }}</button>
