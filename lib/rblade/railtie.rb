@@ -38,8 +38,8 @@ module RBlade
         path.sub!(/(?:\.[^.]++)?\.rblade\z/, "")
 
         locals = {
-          attributes: RBlade::AttributesManager.new(attributes),
-          slot: block.nil? ? "" : capture(&block)
+          slot: block.nil? ? attributes.delete(:slot) || -"" : capture(&block),
+          attributes: RBlade::AttributesManager.new(attributes)
         }
 
         render template: path, locals:
