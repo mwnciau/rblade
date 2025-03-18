@@ -44,6 +44,10 @@ module RBlade
       @component_name_stack.push view_name
     end
 
+    def current_view_name
+      @component_name_stack.last
+    end
+
     def get
       @component_definitions
     end

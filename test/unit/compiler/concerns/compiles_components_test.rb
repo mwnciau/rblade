@@ -169,4 +169,20 @@ class CompilesComponentsTest < TestCase
     # When enabled, components rendered normally should still work
     assert_partial_compiles_to("<x-button>choccy<//>", "<button class=\"button\">choccy</button>") { "not choccy" }
   end
+
+  def test_dynamic_components
+    assert_compiles_to "<x-dynamic component=\"button\">button</x-dynamic>", nil, "<button class=\"button\">button</button>"
+    assert_compiles_to "<x-dynamic :component=\"'button'\">button</x-dynamic>", nil, "<button class=\"button\">button</button>"
+
+    assert_compiles_to "<x-dynamic :component=\"component\">button</x-dynamic>", nil, "<button class=\"button\">button</button>", +"component = 'button';"
+    assert_compiles_to "<x-dynamic :component>button</x-dynamic>", nil, "<button class=\"button\">button</button>", +"component = 'button';"
+    assert_compiles_to "<x-dynamic component={{ component }}>button</x-dynamic>", nil, "<button class=\"button\">button</button>", +"component = 'button';"
+    assert_compiles_to "<x-dynamic component=\"but{{onent}}\">button</x-dynamic>", nil, "<button class=\"button\">button</button>", +"onent = 'ton';"
+
+    assert_compiles_to "<x-dynamic component=\"button\"/>", nil, "<button class=\"button\"></button>"
+    assert_compiles_to "<x-dynamic component=\"relative_button\"/>", nil, "<button class=\"button\">relative</button>"
+
+    assert_compiles_to "<x-dynamic component=\"compiles_components_test.relative\" title=\"1234\"/>", nil, "1234 - "
+    assert_compiles_to "<x-compiles_components_test.dynamic-relative title=\"1234\"/>", nil, "1234 - "
+  end
 end

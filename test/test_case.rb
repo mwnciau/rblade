@@ -8,6 +8,7 @@ require "ostruct"
 
 class TestCase < Minitest::Test
   RBlade::ComponentStore.add_path(File.join(File.dirname(__FILE__), "fixtures"))
+  RBlade::ComponentStore.add_path(File.join(File.dirname(__FILE__), "fixtures"), "view")
 
   def assert_compiles_to(template, expected_code = nil, expected_result = nil, locals = nil)
     component_store = RBlade::ComponentStore.new

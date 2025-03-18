@@ -2,6 +2,7 @@
 - Add ability to add raw directive handlers that add ruby code to the template
 - Add `RBlade.direct_component_rendering` option to allow RBlade components to be rendered directly
 - Add `component` view helper for rendering RBlade components in other templates
+- Add support for dynamic components using `<x-dynamic component="...">`
 - Improve performance of regular expressions
 - Remove deprecated "_required" option for props statement values (use "required" instead)
 - Update README

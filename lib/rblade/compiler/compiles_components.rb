@@ -40,6 +40,8 @@ module RBlade
       }
       @component_stack << component
 
+      return compile_dynamic_component(token) if component[:name] == "dynamic"
+
       attributes = compile_attributes token.value[:attributes]
 
       if component[:name].start_with? "slot::"
@@ -47,6 +49,26 @@ module RBlade
       else
         "#{@component_store.component(component[:name])}(RBlade::AttributesManager.new({#{attributes.join(",")}})) do |_slot|;"
       end
+    end
+
+    def compile_dynamic_component(token)
+      component_index = token.value[:attributes].index {|item| item[:name] == "component"}
+      component = token.value[:attributes].delete_at(component_index)
+      component_value = case component[:type]
+
+      when "string"
+        "#{process_string_attribute(component[:value])}"
+      when "ruby"
+        "(#{component[:value]})"
+      when "pass_through"
+        "#{component[:name]}"
+      else
+        raise RBladeTemplateError.new "Component compiler: unexpected attribute type for component attribute (#{attribute[:type]})"
+      end
+
+      attributes = compile_attributes token.value[:attributes]
+
+      "@output_buffer.raw_buffer<<component(#{component_value}, '#{RBlade.escape_quotes(@component_store.current_view_name)}', #{attributes.join ","}) do;";
     end
 
     def compile_token_end token
@@ -62,7 +84,7 @@ module RBlade
       "end;"
     end
 
-    def compile_attributes attributes
+    def compile_attributes(attributes)
       attributes.map do |attribute|
         case attribute[:type]
         when "class"

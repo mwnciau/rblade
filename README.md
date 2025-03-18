@@ -54,13 +54,14 @@ For a quick overview of RBlade's capabilities, refer to the [reference file](REF
       - [Retrieving and Filtering Attributes](#retrieving-and-filtering-attributes)
     + [Slots](#slots)
       - [Slot Attributes](#slot-attributes)
+    + [Dynamic Components](#dynamic-components)
     + [Registering Additional Component Directories](#registering-additional-component-directories)
     + [Index Components](#index-components)
   * [Forms](#forms)
     + [Old Input](#old-input)
     + [Method Field](#method-field)
   * [Stacks](#stacks)
-  * [Using RBlade Components As Partials](#rblade-partials)
+  * [Integrating RBlade With Other Templates](#rblade-integration)
 
 <a name="displaying-data"></a>
 ## Displaying Data
@@ -837,6 +838,20 @@ Sometimes, you may wish to return early from a component without printing anythi
 ...
 ```
 
+<a name="dynamic-components"></a>
+### Dynamic Components
+
+Sometimes you may need to render a component but not know which component should be rendered until runtime. In this situation, you may use RBlades's built-in dynamic component to render the component based on a runtime value or variable:
+
+```rblade
+<% component_name = 'button' %>
+
+<x-dynamic :component="component_name"/>
+```
+
+> [!NOTE]  
+> Dynamic components use the `component` helper class, and thus don't take advantage of RBlade's performance improvements over using partials
+
 <a name="registering-additional-component-directories"></a>
 ### Registering Additional Component Directories
 
@@ -958,8 +973,8 @@ If you would like to prepend content onto the beginning of a stack, you should u
 ```
 
 
-<a name="rblade-partials"></a>
-## Using RBlade Components As Partials
+<a name="rblade-integration"></a>
+## Integrating RBlade With Other Templates
 
 You might want to use RBlade components within other templates, e.g. if you are using a component library that uses them. By default, RBlade components cannot be rendered directly, but this can be enabled using the `direct_component_rendering` option. 
 
@@ -970,8 +985,13 @@ You might want to use RBlade components within other templates, e.g. if you are 
 RBlade.direct_component_rendering = true
 ```
 
-Once enabled, RBlade components can be rendered using `render partial: ...`. Block contents are passed to the component as `slot`, `attributes` is initialized using `local_assigns`, and the `@props` directive will look for content set using `content_for`.
+Once enabled, RBlade components can be rendered using `render partial: ...`. Block contents are passed to the component in the `slot` variable, `attributes` is initialized using `local_assigns`, and the `@props` directive will look for content set using `content_for`.
 
 ```erb
-
+<%= render template: "components/button", locals: {class: "mt-4", slot: capture do %>
+  
+<% end } %>
 ```
+
+> [!NOTE]  
+> RBlade's `{{ }}` print directives are automatically sent through Rails' `h` function to prevent XSS attacks.

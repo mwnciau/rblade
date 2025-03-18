@@ -13,7 +13,7 @@ Token = Struct.new(:type, :value)
 
 module RBlade
   def self.escape_quotes string
-    string.gsub(/['\\\x0]/, '\\\\\0')
+    string&.gsub(/['\\\x0]/, '\\\\\0')
   end
 
   class RBladeTemplateError < StandardError; end
