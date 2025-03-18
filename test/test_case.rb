@@ -74,11 +74,11 @@ class TestCase < Minitest::Test
       end
 
       def self.view_paths
-        ["/var/source/test/fixtures"]
+        [File.join(File.dirname(__FILE__), "fixtures")]
       end
 
       def self.render(**args)
-        template = File.read("/var/source/test/fixtures#{args[:template]}.rblade")
+        template = File.read(File.join(File.dirname(__FILE__), "fixtures#{args[:template]}.rblade"))
 
         local_assigns = {} # rubocop:disable Lint/UselessAssignment
         attributes = args[:locals][:attributes] # rubocop:disable Lint/UselessAssignment

@@ -37,7 +37,7 @@ class BenchmarkTest < TestCase
 
       bm.report("compile_#{version}") { RBlade::Compiler.compile_string("<x-benchmark :colours/>", RBlade::ComponentStore.new) }
       bm.compare!
-      bm.save! "/var/source/storage/benchmark_compile.txt"
+      bm.save! File.join(File.dirname(__FILE__), "storage/benchmark_compile.txt")
     end
 
     Benchmark.ips do |bm|
@@ -46,7 +46,7 @@ class BenchmarkTest < TestCase
 
       bm.report("execute_#{version}") { mod.module_eval(compiled_string) }
       bm.compare!
-      bm.save! "/var/source/storage/benchmark_execute.txt"
+      bm.save! File.join(File.dirname(__FILE__), "storage/benchmark_execute.txt")
     end
   end
 end
