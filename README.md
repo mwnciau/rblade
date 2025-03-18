@@ -976,7 +976,28 @@ If you would like to prepend content onto the beginning of a stack, you should u
 <a name="rblade-integration"></a>
 ## Integrating RBlade With Other Templates
 
-You might want to use RBlade components within other templates, e.g. if you are using a component library that uses them. By default, RBlade components cannot be rendered directly, but this can be enabled using the `direct_component_rendering` option. 
+You might want to use RBlade components within other templates, e.g. if you are using a component library that uses them. The `component` helper method lets you easily include RBlade components in your ERB (or other) templates:
+
+```erb
+<%= component "button", class: "mt-4", colour: "green" do %>
+  <b>My button</b>
+<% end %>
+```
+
+If preferred, the `component` method can be renamed using the `RBlade.component_helper_method_name` option:
+
+```ruby
+# config/initializers/rblade.rb
+
+# Change the name of the component helper method
+RBlade.component_helper_method_name = :rblade_component
+
+
+# app/views/home/show.erb
+<%= rblade_component "my_component" %>
+```
+
+By default, RBlade layouts are not compatible with other templates, and components cannot be rendered directly, but this can be enabled using the `direct_component_rendering` option. 
 
 ```ruby
 # config/initializers/rblade.rb
@@ -985,13 +1006,14 @@ You might want to use RBlade components within other templates, e.g. if you are 
 RBlade.direct_component_rendering = true
 ```
 
-Once enabled, RBlade components can be rendered using `render partial: ...`. Block contents are passed to the component in the `slot` variable, `attributes` is initialized using `local_assigns`, and the `@props` directive will look for content set using `content_for`.
+Once enabled, RBlade components can be used as layouts for ERB templates, or rendered directly using `render`. Block contents are passed to the component in the `slot` variable, `attributes` is initialized using `local_assigns`, and the `@props` directive will look for content set using `content_for`.
 
 ```erb
 <%= render template: "components/button", locals: {class: "mt-4", slot: capture do %>
-  
+  <% content_for: :title, "My title" %>
+  <b>My content</b>
 <% end } %>
 ```
 
 > [!NOTE]  
-> RBlade's `{{ }}` print directives are automatically sent through Rails' `h` function to prevent XSS attacks.
+> Using the `component` helper instead of RBlade's component syntax does not take advantage of RBlade's component caching
