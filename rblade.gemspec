@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "minitest", "~> 5.0"
   s.add_development_dependency "minitest-reporters", "~> 1.1"
-  s.add_development_dependency "standard", ">= 1.3"
+  s.add_development_dependency "standard", ">= 1.35.1"
   s.add_development_dependency "rubocop", ">= 1.73"
   s.add_development_dependency "rails", ">= 7.0"
   s.add_development_dependency "benchmark-ips"
