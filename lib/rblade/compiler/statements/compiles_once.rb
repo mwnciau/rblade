@@ -7,7 +7,7 @@ module RBlade
         @once_counter = 0
       end
 
-      def compileOnce args
+      def compile_once(args)
         if args&.count&.> 1
           raise RBladeTemplateError.new "Once statement: wrong number of arguments (given #{args.count}, expecting 0 or 1)"
         end
@@ -17,7 +17,7 @@ module RBlade
         "unless @_rblade_once_tokens.include? #{once_id};@_rblade_once_tokens<<#{once_id};"
       end
 
-      def compilePushOnce args
+      def compile_push_once(args)
         if args&.count != 1 && args&.count != 2
           raise RBladeTemplateError.new "Push once statement: wrong number of arguments (given #{args&.count || 0}, expecting 1 or 2)"
         end
@@ -27,7 +27,7 @@ module RBlade
         "(@_rblade_once_tokens.include? #{once_id}) || @_rblade_once_tokens<<#{once_id} && @_rblade_stack_manager.push(#{args[0]}, @output_buffer) do;"
       end
 
-      def compilePrependOnce args
+      def compile_prepend_once(args)
         if args&.count != 1 && args&.count != 2
           raise RBladeTemplateError.new "Prepend once statement: wrong number of arguments (given #{args&.count || 0}, expecting 1 or 2)"
         end

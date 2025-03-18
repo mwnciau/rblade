@@ -8,7 +8,7 @@ module RBlade
       tokens.map! do |token|
         next(token) if token.type != :unprocessed
 
-        segments = tokenizeComponentTags token.value
+        segments = tokenize_component_tags token.value
 
         i = 0
         while i < segments.count
@@ -22,9 +22,9 @@ module RBlade
             i += 1
           elsif segments[i] == "<" && segments[i + 1]&.match?(/x[-:]/)
             name = segments[i + 1][2..]
-            raw_attributes = (segments[i + 2] != ">") ? tokenizeAttributes(segments[i + 2]) : nil
+            raw_attributes = (segments[i + 2] != ">") ? tokenize_attributes(segments[i + 2]) : nil
 
-            attributes = processAttributes raw_attributes
+            attributes = process_attributes raw_attributes
 
             if raw_attributes.nil?
               segments.delete_at i + 1
@@ -54,7 +54,7 @@ module RBlade
 
     private
 
-    def processAttributes raw_attributes
+    def process_attributes(raw_attributes)
       attributes = []
       i = 0
       while i < raw_attributes.count
@@ -112,7 +112,7 @@ module RBlade
       attributes
     end
 
-    def tokenizeComponentTags value
+    def tokenize_component_tags(value)
       value.split(%r/
         # Opening and self-closing tags
         (?:
@@ -166,7 +166,7 @@ module RBlade
       /x)
     end
 
-    def tokenizeAttributes segment
+    def tokenize_attributes(segment)
       segment.scan(%r/
         (?<=\s|^)
         (?:

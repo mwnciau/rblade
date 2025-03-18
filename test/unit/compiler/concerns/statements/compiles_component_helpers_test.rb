@@ -1,7 +1,7 @@
 require "test_case"
 
 class CompilesComponentHelpersTest < TestCase
-  def assert_props_compiles_to template, expected_code = nil, expected_result = nil
+  def assert_props_compiles_to(template, expected_code = nil, expected_result = nil)
     locals = %[
       attributes = RBlade::AttributesManager.new({a: "A"})
     ]

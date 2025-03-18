@@ -5,7 +5,9 @@ require "rblade/helpers/tokenizer"
 module RBlade
   class CompilesStatements
     class CompilesComponentHelpers
-      def compileShouldRender(args)
+      RUBY_RESERVED_KEYWORDS = %w[__FILE__ __LINE__ alias and begin BEGIN break case class def defined? do else elsif end END ensure false for if in module next nil not or redo rescue retry return self super then true undef unless until when while yield].freeze
+
+      def compile_should_render(args)
         if args&.count != 1
           raise RBladeTemplateError.new "Should render statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
@@ -13,7 +15,7 @@ module RBlade
         "unless(#{args[0]});return'';end;"
       end
 
-      def compileProps(args, tokens)
+      def compile_props(args, tokens)
         props = extract_props args
         props.map do |key, value|
           compiled_code = if RBlade.direct_component_rendering
@@ -28,7 +30,7 @@ module RBlade
           end
 
           if is_valid_variable_name key
-            compiled_code << if variableIsSlot key, tokens
+            compiled_code << if variable_is_slot key, tokens
               "#{key}=RBlade::SlotManager.wrap(attributes.delete :'#{RBlade.escape_quotes(key)}');"
             else
               "#{key}=attributes.delete :'#{RBlade.escape_quotes(key)}';"
@@ -75,8 +77,6 @@ module RBlade
         props
       end
 
-      RUBY_RESERVED_KEYWORDS = %w[__FILE__ __LINE__ alias and begin BEGIN break case class def defined? do else elsif end END ensure false for if in module next nil not or redo rescue retry return self super then true undef unless until when while yield].freeze
-
       def is_valid_variable_name(key)
         return false unless key.match?(/\A[a-zA-Z_][a-zA-Z0-9_]*\z/)
 
@@ -86,7 +86,7 @@ module RBlade
       end
 
       # Automatically detect if a variable is a slot by looking for "<var>.attributes"
-      def variableIsSlot name, tokens
+      def variable_is_slot(name, tokens)
         tokens.any? { |token| token.value.to_s.match? "#{name}.attributes" }
       end
     end

@@ -34,9 +34,9 @@ module RBlade
 
     private
 
-    def compile_token_start token
+    def compile_token_start(token)
       component = {
-        name: token.value[:name]
+        name: token.value[:name],
       }
       @component_stack << component
 
@@ -70,7 +70,7 @@ module RBlade
       "@output_buffer.raw_buffer<<component(#{component_value}, '#{RBlade.escape_quotes(@component_store.current_view_name)}', #{attributes.join ","}) do;"
     end
 
-    def compile_token_end token
+    def compile_token_end(token)
       component = @component_stack.pop
       if component.nil?
         raise RBladeTemplateError.new "Unexpected closing tag </x-#{token.value[:name]}>"

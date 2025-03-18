@@ -57,15 +57,15 @@ fi
 
 if [ "$1" == "cs" ] || [ "$1" == "c" ]
 then
-    echo Running: ${DOCKER_COMPOSE_COMMAND} run blade rake standard "${@:2}"
-    ${DOCKER_COMPOSE_COMMAND} run blade rake standard "${@:2}"
+    echo Running: ${DOCKER_COMPOSE_COMMAND} run blade rubocop "${@:2}"
+    ${DOCKER_COMPOSE_COMMAND} run blade rubocop "${@:2}"
     exit 0
 fi
 
 if [ "$1" == "cs:fix" ]
 then
-    echo Running: ${DOCKER_COMPOSE_COMMAND} run blade rake standard:fix "${@:2}"
-    ${DOCKER_COMPOSE_COMMAND} run blade rake standard:fix "${@:2}"
+    echo Running: ${DOCKER_COMPOSE_COMMAND} run blade rubocop --autocorrect "${@:2}"
+    ${DOCKER_COMPOSE_COMMAND} run blade rubocop --autocorrect "${@:2}"
     exit 0
 fi
 

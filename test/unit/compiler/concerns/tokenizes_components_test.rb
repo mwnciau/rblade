@@ -1,7 +1,7 @@
 require "test_case"
 
 class TokenizesComponentsTest < TestCase
-  def assert_tokenizes_to template, expected
+  def assert_tokenizes_to(template, expected)
     tokens = [Token.new(:unprocessed, template)]
     RBlade::TokenizesComponents.new.tokenize!(tokens)
 
@@ -22,7 +22,7 @@ class TokenizesComponentsTest < TestCase
     assert_tokenizes_to "<x-apple> <x-banana>", [
       {name: "apple", attributes: []},
       " ",
-      {name: "banana", attributes: []}
+      {name: "banana", attributes: []},
     ]
     assert_tokenizes_to "<   x-banana   >", [{name: "banana", attributes: []}]
     assert_tokenizes_to "<
@@ -170,8 +170,8 @@ class TokenizesComponentsTest < TestCase
         {type: "style", value: '{cake: "two"}'},
         {name: "cheese", value: "yes", type: "string"},
         {name: "readonly", type: "empty"},
-        {name: ":escaped", value: "I only have one colon", type: "string"}
-      ]}
+        {name: ":escaped", value: "I only have one colon", type: "string"},
+      ]},
     ]
   end
 

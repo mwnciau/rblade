@@ -40,7 +40,7 @@ module RBlade
         @stack = +""
       end
 
-      def set_before_stack before_stack
+      def set_before_stack(before_stack)
         @before_stack = before_stack
       end
 
@@ -52,11 +52,11 @@ module RBlade
         to_s
       end
 
-      def push code
+      def push(code)
         @stack << code
       end
 
-      def prepend code
+      def prepend(code)
         @prepends << code
       end
     end

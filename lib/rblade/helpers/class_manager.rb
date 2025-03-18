@@ -2,7 +2,7 @@
 
 module RBlade
   class ClassManager
-    def initialize classes
+    def initialize(classes)
       if classes.is_a? String
         @classes = classes
       elsif classes.is_a? Array

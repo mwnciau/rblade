@@ -4,7 +4,7 @@ module RBlade
   class AttributesManager
     delegate :delete, to: :@attributes
 
-    def initialize attributes
+    def initialize(attributes)
       @attributes = attributes
     end
 
@@ -38,7 +38,7 @@ module RBlade
       true
     end
 
-    def to_str attributes = nil
+    def to_str(attributes = nil)
       attributes ||= @attributes
 
       attributes.map do |key, value|

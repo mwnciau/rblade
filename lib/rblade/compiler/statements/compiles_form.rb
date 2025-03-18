@@ -3,7 +3,7 @@
 module RBlade
   class CompilesStatements
     class CompilesForm
-      def compileMethod args
+      def compile_method(args)
         if args&.count != 1
           raise RBladeTemplateError.new "Method statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
@@ -11,31 +11,31 @@ module RBlade
         %(@output_buffer.raw_buffer<<-"<input type=\\"hidden\\" name=\\"_method\\" value=\\"\#{#{args[0]}}\\">";)
       end
 
-      def compileDelete args
+      def compile_delete(args)
         unless args.nil?
           raise RBladeTemplateError.new "Delete statement: wrong number of arguments (given #{args.count}, expecting 0)"
         end
 
-        compileMethod(["'DELETE'"])
+        compile_method(["'DELETE'"])
       end
 
-      def compilePatch args
+      def compile_patch(args)
         unless args.nil?
           raise RBladeTemplateError.new "Patch statement: wrong number of arguments (given #{args.count}, expecting 0)"
         end
 
-        compileMethod(["'PATCH'"])
+        compile_method(["'PATCH'"])
       end
 
-      def compilePut args
+      def compile_put(args)
         unless args.nil?
           raise RBladeTemplateError.new "Put statement: wrong number of arguments (given #{args.count}, expecting 0)"
         end
 
-        compileMethod(["'PUT'"])
+        compile_method(["'PUT'"])
       end
 
-      def compileOld args
+      def compile_old(args)
         if args.nil? || args.count > 2
           raise RBladeTemplateError.new "Old statement: wrong number of arguments (given #{args&.count || 0}, expecting 1 or 2)"
         end

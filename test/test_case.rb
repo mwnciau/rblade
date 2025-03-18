@@ -12,7 +12,7 @@ class TestCase < Minitest::Test
 
   def assert_compiles_to(template, expected_code = nil, expected_result = nil, locals = nil)
     component_store = RBlade::ComponentStore.new
-    compiled_string = RBlade::Compiler.compileString(template, component_store)
+    compiled_string = RBlade::Compiler.compile_string(template, component_store)
 
     if expected_code.is_a?(Regexp)
       assert compiled_string.match? expected_code
@@ -32,7 +32,7 @@ class TestCase < Minitest::Test
   def assert_partial_compiles_to(template, expected_result = nil, **args, &)
     component_store = RBlade::ComponentStore.new
     RBlade.direct_component_rendering = true
-    compiled_string = RBlade::Compiler.compileString(template, component_store)
+    compiled_string = RBlade::Compiler.compile_string(template, component_store)
 
     if args[:compiles_to].is_a?(Regexp)
       assert compiled_string.match? args[:compiles_to]
@@ -80,13 +80,13 @@ class TestCase < Minitest::Test
       def self.render(**args)
         template = File.read("/var/source/test/fixtures#{args[:template]}.rblade")
 
-        local_assigns = {} # standard:disable Lint/UselessAssignment
-        attributes = args[:locals][:attributes] # standard:disable Lint/UselessAssignment
-        slot = args[:locals][:slot] # standard:disable Lint/UselessAssignment
+        local_assigns = {} # rubocop:disable Lint/UselessAssignment
+        attributes = args[:locals][:attributes] # rubocop:disable Lint/UselessAssignment
+        slot = args[:locals][:slot] # rubocop:disable Lint/UselessAssignment
 
         options = OpenStruct.new(
           short_identifier: args[:template].delete_prefix("/"),
-          locals: ["attributes", "slot"]
+          locals: ["attributes", "slot"],
         )
 
         capture do

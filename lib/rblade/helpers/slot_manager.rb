@@ -30,7 +30,7 @@ module RBlade
     end
 
     # Wraps var in a slot manager if it's a string
-    def self.wrap var
+    def self.wrap(var)
       var.is_a?(String) ? new(var) : var
     end
 

@@ -2,7 +2,7 @@
 
 module RBlade
   class Tokenizer
-    def self.extractCommaSeparatedValues segment
+    def self.extract_comma_separated_values(segment)
       unless segment.match?(/,\s*+\z/)
         # Add a comma to the end to delimit the end of the last argument
         segment += ","
@@ -17,7 +17,7 @@ module RBlade
       bracket_count = {
         "[]": 0,
         "{}": 0,
-        "()": 0
+        "()": 0,
       }
       tokens.each do |token|
         case token[1]

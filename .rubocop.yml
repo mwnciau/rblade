@@ -1,0 +1,24 @@
+AllCops:
+  DisabledByDefault: true
+  SuggestExtensions: false
+  TargetRubyVersion: 3.4
+  UseCache: true
+
+inherit_gem:
+  standard: config/base.yml
+
+# Enforce commas at the end of multiline arguments, hashes and arrays, improving git diffs
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: diff_comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: diff_comma
+
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: comma
+
+# Enforce standardisation of method definitions
+Style/MethodDefParentheses:
+  Enabled: true
+Naming/MethodName:
+  Enabled: true

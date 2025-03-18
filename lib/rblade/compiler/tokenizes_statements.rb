@@ -136,7 +136,7 @@ module RBlade
         end
       end
 
-      arguments = Tokenizer.extractCommaSeparatedValues argument_string
+      arguments = Tokenizer.extract_comma_separated_values argument_string
       segments.delete_at segment_index
 
       arguments

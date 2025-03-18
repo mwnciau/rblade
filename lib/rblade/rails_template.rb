@@ -32,7 +32,7 @@ module RBlade
         end
       end
 
-      -"#{preamble}#{component_store.get}#{RBlade::Compiler.compileString(source, component_store)}@output_buffer.raw_buffer.prepend(@_rblade_stack_manager.get(_stacks));@output_buffer;"
+      -"#{preamble}#{component_store.get}#{RBlade::Compiler.compile_string(source, component_store)}@output_buffer.raw_buffer.prepend(@_rblade_stack_manager.get(_stacks));@output_buffer;"
     end
   end
 end

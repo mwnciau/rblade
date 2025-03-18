@@ -12,7 +12,7 @@ require "active_support/core_ext/string/output_safety"
 Token = Struct.new(:type, :value)
 
 module RBlade
-  def self.escape_quotes string
+  def self.escape_quotes(string)
     string&.gsub(/['\\\x0]/, '\\\\\0')
   end
 
@@ -37,7 +37,7 @@ module RBlade
   end
 
   class Compiler
-    def self.compileString(string_template, component_store)
+    def self.compile_string(string_template, component_store)
       tokens = [Token.new(:unprocessed, string_template)]
 
       CompilesVerbatim.new.compile! tokens
@@ -50,20 +50,20 @@ module RBlade
       component_compiler = CompilesComponents.new(component_store)
       component_compiler.compile! tokens
       component_compiler.ensure_all_tags_closed
-      compileTokens tokens
+      compile_tokens tokens
     end
 
-    def self.compileAttributeString(string_template)
+    def self.compile_attribute_string(string_template)
       tokens = [Token.new(:unprocessed, string_template)]
 
       CompilesComments.compile!(tokens)
       CompilesRuby.compile! tokens
       CompilesPrints.compile!(tokens)
 
-      compileTokens tokens
+      compile_tokens tokens
     end
 
-    def self.compileTokens tokens
+    def self.compile_tokens(tokens)
       output = +""
 
       i = 0

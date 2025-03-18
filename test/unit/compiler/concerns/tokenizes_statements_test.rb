@@ -1,7 +1,7 @@
 require "test_case"
 
 class TokenizesStatementsTest < TestCase
-  def assert_tokenizes_to template, expected
+  def assert_tokenizes_to(template, expected)
     tokens = [Token.new(:unprocessed, template)]
     RBlade::TokenizesStatements.new.tokenize!(tokens)
 

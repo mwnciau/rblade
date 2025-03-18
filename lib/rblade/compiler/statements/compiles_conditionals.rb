@@ -3,7 +3,7 @@
 module RBlade
   class CompilesStatements
     class CompilesConditionals
-      def compileIf args
+      def compile_if(args)
         if args&.count != 1
           raise RBladeTemplateError.new "If statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
@@ -11,7 +11,7 @@ module RBlade
         "if #{args[0]};"
       end
 
-      def compileBlank args
+      def compile_blank(args)
         if args&.count != 1
           raise RBladeTemplateError.new "Blank? statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
@@ -19,7 +19,7 @@ module RBlade
         "if (#{args[0]}).blank?;"
       end
 
-      def compileDefined args
+      def compile_defined(args)
         if args&.count != 1
           raise RBladeTemplateError.new "Defined? statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
@@ -27,7 +27,7 @@ module RBlade
         "if defined? #{args[0]};"
       end
 
-      def compileEmpty args
+      def compile_empty(args)
         if args&.count != 1
           raise RBladeTemplateError.new "Empty? statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
@@ -35,7 +35,7 @@ module RBlade
         "if (#{args[0]}).empty?;"
       end
 
-      def compileNil args
+      def compile_nil(args)
         if args&.count != 1
           raise RBladeTemplateError.new "Nil? statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
@@ -43,7 +43,7 @@ module RBlade
         "if (#{args[0]}).nil?;"
       end
 
-      def compilePresent args
+      def compile_present(args)
         if args&.count != 1
           raise RBladeTemplateError.new "Present? statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
@@ -51,7 +51,7 @@ module RBlade
         "if (#{args[0]}).present?;"
       end
 
-      def compileElsif args
+      def compile_elsif(args)
         if args&.count != 1
           raise RBladeTemplateError.new "Elsif statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
@@ -59,7 +59,7 @@ module RBlade
         "elsif #{args[0]};"
       end
 
-      def compileElse args
+      def compile_else(args)
         unless args.nil?
           raise RBladeTemplateError.new "Else statement: wrong number of arguments (given #{args.count}, expecting 0)"
         end
@@ -67,7 +67,7 @@ module RBlade
         "else;"
       end
 
-      def compileUnless args
+      def compile_unless(args)
         if args&.count != 1
           raise RBladeTemplateError.new "Unless statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
@@ -75,7 +75,7 @@ module RBlade
         "unless #{args[0]};"
       end
 
-      def compileCase args
+      def compile_case(args)
         if args&.count != 1
           raise RBladeTemplateError.new "Case statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
@@ -83,7 +83,7 @@ module RBlade
         "case #{args[0]};"
       end
 
-      def compileWhen args
+      def compile_when(args)
         if args.nil?
           raise RBladeTemplateError.new "When statement: wrong number of arguments (given 0, expecting at least 1)"
         end
@@ -91,7 +91,7 @@ module RBlade
         "when #{args.join ","};"
       end
 
-      def compileChecked args
+      def compile_checked(args)
         if args&.count != 1
           raise RBladeTemplateError.new "Checked statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
@@ -99,7 +99,7 @@ module RBlade
         "if #{args[0]};@output_buffer.raw_buffer<<-'checked';end;"
       end
 
-      def compileDisabled args
+      def compile_disabled(args)
         if args&.count != 1
           raise RBladeTemplateError.new "Disabled statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
@@ -107,7 +107,7 @@ module RBlade
         "if #{args[0]};@output_buffer.raw_buffer<<-'disabled';end;"
       end
 
-      def compileReadonly args
+      def compile_readonly(args)
         if args&.count != 1
           raise RBladeTemplateError.new "Readonly statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
@@ -115,7 +115,7 @@ module RBlade
         "if #{args[0]};@output_buffer.raw_buffer<<-'readonly';end;"
       end
 
-      def compileRequired args
+      def compile_required(args)
         if args&.count != 1
           raise RBladeTemplateError.new "Required statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
@@ -123,7 +123,7 @@ module RBlade
         "if #{args[0]};@output_buffer.raw_buffer<<-'required';end;"
       end
 
-      def compileSelected args
+      def compile_selected(args)
         if args&.count != 1
           raise RBladeTemplateError.new "Selected statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
@@ -131,7 +131,7 @@ module RBlade
         "if #{args[0]};@output_buffer.raw_buffer<<-'selected';end;"
       end
 
-      def compileEnv args
+      def compile_env(args)
         if args&.count != 1
           raise RBladeTemplateError.new "Env statement: wrong number of arguments (given #{args&.count || 0}, expecting 1)"
         end
@@ -141,7 +141,7 @@ module RBlade
         "if Array.wrap(#{environments}).include?(Rails.env);"
       end
 
-      def compileProduction args
+      def compile_production(args)
         unless args.nil?
           raise RBladeTemplateError.new "Production statement: wrong number of arguments (given #{args.count}, expecting 0)"
         end

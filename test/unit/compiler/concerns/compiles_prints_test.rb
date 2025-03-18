@@ -28,12 +28,12 @@ class CompilesPrintsTest < TestCase
   def test_expression
     assert_compiles_to "{{ foo + bar << 'BAZ' }}", "@output_buffer.append=foo + bar << 'BAZ';", "FOOBARBAZ"
     assert_compiles_to %q({{ "foo" + 'bar' }}), %q(@output_buffer.append="foo" + 'bar';), "foobar"
-    assert_compiles_to '{{ "#{foo}" }}', '@output_buffer.append="#{foo}";', "FOO" # standard:disable Lint/InterpolationCheck
+    assert_compiles_to '{{ "#{foo}" }}', '@output_buffer.append="#{foo}";', "FOO" # rubocop:disable Lint/InterpolationCheck
     assert_compiles_to "{{ 'a' * 3 }}", "@output_buffer.append='a' * 3;", "aaa"
 
     assert_compiles_to "{!! foo + bar << 'BAZ' !!}", "@output_buffer.raw_buffer<<(foo + bar << 'BAZ').to_s;", "FOOBARBAZ"
     assert_compiles_to %q({!! "foo" + 'bar' !!}), %q[@output_buffer.raw_buffer<<("foo" + 'bar').to_s;], "foobar"
-    assert_compiles_to '{!! "#{foo}" !!}', '@output_buffer.raw_buffer<<("#{foo}").to_s;', "FOO" # standard:disable Lint/InterpolationCheck
+    assert_compiles_to '{!! "#{foo}" !!}', '@output_buffer.raw_buffer<<("#{foo}").to_s;', "FOO" # rubocop:disable Lint/InterpolationCheck
     assert_compiles_to "{!! 'a' * 3 !!}", "@output_buffer.raw_buffer<<('a' * 3).to_s;", "aaa"
   end
 
