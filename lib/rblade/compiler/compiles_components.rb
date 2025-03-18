@@ -67,7 +67,7 @@ module RBlade
 
       attributes = compile_attributes token.value[:attributes]
 
-      "@output_buffer.raw_buffer<<component(#{component_value}, '#{RBlade.escape_quotes(@component_store.current_view_name)}', #{attributes.join ","}) do;"
+      "@output_buffer.raw_buffer<<#{RBlade.component_helper_method_name}(#{component_value}, '#{RBlade.escape_quotes(@component_store.current_view_name)}', #{attributes.join ","}) do;"
     end
 
     def compile_token_end(token)

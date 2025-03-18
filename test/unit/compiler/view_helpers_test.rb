@@ -26,6 +26,7 @@ class ViewHelpersTest < TestCase
 
     assert_compiles_to "<%= rblade_component 'button' %>", nil, "<button class=\"button\"></button>"
     assert_partial_compiles_to "<%= rblade_component 'button' %>", "<button class=\"button\"></button>"
+    assert_partial_compiles_to "<x-dynamic component=button/>", "<button class=\"button\"></button>"
   ensure
     RBlade.component_helper_method_name = :component
   end
