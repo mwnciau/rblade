@@ -24,12 +24,14 @@ By default, RBlade will look for components in the `app/views/components` folder
 | `<x-component.name>...</x-component.name>`               | Render the component with the given slot content                                                                                           |
 | `<x-component.name>...<//>`                              | Short closing tag syntax (note: this bypasses some sanity checking during compilation)                                                     |
 | `<x-name attribute="STRING"/>`                           | Pass a string value to a component                                                                                                         |
+| `<x-name attribute="STRING{{ RUBY_EXPRESSION }}"/>`      | Pass a string value to a component with an interpolated ruby value                                                                         |
 | `<x-name :attribute="RUBY_EXPRESSION"/>`                 | Pass a ruby expression, executed in the local scope, to a component                                                                        |
 | `<x-name :attribute/>`                                   | Pass the `attribute` local variable into a component                                                                                       |
 | `<x-name @class({'bg-red-600': is_error})/>`             | Conditionally pass classes to a component                                                                                                  |
 | `<x-name @style({'bg-red-600': is_error})/>`             | Conditionally pass styles to a component                                                                                                   |
 | `<x-name attribute/>`                                    | Pass an attribute to a component with value `true`                                                                                         |
 | `<x-name {{ attributes }}/>`                             | Pass attributes to a child component                                                                                                       |
+| `<x-dynamic component="name"/>`                          | Dynamically render a component based on the runetime value of the `component` attribute                                                    |
 | `@props(header: "Header")`                               | Remove `header` from the attributes Hash and introduce it as a local variable, using the specified value as a default                      |
 | `@props(header: required)`                               | Remove `header` from the attributes Hash and introduce it as a local variable, raising an error if it is not set                           |
 | `{{ slot }}`                                             | Output the block content passed into the current component                                                                                 |
@@ -130,11 +132,11 @@ Note that the stack is printed once the current view or component finishes.
 
 ## Tips
 
-* Except for `@push`, `@prepend` and their variants, all end directives can simply be replaced with `@end` if preferred:
+* All end directives can simply be replaced with `@end` if preferred:
     -  `@nil?(...) ... @endnil?`
     -  `@nil?(...) ... @endnil`
     -  `@nil?(...) ... @end`
-* Except for `@ruby` and `@verbatim`, directives are case insensitive and can contain underscores. The following are identical:
+* Directives are case insensitive and can contain underscores. The following are identical:
     - `@pushonce`
     - `@pushOnce`
     - `@PushOnce` 

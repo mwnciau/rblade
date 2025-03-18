@@ -142,7 +142,7 @@ If you are displaying JavaScript variables in a large portion of your template, 
     <div class="container">
         Hello, {{ name }}.
     </div>
-@endverbatim
+@endVerbatim
 ```
 
 <a name="rblade-directives"></a>
@@ -177,7 +177,7 @@ In addition to the conditional directives above, the `@blank?`, `defined?`, `@em
     // records is defined and is not nil
 @else
     // Since these directives are compiled to if statements, you can also use the @else directive
-@endempty?
+@endEmpty?
 ```
 
 <a name="environment-directives"></a>
