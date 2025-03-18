@@ -1,3 +1,6 @@
+## 3.0.1 [2025-03-18]
+- Fix dynamic components not working when `RBlade.component_helper_method_name` is set
+
 ## 3.0.0 [2025-03-18]
 - Add ability to add raw directive handlers that add ruby code to the template
 - Add `RBlade.direct_component_rendering` option to allow RBlade components to be rendered directly
