@@ -80,9 +80,9 @@ class TestCase < Minitest::Test
       def self.render(**args)
         template = File.read(File.join(File.dirname(__FILE__), "fixtures#{args[:template]}.rblade"))
 
-        local_assigns = {} # rubocop:disable Lint/UselessAssignment
-        attributes = args[:locals][:attributes] # rubocop:disable Lint/UselessAssignment
-        slot = args[:locals][:slot] # rubocop:disable Lint/UselessAssignment
+        local_assigns = {}
+        attributes = args[:locals][:attributes]
+        slot = args[:locals][:slot]
 
         options = OpenStruct.new(
           short_identifier: args[:template].delete_prefix("/"),
@@ -90,12 +90,13 @@ class TestCase < Minitest::Test
         )
 
         capture do
-          module_eval RBlade::RailsTemplate.new.call(options, template)
+          module_eval "def _component(local_assigns, attributes, slot);#{RBlade::RailsTemplate.new.call(options, template)}end;module_function :_component", __FILE__, __LINE__
+          _component(local_assigns, attributes, slot)
         end
       end
     end
 
-    RBlade::Railtie.setup_component_view_helper(ActionView::Helpers)
+    RBlade::Railtie.setup_component_view_helper(mod.singleton_class)
 
     mod
   end
