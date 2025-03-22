@@ -73,7 +73,7 @@ polated#{"%"},
       %<12<34>56>
     ]
 
-    matched_strings.each { |string| assert string.match?(RBlade::RegularExpressions::RUBY_STRING), "String did not match: #{string}" }
+    matched_strings.each { |string| assert_equal string, "a#{string}a".match(RBlade::RegularExpressions::RUBY_STRING)&.[](0) }
 
     unmatched_strings = %w[
       %q|not|interpolated|
@@ -84,10 +84,18 @@ polated#{"%"},
       %$#$
       "#{%}"
       '#{'}'
+      %q(12(34)
+      %q[12\[34]
+      %q{12{34}
+      %q<12<34>
+      %(12(34)
+      %[12\[34]
+      %{12{34}
+      %<12<34>
     ]
 
     # rubocop:enable Lint/NestedPercentLiteral
 
-    unmatched_strings.each { |string| assert !string.match?(RBlade::RegularExpressions::RUBY_STRING), "String matched: #{string}" }
+    unmatched_strings.each { |string| refute_equal string, "a#{string}a".match(RBlade::RegularExpressions::RUBY_STRING)&.[](0) }
   end
 end

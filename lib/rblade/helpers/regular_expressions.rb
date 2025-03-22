@@ -1,6 +1,5 @@
 module RBlade::RegularExpressions
   RUBY_STRING = /
-    \A
     (?<string>
     (?# Interpolated strings )
     "
@@ -87,6 +86,5 @@ module RBlade::RegularExpressions
     |
     (?<!\w)\?.
     )
-    \z
   /mx
 end
