@@ -40,13 +40,13 @@ module RBlade::RegularExpressions
     (?# Non interpolated percent expressions )
     %[qwis]
       (?:
-        \( (?: [^)\\]++ | \\. )*+ \)
+        (?<ni_parentheses> \( (?: [^()\\]++ | \\. | \g<ni_parentheses> )*+ \) )
         |
-        \[ (?: [^\]\\]++ | \\. )*+ \]
+        (?<ni_brackets> \[ (?: [^\[\]\\]++ | \\. | \g<ni_brackets> )*+ \] )
         |
-        < (?: [^>\\]++ | \\. )*+ >
+        (?<ni_crocs> < (?: [^<>\\]++ | \\. | \g<ni_crocs> )*+ > )
         |
-        \{ (?: [^}\\]++ | \\. )*+ \}
+        (?<ni_braces> \{ (?: [^{}\\]++ | \\. | \g<ni_braces> )*+ \} )
         |
         (?<nid>[\x00-\x7F&&[^a-zA-Z0-9(\[{<]])
         (?:
@@ -62,13 +62,13 @@ module RBlade::RegularExpressions
     (?# Interpolated percent expressions )
     %[QWIrx]?
       (?:
-        \( (?: [^)\\#]++ | \#\g<curly> | \\. )*+ \)
+        (?<i_parentheses> \( (?: [^()\\#]++ | \#\g<curly> | \\. | \g<i_parentheses> )*+ \) )
         |
-        \[ (?: [^\]\\#]++ | \#\g<curly> | \\. )*+ \]
+        (?<i_brackets> \[ (?: [^\[\]\\#]++ | \#\g<curly> | \\. | \g<i_brackets> )*+ \] )
         |
-        < (?: [^>\\#]++ | \#\g<curly> | \\. )*+ >
+        (?<i_crocs> < (?: [^<>\\#]++ | \#\g<curly> | \\. | \g<i_crocs> )*+ > )
         |
-        \{ (?: [^}\\#]++ | \#\g<curly> | \\. )*+ \}
+        (?<i_braces> \{ (?: [^{}\\#]++ | \#\g<curly> | \\. | \g<i_braces> )*+ \} )
         |
         (?<id>[\x00-\x7F&&[^a-zA-Z0-9(\[{<]])
         (?:

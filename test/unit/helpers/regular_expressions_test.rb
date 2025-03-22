@@ -63,6 +63,14 @@ polated#{"%"},
       "#{match?}"
       "#{{a:1}}"
       "#{{a:1}'"'}"
+      %q(12(34)56)
+      %q[12[34]56]
+      %q{12{34}56}
+      %q<12<34>56>
+      %(12(34)56)
+      %[12[34]56]
+      %{12{34}56}
+      %<12<34>56>
     ]
 
     matched_strings.each { |string| assert string.match?(RBlade::RegularExpressions::RUBY_STRING), "String did not match: #{string}" }
