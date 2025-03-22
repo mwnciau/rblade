@@ -43,36 +43,36 @@ fi
 
 if [ "$1" == "run" ] || [ "$1" == "r" ]
 then
-    echo Running: ${DOCKER_COMPOSE_COMMAND} run blade ${@:2}
-    ${DOCKER_COMPOSE_COMMAND} run blade "${@:2}"
+    echo Running: ${DOCKER_COMPOSE_COMMAND} run --remove-orphans --rm blade ${@:2}
+    ${DOCKER_COMPOSE_COMMAND} run --remove-orphans --rm blade "${@:2}"
     exit 0
 fi
 
 if [ "$1" == "rake" ] || [ "$1" == "rk" ]
 then
-    echo Running: ${DOCKER_COMPOSE_COMMAND} run blade rake ${@:2}
-    ${DOCKER_COMPOSE_COMMAND} run blade rake "${@:2}"
+    echo Running: ${DOCKER_COMPOSE_COMMAND} run --remove-orphans --rm blade rake ${@:2}
+    ${DOCKER_COMPOSE_COMMAND} run --remove-orphans --rm blade rake "${@:2}"
     exit 0
 fi
 
 if [ "$1" == "cs" ] || [ "$1" == "c" ]
 then
-    echo Running: ${DOCKER_COMPOSE_COMMAND} run blade rubocop "${@:2}"
-    ${DOCKER_COMPOSE_COMMAND} run blade rubocop "${@:2}"
+    echo Running: ${DOCKER_COMPOSE_COMMAND} run --remove-orphans --rm blade rubocop "${@:2}"
+    ${DOCKER_COMPOSE_COMMAND} run --remove-orphans --rm blade rubocop "${@:2}"
     exit 0
 fi
 
 if [ "$1" == "cs:fix" ]
 then
-    echo Running: ${DOCKER_COMPOSE_COMMAND} run blade rubocop --autocorrect "${@:2}"
-    ${DOCKER_COMPOSE_COMMAND} run blade rubocop --autocorrect "${@:2}"
+    echo Running: ${DOCKER_COMPOSE_COMMAND} run --remove-orphans --rm blade rubocop --autocorrect "${@:2}"
+    ${DOCKER_COMPOSE_COMMAND} run --remove-orphans --rm blade rubocop --autocorrect "${@:2}"
     exit 0
 fi
 
 if [ "$1" == "test" ] || [ "$1" == "t" ]
 then
-    echo Running: ${DOCKER_COMPOSE_COMMAND} run blade rake test "${@:2}"
-    ${DOCKER_COMPOSE_COMMAND} run blade rake test "${@:2}"
+    echo Running: ${DOCKER_COMPOSE_COMMAND} run --remove-orphans --rm blade rake test "${@:2}"
+    ${DOCKER_COMPOSE_COMMAND} run --remove-orphans --rm blade rake test "${@:2}"
     exit 0
 fi
 
