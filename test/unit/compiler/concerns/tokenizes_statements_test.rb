@@ -36,13 +36,18 @@ class TokenizesStatementsTest < TestCase
   def test_nested_statements
     assert_tokenizes_to "@ruby(@if)", [{name: "ruby", arguments: ["@if"]}]
     assert_tokenizes_to "@ruby(@@if)", [{name: "ruby", arguments: ["@@if"]}]
-    assert_tokenizes_to "@@ruby(@if)", ["@ruby", "(", {name: "if"}, ")"]
-    assert_tokenizes_to "@@ruby(()@if)", ["@ruby", "(()", {name: "if"}, ")"]
+    assert_tokenizes_to "@@ruby(@if)", ["@ruby(", {name: "if"}, ")"]
+    assert_tokenizes_to "@@ruby(()@if)", ["@ruby(()", {name: "if"}, ")"]
   end
 
   def test_skip_statement
     assert_tokenizes_to "@@ruby", ["@ruby"]
-    assert_tokenizes_to "@@ruby(1, 2, 3)", ["@ruby", "(1, 2, 3)"]
+    assert_tokenizes_to "before @@ruby", ["before @ruby"]
+    assert_tokenizes_to "before@@ruby", ["before@@ruby"]
+
+    assert_tokenizes_to "@@ruby(1, 2, 3)", ["@ruby(1, 2, 3)"]
+    assert_tokenizes_to "before @@ruby(1, 2, 3)", ["before @ruby(1, 2, 3)"]
+    assert_tokenizes_to "before@@ruby(1, 2, 3)", ["before@@ruby(1, 2, 3)"]
   end
 
   def test_bracket_matching

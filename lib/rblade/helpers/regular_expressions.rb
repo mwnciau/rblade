@@ -1,4 +1,5 @@
 module RBlade::RegularExpressions
+  RUBY_STRING_CHARACTERS = "\"'%?"
   RUBY_STRING = /
     (?<string>
     (?# Interpolated strings )
@@ -13,11 +14,6 @@ module RBlade::RegularExpressions
             \g<string>
             |
             \g<curly>
-            |
-            (?<=\w)\?
-            |
-            (?# A percentage sign that's not a percent literal)
-            %(?![qwisQWIrx]?+[\x00-\x7F&&[^a-zA-Z0-9(\[{<]])
           )*+
         \})
         |
@@ -47,15 +43,15 @@ module RBlade::RegularExpressions
         |
         (?<ni_braces> \{ (?: [^{}\\]++ | \\. | \g<ni_braces> )*+ \} )
         |
-        (?<nid>[\x00-\x7F&&[^a-zA-Z0-9(\[{<]])
+        (?<percent_delimiter>[\x00-\x7F&&[^a-zA-Z0-9(\[{<]])
         (?:
           [a-zA-Z0-9(\[{<[^\x00-\x7F]]++
           |
           \\.
           |
-          (?!\k<nid>)[^\\]
+          (?!\k<percent_delimiter>)[^\\]
         )*?
-        \k<nid>
+        \k<percent_delimiter>
       )
     |
     (?# Interpolated percent expressions )
@@ -69,7 +65,7 @@ module RBlade::RegularExpressions
         |
         (?<i_braces> \{ (?: [^{}\\#]++ | \#\g<curly> | \\. | \g<i_braces> )*+ \} )
         |
-        (?<id>[\x00-\x7F&&[^a-zA-Z0-9(\[{<]])
+        \g<percent_delimiter>
         (?:
           [a-zA-Z0-9(\[{<[^\x00-\x7F]]++
           |
@@ -77,14 +73,20 @@ module RBlade::RegularExpressions
           |
           \\.
           |
-          (?!\k<id>)[^\\#]
+          (?!\k<percent_delimiter>)[^\\#]
           |
           (?!\#\{)\#[@$]?+
         )*?
-        (?!\#\{)\k<id>
+        (?!\#\{)\k<percent_delimiter>
       )
     |
     (?<!\w)\?.
+    |
+    (?# Consume characters that don't end up being string literals)
+    (?<=\w)\?
+    |
+    (?# A percentage sign that's not a percent literal)
+    %(?![qwisQWIrx]?+\g<percent_delimiter>)
     )
   /mx
 end

@@ -76,6 +76,8 @@ polated#{"%"},
     matched_strings.each { |string| assert_equal string, "a#{string}a".match(RBlade::RegularExpressions::RUBY_STRING)&.[](0) }
 
     unmatched_strings = %w[
+      %q|asd.
+      %-asd=
       %q|not|interpolated|
       %|inter|polated|
       "#{"
