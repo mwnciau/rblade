@@ -6,7 +6,7 @@ class TokenizesStatementsTest < TestCase
     RBlade::TokenizesStatements.new.tokenize!(tokens)
 
     expected.each.with_index do |expected_item, i|
-      actual = tokens[i].value
+      actual = tokens[i]&.value || tokens[i]
       if expected_item.is_a? Hash
         assert_equal expected_item[:name], actual[:name]
         if expected_item[:arguments].nil?
@@ -51,7 +51,8 @@ class TokenizesStatementsTest < TestCase
   end
 
   def test_bracket_matching
-    assert_tokenizes_to "@ruby()", [{name: "ruby"}]
+    assert_tokenizes_to "@ruby()", [{name: "ruby"}, nil]
+    assert_tokenizes_to "@ruby( )", [{name: "ruby"}, nil]
     assert_tokenizes_to "@ruby(')', 2)", [{name: "ruby", arguments: ["')'", "2"]}]
     assert_tokenizes_to "@ruby('(', 2)", [{name: "ruby", arguments: ["'('", "2"]}]
     assert_tokenizes_to "@ruby(%q[)], 2)", [{name: "ruby", arguments: ["%q[)]", "2"]}]
@@ -102,14 +103,22 @@ class TokenizesStatementsTest < TestCase
   end
 
   def test_statement_arguments
-    assert_tokenizes_to "@ruby()", [{name: "ruby"}]
-    assert_tokenizes_to "@ruby( )", [{name: "ruby"}]
+    assert_tokenizes_to "@ruby()", [{name: "ruby"}, nil]
+    assert_tokenizes_to "@ruby( )", [{name: "ruby"}, nil]
+
+    assert_tokenizes_to "@ruby(1 \n 2 \n 3)", [{name: "ruby", arguments: ["1 \n 2 \n 3"]}]
+    assert_tokenizes_to "@ruby(1, \n 2, \n 3)", [{name: "ruby", arguments: ["1", "2", "3"]}]
 
     # Double commas get merged
     assert_tokenizes_to "@ruby(a,,b)", [{name: "ruby", arguments: ["a", "b"]}]
     assert_tokenizes_to "@ruby(a, ,b)", [{name: "ruby", arguments: ["a", "b"]}]
+  end
 
-    # Double commas get merged
-    assert_tokenizes_to "@ruby(a,,b)", [{name: "ruby", arguments: ["a", "b"]}]
+  def test_limitations
+    # Parentheses in regular expressions may cause incorrect matching
+    assert_tokenizes_to "@ruby(/\\)/)", [{name: "ruby", arguments: ["/\\"]}, "/)"]
+
+    # A workaround is to use the alternative %r syntax
+    assert_tokenizes_to "@ruby(%r/\\)/)", [{name: "ruby", arguments: ["%r/\\)/"]}, nil]
   end
 end
