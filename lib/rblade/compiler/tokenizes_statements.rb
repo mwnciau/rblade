@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rblade/helpers/regular_expressions"
-require "rblade/helpers/tokenizer"
 require "ripper"
 
 module RBlade
@@ -45,12 +44,12 @@ module RBlade
           \s?
         /xo) do |before_match|
           next if current_match_id == $~.object_id
-          current_match_id = $~.object_id# unless $~.nil?
+          current_match_id = $~.object_id
 
           # Add the current string to the segment list
           unless before_match == ""
             # Skip output between case and when statements
-            unless segments.last&.type == :statement && segments.last&.value&.[](:name) == 'case'
+            unless segments.last&.type == :statement && segments.last&.value&.[](:name) == "case"
               if segments.last && segments.last.type == :unprocessed
                 segments.last.value << before_match
               else
@@ -105,18 +104,76 @@ module RBlade
 
     private
 
-    def tokenize_arguments!(statement_handle, arguments)
-      # Remove the parentheses from the argument string
-      arguments = arguments[1..-2]
+    def tokenize_arguments!(statement_handle, argument_string)
+      argument_string.delete_prefix! "("
+      argument_string.delete_suffix! ")"
 
-      # Special case for the props statement: remove the wrapping braces if they exist
       if statement_handle == "props"
-        if arguments.start_with?("{") && arguments.end_with?("}")
-          arguments = arguments[1..-2]
-        end
+        # Special case for the props statement: remove wrapping braces if they exist
+        argument_string.delete_prefix! "{"
+        argument_string.delete_suffix! "}"
       end
 
-      Tokenizer.extract_comma_separated_values arguments
+      argument_string.strip!
+      return nil if argument_string == ""
+
+      current_match_id = nil
+      arguments = []
+      argument_string.split(/
+        \G
+        (?<argument>
+          (?:
+            [^,\(\{\[#{RegularExpressions::RUBY_STRING_CHARACTERS}]++
+            |
+            #{RegularExpressions::RUBY_STRING}
+            |
+            (?<parentheses>
+              \(
+                (?:
+                  [^\(\)#{RegularExpressions::RUBY_STRING_CHARACTERS}]++
+                  |
+                  \g<string>
+                  |
+                  \g<parentheses>
+                )*+
+              \)
+            )
+            |
+            (?<brackets>
+              \[
+                (?:
+                  [^\[\]#{RegularExpressions::RUBY_STRING_CHARACTERS}]++
+                  |
+                  \g<string>
+                  |
+                  \g<brackets>
+                )*+
+              \]
+            )
+            |
+            (?<braces>
+              \{
+                (?:
+                  [^\{\}#{RegularExpressions::RUBY_STRING_CHARACTERS}]++
+                  |
+                  \g<string>
+                  |
+                  \g<braces>
+                )*+
+              \}
+            )
+          )*+
+        )
+        ,
+      /xmo, -1) do |x|
+        next if current_match_id == $~.object_id
+        current_match_id = $~.object_id
+
+        argument = ($~&.[](:argument) || x).strip
+        arguments << argument unless argument == ""
+      end
+
+      arguments
     end
   end
 end

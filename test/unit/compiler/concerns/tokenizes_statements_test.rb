@@ -76,6 +76,7 @@ class TokenizesStatementsTest < TestCase
 
   def test_commas_in_brackets
     assert_tokenizes_to "@ruby([1, 2, 3])", [{name: "ruby", arguments: ["[1, 2, 3]"]}]
+    assert_tokenizes_to "@ruby([1, 2, 3], a)", [{name: "ruby", arguments: ["[1, 2, 3]", "a"]}]
     assert_tokenizes_to "@ruby([1, {2, 3}])", [{name: "ruby", arguments: ["[1, {2, 3}]"]}]
     assert_tokenizes_to "@ruby([1], ([{2, 3}]))", [{name: "ruby", arguments: ["[1]", "([{2, 3}])"]}]
   end
@@ -98,5 +99,17 @@ class TokenizesStatementsTest < TestCase
 
     # Whitespace should not be trimmed for non-statements
     assert_compiles_to " @cake ", "@output_buffer.raw_buffer<<-' @cake ';"
+  end
+
+  def test_statement_arguments
+    assert_tokenizes_to "@ruby()", [{name: "ruby"}]
+    assert_tokenizes_to "@ruby( )", [{name: "ruby"}]
+
+    # Double commas get merged
+    assert_tokenizes_to "@ruby(a,,b)", [{name: "ruby", arguments: ["a", "b"]}]
+    assert_tokenizes_to "@ruby(a, ,b)", [{name: "ruby", arguments: ["a", "b"]}]
+
+    # Double commas get merged
+    assert_tokenizes_to "@ruby(a,,b)", [{name: "ruby", arguments: ["a", "b"]}]
   end
 end
