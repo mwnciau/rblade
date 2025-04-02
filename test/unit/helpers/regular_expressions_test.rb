@@ -100,4 +100,134 @@ polated#{"%"},
 
     unmatched_strings.each { |string| refute_equal string, "a#{string}a".match(RBlade::RegularExpressions::RUBY_STRING)&.[](0) }
   end
+
+  def test_interpolated_heredocs
+    heredoc_strings = []
+
+    heredoc_strings.push <<~HERE.strip
+      <<END
+      123
+      END
+    HERE
+
+    heredoc_strings.push <<~HERE.strip
+      <<"END"
+      123
+      END
+    HERE
+
+    heredoc_strings.push <<~HERE.strip
+      <<-END
+      123
+      END
+    HERE
+
+    heredoc_strings.push <<~HERE.strip
+      <<~END
+      123
+      END
+    HERE
+
+    heredoc_strings.push <<~HERE.strip
+      <<-END
+        123
+        END
+    HERE
+
+    heredoc_strings.push <<~HERE.strip
+      <<~END
+        123
+        END
+    HERE
+
+    heredoc_strings.push <<~'HERE'.strip
+      <<END
+      #{
+      END
+      }
+      END
+    HERE
+
+    heredoc_strings.push <<~'HERE'.strip
+      <<-END
+      #{
+      END
+      }
+      END
+    HERE
+
+    heredoc_strings.push <<~'HERE'.strip
+      <<~END
+      #{
+      END
+      }
+      END
+    HERE
+
+    heredoc_strings.each { |string| assert_equal string, "a#{string}\na".match(RBlade::RegularExpressions::RUBY_STRING)&.[](0) }
+  end
+
+  def test_non_interpolated_heredocs
+    heredoc_strings = []
+
+    heredoc_strings.push <<~HERE.strip
+      <<'END'
+      123
+      END
+    HERE
+
+    heredoc_strings.push <<~HERE.strip
+      <<-'END'
+      123
+      END
+    HERE
+
+    heredoc_strings.push <<~HERE.strip
+      <<~'END'
+      123
+      END
+    HERE
+
+    heredoc_strings.push <<~HERE.strip
+      <<-'END'
+        123
+        END
+    HERE
+
+    heredoc_strings.push <<~HERE.strip
+      <<~'END'
+        123
+        END
+    HERE
+
+    heredoc_strings.each { |string| assert_equal string, "a#{string}\na".match(RBlade::RegularExpressions::RUBY_STRING)&.[](0) }
+
+    invalid_heredoc_strings = []
+
+    invalid_heredoc_strings.push <<~'HERE'.strip
+      <<'END'
+      #{
+      END
+      }
+      END
+    HERE
+
+    invalid_heredoc_strings.push <<~'HERE'.strip
+      <<-'END'
+      #{
+      END
+      }
+      END
+    HERE
+
+    invalid_heredoc_strings.push <<~'HERE'.strip
+      <<~'END'
+      #{
+      END
+      }
+      END
+    HERE
+
+    invalid_heredoc_strings.each { |string| refute_equal string, string.match(RBlade::RegularExpressions::RUBY_STRING)&.[](0) }
+  end
 end

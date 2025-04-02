@@ -1035,6 +1035,15 @@ Regular expression literals may cause improper bracket matching in RBlade direct
 @ruby(%r/\)/)
 ```
 
+### `<<` in RBlade directives
+
+The append operator is assumed to be a HEREDOC if followed immediately by a word character (a-z, A-Z, _), `-` or `~`.
+
+```rblade
+{{-- If using `<<` to append, add a space after the operator --}}
+@ruby(string << "extra")
+```
+
 ### End brackets in print statements
 
 Print statements cannot contain their end bracket in strings or other literals:

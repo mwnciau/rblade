@@ -14,6 +14,8 @@ class TokenizesStatementsTest < TestCase
         else
           assert_equal expected_item[:arguments], actual[:arguments]
         end
+      elsif expected_item.nil?
+        assert_nil actual
       else
         assert_equal expected_item, actual
       end
@@ -68,6 +70,16 @@ class TokenizesStatementsTest < TestCase
     assert_tokenizes_to "@ruby(1,
     (2 + (3)),
     4) @if()", [{name: "ruby", arguments: ["1", "(2 + (3))", "4"]}, {name: "if"}]
+
+    assert_tokenizes_to "@ruby(<<END\n)\nEND\n)", [{name: "ruby", arguments: ["<<END\n)\nEND"]}]
+    assert_tokenizes_to "@ruby(<<\"END\"\n)\nEND\n)", [{name: "ruby", arguments: ["<<\"END\"\n)\nEND"]}]
+    assert_tokenizes_to "@ruby(<<'END'\n)\nEND\n)", [{name: "ruby", arguments: ["<<'END'\n)\nEND"]}]
+    assert_tokenizes_to "@ruby(<<-END\n)\n  END\n)", [{name: "ruby", arguments: ["<<-END\n)\n  END"]}]
+    assert_tokenizes_to "@ruby(<<-\"END\"\n)\n  END\n)", [{name: "ruby", arguments: ["<<-\"END\"\n)\n  END"]}]
+    assert_tokenizes_to "@ruby(<<-'END'\n)\n  END\n)", [{name: "ruby", arguments: ["<<-'END'\n)\n  END"]}]
+    assert_tokenizes_to "@ruby(<<~END\n)\n\tEND\n)", [{name: "ruby", arguments: ["<<~END\n)\n\tEND"]}]
+    assert_tokenizes_to "@ruby(<<~\"END\"\n)\n\tEND\n)", [{name: "ruby", arguments: ["<<~\"END\"\n)\n\tEND"]}]
+    assert_tokenizes_to "@ruby(<<~'END'\n)\n\tEND\n)", [{name: "ruby", arguments: ["<<~'END'\n)\n\tEND"]}]
 
     assert_tokenizes_to "( @ruby())", ["(", {name: "ruby"}, ")"]
     assert_tokenizes_to "@ruby)", [{name: "ruby"}, ")"]

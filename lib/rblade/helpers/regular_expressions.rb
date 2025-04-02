@@ -1,5 +1,5 @@
 module RBlade::RegularExpressions
-  RUBY_STRING_CHARACTERS = "\"'%?"
+  RUBY_STRING_CHARACTERS = "\"'%?<"
   RUBY_STRING = /
     (?<string>
     (?# Interpolated strings )
@@ -80,13 +80,56 @@ module RBlade::RegularExpressions
         (?!\#\{)\k<percent_delimiter>
       )
     |
+    (?# Interpolated HEREDOC)
+    <<(?:(?<heredoc_delimiter>[a-zA-Z_]\w*+)|"\g<heredoc_delimiter>")[^\n]*+\n
+    (?:
+      (?!\k<heredoc_delimiter>$)[^\#\n]++
+      |
+      \#\g<curly>
+      |
+      (?!\#\{)\#[^\#\n]++
+      |
+      \n
+    )*?
+    \n\k<heredoc_delimiter>$
+    |
+    (?# Interpolated HEREDOC with leading spaces)
+    <<[-~](?:\g<heredoc_delimiter>|"\g<heredoc_delimiter>")[^\n]*+\n
+    (?:
+      (?!\k<heredoc_delimiter>$)[^\#\n]++
+      |
+      \#\g<curly>
+      |
+      (?!\#\{)\#[^\#\n]++
+      |
+      \n
+    )*?
+    \n\s*+\k<heredoc_delimiter>$
+    |
+    (?# Non-interpolated HEREDOC)
+    <<'\g<heredoc_delimiter>'[^\n]*+\n
+    (?:
+      (?!\k<heredoc_delimiter>$)[^\n]*+\n
+    )*+
+    \k<heredoc_delimiter>$
+    |
+    (?# Non-interpolated HEREDOC with leading spaces)
+    <<[-~]'\g<heredoc_delimiter>'[^\n]*+\n
+    (?:
+      (?!\s*\k<heredoc_delimiter>$)[^\n]*+\n
+    )*+
+    \s*\k<heredoc_delimiter>$
+    |
     (?<!\w)\?.
     |
-    (?# Consume characters that don't end up being string literals)
+    (?# Consume characters that aren't string literals)
     (?<=\w)\?
     |
     (?# A percentage sign that's not a percent literal)
     %(?![qwisQWIrx]?+\g<percent_delimiter>)
     )
+    |
+    (?# Consume angled brackets that aren't HEREDOCs)
+    <(?!<[~-]?['"a-zA-Z_])
   /mx
 end
