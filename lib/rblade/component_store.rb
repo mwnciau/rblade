@@ -86,7 +86,7 @@ module RBlade
 
       compiled_component = RBlade::Compiler.compile_string(template, self)
 
-      @component_definitions << "def self._rblade_component_#{escaped_name}(attributes,&);slot=if block_given?;RBlade::SlotManager.new(@output_buffer.capture(->(name, slot_attributes, &slot_block)do;attributes[name]=RBlade::SlotManager.new(@output_buffer.capture(&slot_block), slot_attributes);end,&));end;_stacks=[];@output_buffer.raw_buffer<<@output_buffer.capture do;#{compiled_component}@output_buffer.raw_buffer.prepend(@_rblade_stack_manager.get(_stacks));end;end;"
+      @component_definitions << "def self._rblade_component_#{escaped_name}(attributes,&);slot=if block_given?;RBlade::SlotManager.new(@output_buffer.capture(->(name, **slot_attributes, &slot_block)do;attributes[name]=RBlade::SlotManager.new(@output_buffer.capture(&slot_block), slot_attributes);end,&));end;slot.nil?;_stacks=[];@output_buffer.raw_buffer<<@output_buffer.capture do;#{compiled_component}@output_buffer.raw_buffer.prepend(@_rblade_stack_manager.get(_stacks));end;end;"
 
       @component_method_names[name] = "_rblade_component_#{escaped_name}"
     end

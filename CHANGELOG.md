@@ -1,3 +1,7 @@
+## 3.1.0 [2025-04-02]
+- Add ability to use slots in dynamic components and the component view helper method
+- Change statement matching to use regular expressions to improve compile performance
+
 ## 3.0.1 [2025-03-18]
 - Fix dynamic components not working when `RBlade.component_helper_method_name` is set
 

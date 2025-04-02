@@ -45,7 +45,7 @@ module RBlade
       attributes = compile_attributes token.value[:attributes]
 
       if component[:name].start_with? "slot::"
-        "_slot.call(:'#{RBlade.escape_quotes(component[:name].delete_prefix("slot::"))}', {#{attributes.join(",")}}) do;"
+        "_slot.call(:'#{RBlade.escape_quotes(component[:name].delete_prefix("slot::"))}', **{#{attributes.join(",")}}) do;"
       else
         "#{@component_store.component(component[:name])}(RBlade::AttributesManager.new({#{attributes.join(",")}})) do |_slot|;"
       end
@@ -67,7 +67,7 @@ module RBlade
 
       attributes = compile_attributes token.value[:attributes]
 
-      "@output_buffer.raw_buffer<<#{RBlade.component_helper_method_name}(#{component_value}, '#{RBlade.escape_quotes(@component_store.current_view_name)}', #{attributes.join ","}) do;"
+      "@output_buffer.raw_buffer<<#{RBlade.component_helper_method_name}(#{component_value}, '#{RBlade.escape_quotes(@component_store.current_view_name)}', #{attributes.join ","}) do |_slot|;"
     end
 
     def compile_token_end(token)

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rblade/helpers/tokenizer"
-
 module RBlade
   class CompilesStatements
     class CompilesComponentHelpers

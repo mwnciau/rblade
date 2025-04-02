@@ -23,7 +23,7 @@ module RBlade
     end
 
     def setup_component_view_helper(mod)
-      mod.send(:define_method, RBlade.component_helper_method_name) do |component_name, current_view = nil, **attributes, &block|
+      mod.send(:define_method, RBlade.component_helper_method_name) do |component_name, current_view = nil, slot: "", **attributes, &block|
         # If this is a relative path, prepend with the previous component name's base
         if !current_view.nil? && component_name.start_with?(".")
           component_name = current_view.sub(/[^\.]++\z/, "") + component_name.delete_prefix(".")
@@ -37,12 +37,22 @@ module RBlade
         end
         path.sub!(/(?:\.[^.]++)?\.rblade\z/, "")
 
-        locals = {
-          slot: block.nil? ? attributes.delete(:slot) || -"" : capture(&block),
-          attributes: RBlade::AttributesManager.new(attributes),
-        }
+        attributes = RBlade::AttributesManager.new(attributes)
 
-        render template: path, locals:
+        unless block.nil?
+          value = nil
+          slot = @output_buffer.capture do
+            value = block.call(->(name, **slot_attributes, &slot_block) do
+              attributes[name] = RBlade::SlotManager.new(@output_buffer.capture(&slot_block), slot_attributes)
+            end)
+          end
+
+          if slot.blank?
+            slot = value || ""
+          end
+        end
+
+        render template: path, locals: {slot: RBlade::SlotManager.new(slot), attributes:}
       end
     end
   end

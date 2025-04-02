@@ -23,6 +23,7 @@ class CompilesComponentHelpersTest < TestCase
   end
 
   def test_props_hash
+    assert_props_compiles_to "@props({a: 'default', b:false,}) {{ a }} {{ b }}", nil, "A false"
     assert_props_compiles_to "@props({b: 'default'}) {{ b }}",
       "attributes.default(:'b', 'default');b=attributes.delete :'b';@output_buffer.append=b;",
       "default"

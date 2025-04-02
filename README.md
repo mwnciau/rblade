@@ -62,6 +62,7 @@ For a quick overview of RBlade's capabilities, refer to the [reference file](REF
     + [Method Field](#method-field)
   * [Stacks](#stacks)
   * [Integrating RBlade With Other Templates](#rblade-integration)
+  * [Limitations](#limitations)
 
 <a name="displaying-data"></a>
 ## Displaying Data
@@ -984,6 +985,18 @@ You might want to use RBlade components within other templates, e.g. if you are 
 <% end %>
 ```
 
+The component method also passes a proc that can be used to specify slots:
+
+```erb
+<%= component "card" do |slot| %>
+  <%# The "class" attribute and the contents of the block will be passed in as the "heading" attribute to the card component %>
+  <% slot :heading, class: "font-bold" do %>
+    Heading
+  <% end %>
+  Content
+<% end %>
+```
+
 If preferred, the `component` method can be renamed using the `RBlade.component_helper_method_name` option:
 
 ```ruby
@@ -1017,3 +1030,42 @@ Once enabled, RBlade components can be used as layouts for ERB templates, or ren
 
 > [!NOTE]  
 > Using the `component` helper instead of RBlade's component syntax does not take advantage of RBlade's component caching
+
+
+<a name="limitations"></a>
+## Limitations
+
+### Regular expressions in RBlade directives
+
+Regular expression literals may cause improper bracket matching in RBlade directive. To work around this, use the `%r` percent literal syntax.
+
+```rblade
+{{-- Parentheses in regular expressions may cause incorrect matching --}}
+@ruby(/\)/)
+
+{{-- A workaround is to use the alternative %r syntax --}}
+@ruby(%r/\)/)
+```
+
+### `<<` in RBlade directives
+
+The append operator is assumed to be a HEREDOC if followed immediately by a word character (a-z, A-Z, _), `-` or `~`.
+
+```rblade
+{{-- If using `<<` to append, add a space after the operator --}}
+@ruby(string << "extra")
+```
+
+### End brackets in print statements
+
+Print statements cannot contain their end bracket in strings or other literals:
+
+```rblade
+# These examples will cause a syntax error
+{{ '}}' }}
+<%= 'foo%>' %>
+
+# A workaround is to use the alternative syntax
+<%= 'foo}}' %>
+{{ 'foo%>' }}
+```
