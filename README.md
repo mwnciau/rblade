@@ -985,6 +985,18 @@ You might want to use RBlade components within other templates, e.g. if you are 
 <% end %>
 ```
 
+The component method also passes a proc that can be used to specify slots:
+
+```erb
+<%= component "card" do |slot| %>
+  <%# The "class" attribute and the contents of the block will be passed in as the "heading" attribute to the card component %>
+  <% slot :heading, class: "font-bold" do %>
+    Heading
+  <% end %>
+  Content
+<% end %>
+```
+
 If preferred, the `component` method can be renamed using the `RBlade.component_helper_method_name` option:
 
 ```ruby

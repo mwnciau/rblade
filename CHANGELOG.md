@@ -1,4 +1,5 @@
 ## 3.1.0 [UNRELEASED]
+- Add ability to use slots in dynamic components and the component view helper method
 - Change statement matching to use regular expressions to improve compile performance
 
 ## 3.0.1 [2025-03-18]
