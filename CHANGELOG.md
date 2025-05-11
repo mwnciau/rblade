@@ -1,3 +1,6 @@
+## 3.1.1 [2025-05-11]
+- Fix issue with component attributes mutating unfrozen strings (#19)
+
 ## 3.1.0 [2025-04-02]
 - Add ability to use slots in dynamic components and the component view helper method
 - Change statement matching to use regular expressions to improve compile performance
