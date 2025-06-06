@@ -62,6 +62,21 @@ class TestCase < Minitest::Test
     RBlade.direct_component_rendering = false
   end
 
+  def assert_token(tokens_or_source, type: nil, start_offset: nil, end_offset: nil)
+    tokens = tokens_or_source.is_a?(Array) ? tokens_or_source : RBlade::Compiler.tokenize_string(tokens_or_source)
+
+    assert(
+      tokens.any? do |token|
+        next unless type.nil? || token.type == type
+        next unless start_offset.nil? || token.start_offset == start_offset
+        next unless end_offset.nil? || token.end_offset == end_offset
+
+        true
+      end,
+      "Could not find token with type: #{type}, start_offset: #{start_offset}, end_offset: #{end_offset} in: #{tokens}"
+    )
+  end
+
   def module_context
     mod = Module.new do
       extend ActionView::Helpers

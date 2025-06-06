@@ -9,7 +9,7 @@ require "rblade/compiler/tokenizes_components"
 require "rblade/compiler/tokenizes_statements"
 require "active_support/core_ext/string/output_safety"
 
-Token = Struct.new(:type, :value)
+Token = Struct.new(:type, :value, :start_offset, :end_offset)
 
 module RBlade
   def self.escape_quotes(string)
@@ -38,7 +38,16 @@ module RBlade
 
   class Compiler
     def self.compile_string(string_template, component_store)
-      tokens = [Token.new(:unprocessed, string_template)]
+      tokens = tokenize_string string_template
+
+      component_compiler = CompilesComponents.new(component_store)
+      component_compiler.compile! tokens
+      component_compiler.ensure_all_tags_closed
+      compile_tokens tokens
+    end
+
+    def self.tokenize_string(string_template)
+      tokens = [Token.new(:unprocessed, string_template, 0, string_template.length)]
 
       CompilesVerbatim.new.compile! tokens
       CompilesComments.new.compile! tokens
@@ -47,10 +56,7 @@ module RBlade
       TokenizesStatements.new.tokenize! tokens
       CompilesStatements.new.compile! tokens
 
-      component_compiler = CompilesComponents.new(component_store)
-      component_compiler.compile! tokens
-      component_compiler.ensure_all_tags_closed
-      compile_tokens tokens
+      tokens
     end
 
     def self.compile_attribute_string(string_template)

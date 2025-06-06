@@ -6,24 +6,42 @@ module RBlade
       tokens.map! do |token|
         next(token) if token.type != :unprocessed
 
-        segments = token.value.split(/\s?(?<!\w)(@verbatim)(?!\w)\s?((?:[^@\s]++|[@\s])+?)\s?(?<!\w)@end_?verbatim(?!\w)\s?/i)
+        current_match_id = nil
+        segments = []
+        token.value.split(/\s?(?<!\w)@verbatim(?!\w)\s?(?<contents>(?:[^@\s]++|[@\s])+?)\s?(?<!\w)@end_?verbatim(?!\w)\s?/i) do |before_match|
+          next if current_match_id == $~.object_id
+          current_match_id = $~.object_id
 
-        i = 0
-        while i < segments.count
-          if segments[i] == "@verbatim"
-            segments.delete_at i
-            segments[i] = Token.new(type: :raw_text, value: segments[i])
+          # Add the current string to the segment list
+          unless before_match == ""
+            if segments.last&.type == :unprocessed
+              segments.last.value << before_match
+              segments.last.end_offset += before_match.length
+            else
+              start_offset = segments.last&.end_offset || token.start_offset
+              segments << Token.new(
+                type: :unprocessed,
+                value: before_match,
+                start_offset: start_offset,
+                end_offset: start_offset + before_match.length,
+              )
+            end
+          end
+          next if $~.nil?
 
-            i += 1
-          elsif !segments[i].nil? && segments[i] != ""
-            segments[i] = Token.new(type: :unprocessed, value: segments[i])
-
-            i += 1
-          else
-            segments.delete_at i
+          # Skip escaped statements
+          if $~[:contents].present?
+            start_offset = segments.last&.end_offset || token.start_offset
+            segments << Token.new(
+              type: :raw_text,
+              value: $~[:contents],
+              start_offset: start_offset,
+              end_offset: start_offset + $&.length,
+            )
           end
         end
 
+        raise segments.inspect
         segments
       end.flatten!
     end
