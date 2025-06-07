@@ -7,6 +7,7 @@ require "rblade/compiler/compiles_verbatim"
 require "rblade/compiler/compiles_statements"
 require "rblade/compiler/tokenizes_components"
 require "rblade/compiler/tokenizes_statements"
+require "rblade/helpers/utility"
 require "active_support/core_ext/string/output_safety"
 
 Token = Struct.new(:type, :value, :start_offset, :end_offset)

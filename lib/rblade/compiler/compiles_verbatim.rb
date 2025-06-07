@@ -29,7 +29,6 @@ module RBlade
           end
           next if $~.nil?
 
-          # Skip escaped statements
           if $~[:contents].present?
             start_offset = segments.last&.end_offset || token.start_offset
             segments << Token.new(

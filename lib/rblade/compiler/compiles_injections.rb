@@ -6,56 +6,79 @@ module RBlade
       tokens.map! do |token|
         next(token) if token.type != :unprocessed
 
-        segments = token.value.split(/
-          (@?\{!!)(\s*+(?:[^!}%@]++|[!}%@])+?\s*+)(!!})
+        current_match_id = nil
+        segments = []
+        token.value.split(/
+          (?<escape_unsafe_rblade>@?)\{!!(?<unsafe_rblade>(?:[^!}]++|[!}])+?)!!}
           |
-          (@?\{\{)(\s*+(?:[^!}%@]++|[!}%@])+?\s*+)(}})
+          (?<escape_safe_rblade>@?) \{\{ (?<safe_rblade>(?:[^!}]++|[!}])+?) }}
           |
-          (\s?(?<!\w)@?@ruby)(\s++(?:[^!}%@]++|[!}%@])+?\s*+)((?<!\w)@end_?ruby(?!\w)\s?)
+          \s?(?<![\w@])@ruby\s++(?<ruby>(?:[^@]++|[@])+?)(?<!\w)@end_?ruby(?!\w)\s?
           |
-          (<%%?=?=?)(\s*+(?:[^!}%@]++|[!}%@])+?\s*+)(%%?>)
-        /xi)
+          (?<escaped_erb_start><%%)
+          |
+          (?<escaped_erb_end>%%>)
+          |
+          (?<erb_tag><%(?!%)=?=?)\s*+(?<erb_tag_content>(?:[^%]++|[%])+?)(?<!%)%?>
+        /xi) do |before_match|
+          next if current_match_id == $~.object_id
+          current_match_id = $~.object_id
 
-        i = 0
-        while i < segments.count
-          case segments[i]
-          when "{{", "<%="
-            segments[i] = create_token(segments[i + 1].strip, true)
-          when "<%", /\A\s?@ruby\z/i
-            segments[i + 1].strip!
-            segments[i + 1] << ";" unless segments[i + 1].end_with?(";")
-            segments[i] = Token.new(type: :ruby, value: segments[i + 1])
-          when "{!!", "<%=="
-            segments[i] = create_token(segments[i + 1].strip, false)
-          when "@{!!", "@{{", /\A\s?@@ruby\z/i
-            segments[i].sub!("@", "")
-            segments[i] = Token.new(type: :raw_text, value: "#{segments[i]}#{segments[i + 1]}#{segments[i + 2]}")
-          when "<%%", "<%%=", "<%%=="
-            segments[i] = Token.new(type: :raw_text, value: "<#{segments[i].delete_prefix!("<%")}#{segments[i + 1]}%>")
-          when "", nil
-            segments.delete_at i
-            next
-          else
-            segments[i] = Token.new(type: :unprocessed, value: segments[i])
-            i += 1
-            next
+          unless before_match == ""
+            RBlade::Utility.append_unprocessed_string_segment!(token, segments, before_match)
           end
+          next if $~.nil?
 
-          segments.delete_at i + 1
-          segments.delete_at i + 1
-          i += 1
+          if $~[:unsafe_rblade].present? || $~[:erb_tag] == "<%=="
+            if $~[:escape_unsafe_rblade] == '@'
+              RBlade::Utility.append_unprocessed_string_segment!(token, segments, $&.delete_prefix('@'))
+            else
+              start_offset = segments.last&.end_offset || token.start_offset
+              segments << create_token(
+                ($~[:unsafe_rblade] || $~[:erb_tag_content]).strip,
+                false,
+                start_offset,
+                start_offset + $&.length,
+              )
+            end
+          elsif $~[:safe_rblade].present? || $~[:erb_tag] == "<%="
+            if $~[:escape_safe_rblade] == '@'
+              RBlade::Utility.append_unprocessed_string_segment!(token, segments, $&.delete_prefix('@'))
+            else
+              start_offset = segments.last&.end_offset || token.start_offset
+              segments << create_token(
+                ($~[:safe_rblade] || $~[:erb_tag_content]).strip,
+                true,
+                start_offset,
+                start_offset + $&.length,
+              )
+            end
+          elsif $~[:ruby].present? || $~[:erb_tag] == "<%"
+            value = ($~[:ruby] || $~[:erb_tag_content]).strip
+            value << ";" unless value.end_with?(";")
+            start_offset = segments.last&.end_offset || token.start_offset
+
+            segments << Token.new(
+              type: :ruby,
+              value: value,
+              start_offset: start_offset,
+              end_offset: start_offset + $&.length,
+            )
+          elsif $~[:escaped_erb_start].present?
+            RBlade::Utility.append_unprocessed_string_segment!(token, segments, +"<%")
+          elsif $~[:escaped_erb_end].present?
+            RBlade::Utility.append_unprocessed_string_segment!(token, segments, +"%>")
+          end
         end
 
         segments
       end.flatten!
     end
 
-    private
-
-    def create_token(expression, escape_html)
+    private def create_token(expression, escape_html, start_offset, end_offset)
       # Don't try to print ends
       if expression.match?(/\A(?:}|end(?![[:alnum:]_]|[^\0-\177]))/i)
-        return Token.new(:ruby, "#{expression};")
+        return Token.new(:ruby, "#{expression};", start_offset, end_offset)
       end
 
       segment_value = if escape_html
@@ -75,7 +98,7 @@ module RBlade
         "@output_buffer.raw_buffer<<(#{expression}).to_s;"
       end
 
-      Token.new(:print, segment_value)
+      Token.new(:print, segment_value, start_offset, end_offset)
     end
   end
 end
