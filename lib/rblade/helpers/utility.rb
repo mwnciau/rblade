@@ -1,6 +1,6 @@
 module RBlade
   class Utility
-    def self.append_unprocessed_string_segment!(token, segments, string)
+    def self.append_unprocessed_string_segment!(token, segments, string, offset = 0)
       if segments.last&.type == :unprocessed
         segments.last.value << string
         segments.last.end_offset += string.length
@@ -10,7 +10,7 @@ module RBlade
           type: :unprocessed,
           value: string,
           start_offset: start_offset,
-          end_offset: start_offset + string.length,
+          end_offset: start_offset + string.length + offset,
         )
       end
     end

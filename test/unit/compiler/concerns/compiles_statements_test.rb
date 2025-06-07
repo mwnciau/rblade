@@ -8,8 +8,8 @@ class CompilesStatementsTest < TestCase
 
   def test_escaping
     assert_compiles_to "@@end", "@output_buffer.raw_buffer<<-'@end';"
-    assert_compiles_to "@@this(12345)", "@output_buffer.raw_buffer<<-'@this(12345)';"
-    assert_compiles_to "@@this(@end)", "@output_buffer.raw_buffer<<-'@this(';end;@output_buffer.raw_buffer<<-')';"
+    assert_compiles_to "@@push(12345)", "@output_buffer.raw_buffer<<-'@push(12345)';"
+    assert_compiles_to "@@push(@end)", "@output_buffer.raw_buffer<<-'@push(';end;@output_buffer.raw_buffer<<-')';"
   end
 
   def test_statements_are_case_insensitive

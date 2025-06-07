@@ -14,18 +14,7 @@ module RBlade
 
           # Add the current string to the segment list
           unless before_match == ""
-            if segments.last&.type == :unprocessed
-              segments.last.value << before_match
-              segments.last.end_offset += before_match.length
-            else
-              start_offset = segments.last&.end_offset || token.start_offset
-              segments << Token.new(
-                type: :unprocessed,
-                value: before_match,
-                start_offset: start_offset,
-                end_offset: start_offset + before_match.length,
-              )
-            end
+            RBlade::Utility.append_unprocessed_string_segment!(token, segments, before_match)
           end
           next if $~.nil?
 

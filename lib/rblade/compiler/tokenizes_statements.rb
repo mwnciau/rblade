@@ -16,7 +16,7 @@ module RBlade
           (?:
             (?:
               (?<escaped_at>@@)
-              (?=\w++[!\?]?(?!\w))
+              (?<escaped_statement_name>\w++[!\?]?(?!\w))
             )
             |
             (?:
@@ -50,36 +50,29 @@ module RBlade
           unless before_match == ""
             # Skip output between case and when statements
             unless segments.last&.type == :statement && segments.last&.value&.[](:name) == "case"
-              if segments.last && segments.last.type == :unprocessed
-                segments.last.value << before_match
-              else
-                segments << Token.new(type: :unprocessed, value: before_match)
-              end
+              RBlade::Utility.append_unprocessed_string_segment!(token, segments, before_match)
             end
           end
           next if $~.nil?
 
-          # Skip escaped statements
-          if $~&.[](:escaped_at) == "@@"
-            segment = $&
-            # Remove the first or second @, depending on whether there is whitespace
-            segment.slice!(1).inspect
-            if segments.last && segments.last.type == :unprocessed
-              segments.last.value << segment
-            else
-              segments << Token.new(type: :unprocessed, value: segment)
-            end
+          statement_handle = ($~[:statement_name] || $~[:escaped_statement_name])
+            &.downcase
+            &.tr("_", "")
+          next if statement_handle.nil?
+
+          unless CompilesStatements.has_handler(statement_handle)
+            RBlade::Utility.append_unprocessed_string_segment!(token, segments, $&)
 
             next
           end
 
-          statement_handle = $~[:statement_name].downcase.tr("_", "")
-          unless CompilesStatements.has_handler(statement_handle)
-            if segments.last && segments.last.type == :unprocessed
-              segments.last.value << $&
-            else
-              segments << Token.new(type: :unprocessed, value: $&)
-            end
+          # Skip escaped statements
+          if $~&.[](:escaped_at) == "@@"
+            segment = $&.dup
+            # Remove the first or second @, depending on whether there is whitespace
+            segment.slice!(1)
+
+            RBlade::Utility.append_unprocessed_string_segment!(token, segments, segment, 1)
 
             next
           end
@@ -95,7 +88,13 @@ module RBlade
 
           end
 
-          segments << Token.new(type: :statement, value: statement_data)
+          start_offset = segments.last&.end_offset || token.start_offset
+          segments << Token.new(
+            type: :statement,
+            value: statement_data,
+            start_offset: start_offset,
+            end_offset: start_offset + $&.length,
+          )
         end
 
         segments
