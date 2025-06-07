@@ -8,53 +8,117 @@ module RBlade
       tokens.map! do |token|
         next(token) if token.type != :unprocessed
 
-        segments = tokenize_component_tags token.value
-
-        i = 0
-        while i < segments.count
-          if segments[i] == "</" && segments[i + 1]&.match?(/x[-:]/)
-            segments[i] = Token.new(type: :component_end, value: {name: segments[i + 1][2..]})
-
-            segments.delete_at i + 1
-            i += 1
-          elsif segments[i] == "<//>"
-            segments[i] = Token.new(type: :component_unsafe_end)
-            i += 1
-          elsif segments[i] == "<" && segments[i + 1]&.match?(/x[-:]/)
-            name = segments[i + 1][2..]
-            raw_attributes = (segments[i + 2] != ">") ? tokenize_attributes(segments[i + 2]) : nil
-
-            attributes = process_attributes raw_attributes
-
-            if raw_attributes.nil?
-              segments.delete_at i + 1
-            else
-              while segments[i + 1] != ">" && segments[i + 1] != "/>"
-                segments.delete_at i + 1
-              end
-            end
-
-            token_type = (segments[i + 1] == "/>") ? :component : :component_start
-            segments[i] = Token.new(type: token_type, value: {name:, attributes:})
-            segments.delete_at i + 1
-
-            i += 1
-          elsif !segments[i].nil? && segments[i] != ""
-            segments[i] = Token.new(type: :unprocessed, value: segments[i])
-
-            i += 1
-          else
-            segments.delete_at i
-          end
-        end
-
-        segments
+        process_component_tags token
       end.flatten!
     end
 
-    private
+    private def process_component_tags(token)
+      current_match_id = nil
+      segments = []
 
-    def process_attributes(raw_attributes)
+      token.value.split(%r/
+        # Opening and self-closing tags
+        (?<opening_tag>
+          <
+            \s*+
+            x[-\:](?<opening_tag_name>[\w\-\:\.]++)
+            (?<tag_attributes>
+              (?:
+                \s++
+                (?:
+                  (?:
+                    @class(?<nested_parentheses>\( (?: [^()]++ | \g<nested_parentheses> )*+ \))
+                  )
+                  |
+                  (?:
+                    @style\g<nested_parentheses>
+                  )
+                  |
+                  \{\{ \s*+ attributes (?:[^}]++|\})*? \}\}
+                  |
+                  (?:
+                    [\w\-:.@%]++
+                    (?:
+                      =
+                      (?:
+                        "(?> [^"{]++ | (?<!@)\{\{ (?:[^}]++|\})*? \}\} | \{ )*+"
+                        |
+                        '(?> [^'{]++ | (?<!@)\{\{ (?:[^}]++|\})*? \}\} | \{ )*+'
+                        |
+                        (?> [^'"=<>\s\/{]++ | (?<!@)\{\{ (?:[^}]++|\})*? \}\} | \{ )++
+                      )
+                    )?
+                  )
+                )
+              )*+
+            )
+            \s*+
+          (?<opening_tag_end>\/?>)
+        )
+        |
+        # Closing tags
+        (?<closing_tag>
+          <\/
+            \s*+
+            x[-\:](?<closing_tag_name>[\w\-\:\.]++)
+            \s*+
+          >
+        )
+        |
+        (?<unsafe_closing_tag><\/\/>)
+      /x) do |before_match|
+        next if current_match_id == $~.object_id
+        current_match_id = $~.object_id
+
+        # Add the current string to the segment list
+        unless before_match == ""
+          if segments.last&.type == :unprocessed
+            segments.last.value << before_match
+            segments.last.end_offset += before_match.length
+          else
+            start_offset = segments.last&.end_offset || token.start_offset
+            segments << Token.new(
+              type: :unprocessed,
+              value: before_match,
+              start_offset: start_offset,
+              end_offset: start_offset + before_match.length,
+            )
+          end
+        end
+        next if $~.nil?
+
+        start_offset = segments.last&.end_offset || token.start_offset
+        if $~[:unsafe_closing_tag].present?
+          segments << Token.new(
+            type: :component_unsafe_end,
+            start_offset: start_offset,
+            end_offset: start_offset + $&.length,
+          )
+        elsif $~[:closing_tag].present?
+          segments << Token.new(
+            type: :component_end,
+            value: {name: $~[:closing_tag_name]},
+            start_offset: start_offset,
+            end_offset: start_offset + $&.length,
+          )
+        elsif $~[:opening_tag].present?
+          raw_attributes = tokenize_attributes($~[:tag_attributes])
+          attributes = process_attributes raw_attributes
+
+          token_type = ($~[:opening_tag_end] == "/>") ? :component : :component_start
+          segments << Token.new(
+            type: token_type,
+            value: {name: $~[:opening_tag_name], attributes:},
+            start_offset: start_offset,
+            end_offset: start_offset + $&.length,
+          )
+        end
+      end
+
+      segments
+    end
+
+    private def process_attributes(raw_attributes)
       attributes = []
       i = 0
       while i < raw_attributes.count
@@ -112,61 +176,7 @@ module RBlade
       attributes
     end
 
-    def tokenize_component_tags(value)
-      value.split(%r/
-        # Opening and self-closing tags
-        (?:
-          (<)
-            \s*+
-            (x[-\:][\w\-\:\.]++)
-            ((?:
-              \s++
-              (?:
-                (?:
-                  @class(\( (?: [^()]++ | \g<-1> )*+ \))
-                )
-                |
-                (?:
-                  @style(\( (?: [^()]++ | \g<-1> )*+ \))
-                )
-                |
-                (
-                  \{\{ \s*+ attributes (?:[^}]++|\})*? \}\}
-                )
-                |
-                (?:
-                  [\w\-:.@%]++
-                  (?:
-                    =
-                    (?:
-                      "(?> [^"{]++ | (?<!@)\{\{ (?:[^}]++|\})*? \}\} | \{ )*+"
-                      |
-                      '(?> [^'{]++ | (?<!@)\{\{ (?:[^}]++|\})*? \}\} | \{ )*+'
-                      |
-                      (?> [^'"=<>\s\/{]++ | (?<!@)\{\{ (?:[^}]++|\})*? \}\} | \{ )++
-                    )
-                  )?
-                )
-              )
-            )*+)
-            \s*+
-          (\/?>)
-        )
-        |
-        # Closing tags
-        (?:
-          (<\/)
-            \s*+
-            (x[-\:][\w\-\:\.]++)
-            \s*+
-          >
-        )
-        |
-        (<\/\/>)
-      /x)
-    end
-
-    def tokenize_attributes(segment)
+    private def tokenize_attributes(segment)
       segment.scan(%r/
         (?<=\s|^)
         (?:

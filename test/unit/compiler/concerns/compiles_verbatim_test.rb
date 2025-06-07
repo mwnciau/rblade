@@ -32,15 +32,16 @@ class CompilesVerbatimTest < TestCase
   end
 
   def test_verbatim_offsets
-    #assert_token "@verbatim hi @endverbatim", type: :raw_text, start_offset: 0, end_offset: 25
-
-    assert_token "abc @verbatim hi @endverbatim def", type: :unprocessed, start_offset: 0, end_offset: 3
-    assert_token "abc @verbatim hi @endverbatim def", type: :raw_text, start_offset: 3, end_offset: 30
-    assert_token "abc @verbatim hi @endverbatim def", type: :unprocessed, start_offset: 30, end_offset: 33
+    #assert_tokens "@verbatim hi @endverbatim", [{type: :raw_text, start_offset: 0, end_offset: 25}]
+    assert_tokens "abc @verbatim hi @endverbatim def", [
+      {type: :unprocessed, start_offset: 0, end_offset: 3},
+      {type: :raw_text, start_offset: 3, end_offset: 30},
+      {type: :unprocessed, start_offset: 30, end_offset: 33},
+    ]
   end
 
   def assert_verbatim_found(template, expected = true)
-    tokens = [Token.new(:unprocessed, template)]
+    tokens = [Token.new(:unprocessed, template, 0, template.length)]
     RBlade::CompilesVerbatim.new.compile!(tokens)
 
     assert_equal expected, tokens.any? { |t| t.type == :raw_text }

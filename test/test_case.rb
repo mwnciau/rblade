@@ -62,19 +62,17 @@ class TestCase < Minitest::Test
     RBlade.direct_component_rendering = false
   end
 
-  def assert_token(tokens_or_source, type: nil, start_offset: nil, end_offset: nil)
+  def assert_tokens(tokens_or_source, expected_tokens)
     tokens = tokens_or_source.is_a?(Array) ? tokens_or_source : RBlade::Compiler.tokenize_string(tokens_or_source)
 
-    assert(
-      tokens.any? do |token|
-        next unless type.nil? || token.type == type
-        next unless start_offset.nil? || token.start_offset == start_offset
-        next unless end_offset.nil? || token.end_offset == end_offset
+    assert_equal expected_tokens.length, tokens.length
 
-        true
-      end,
-      "Could not find token with type: #{type}, start_offset: #{start_offset}, end_offset: #{end_offset} in: #{tokens}"
-    )
+    expected_tokens.each_with_index do |token, index|
+      assert_equal token[:type], tokens[index].type unless token[:type].nil?
+      assert_equal token[:value], tokens[index].value unless token[:value].nil?
+      assert_equal token[:start_offset], tokens[index].start_offset unless token[:start_offset].nil?
+      assert_equal token[:end_offset], tokens[index].end_offset unless token[:end_offset].nil?
+    end
   end
 
   def module_context

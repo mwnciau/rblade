@@ -2,7 +2,7 @@ require "test_case"
 
 class TokenizesComponentsTest < TestCase
   def assert_tokenizes_to(template, expected)
-    tokens = [Token.new(:unprocessed, template)]
+    tokens = [Token.new(:unprocessed, template, 0, template.length)]
     RBlade::TokenizesComponents.new.tokenize!(tokens)
 
     expected.each.with_index do |expected_item, i|

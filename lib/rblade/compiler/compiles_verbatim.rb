@@ -41,7 +41,6 @@ module RBlade
           end
         end
 
-        raise segments.inspect
         segments
       end.flatten!
     end
