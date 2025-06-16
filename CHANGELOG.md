@@ -1,3 +1,6 @@
+## 3.2.0 [UNRELEASED]
+- Add translate_location method to improve error messages in RBlade templates
+
 ## 3.1.1 [2025-05-11]
 - Fix issue with component attributes mutating unfrozen strings (#19)
 
