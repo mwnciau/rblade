@@ -32,12 +32,35 @@ class CompilesVerbatimTest < TestCase
   end
 
   def test_verbatim_offsets
-    #assert_tokens "@verbatim hi @endverbatim", [{type: :raw_text, start_offset: 0, end_offset: 25}]
+    assert_tokens "@verbatim hi @endverbatim", [{type: :raw_text, start_offset: 0, end_offset: 25}]
     assert_tokens "abc @verbatim hi @endverbatim def", [
       {type: :unprocessed, start_offset: 0, end_offset: 3},
       {type: :raw_text, start_offset: 3, end_offset: 30},
       {type: :unprocessed, start_offset: 30, end_offset: 33},
     ]
+
+    assert_tokens <<~RBLADE, [{type: :raw_text, start_offset: 0, end_offset: 26}]
+      @verbatim
+      hi
+      @endverbatim
+    RBLADE
+    source = <<~RBLADE
+      abc
+      @verbatim
+      hi
+      @endverbatim
+      def
+    RBLADE
+    assert_tokens source, [
+      {type: :unprocessed, start_offset: 0, end_offset: 3},
+      {type: :raw_text, start_offset: 3, end_offset: 30},
+      {type: :unprocessed, start_offset: 30, end_offset: 34},
+    ]
+  end
+
+  def test_nullify_verbatim
+    assert_equal "                         ", RBlade::CompilesVerbatim.nullify_verbatim("@verbatim hi @endverbatim")
+    assert_equal "a                           b", RBlade::CompilesVerbatim.nullify_verbatim("a @verbatim hi @endverbatim b")
   end
 
   def assert_verbatim_found(template, expected = true)

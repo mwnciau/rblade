@@ -189,4 +189,58 @@ class CompilesComponentsTest < TestCase
     assert_compiles_to "<x-dynamic component=\"compiles_components_test.relative\" title=\"1234\"/>", nil, "1234 - "
     assert_compiles_to "<x-compiles_components_test.dynamic-relative title=\"1234\"/>", nil, "1234 - "
   end
+
+  def test_components_offsets
+    assert_tokens "<x-button/>", [{type: :component, start_offset: 0, end_offset: 11}]
+    assert_tokens "abc <x-button/> def", [
+      {type: :unprocessed, start_offset: 0, end_offset: 4},
+      {type: :component, start_offset: 4, end_offset: 15},
+      {type: :unprocessed, start_offset: 15, end_offset: 19},
+    ]
+
+    assert_tokens "<x-button>hello</x-button>", [
+      {type: :component_start, start_offset: 0, end_offset: 10},
+      {type: :unprocessed, start_offset: 10, end_offset: 15},
+      {type: :component_end, start_offset: 15, end_offset: 26},
+    ]
+    assert_tokens "abc <x-button>hello</x-button> def", [
+      {type: :unprocessed, start_offset: 0, end_offset: 4},
+      {type: :component_start, start_offset: 4, end_offset: 14},
+      {type: :unprocessed, start_offset: 14, end_offset: 19},
+      {type: :component_end, start_offset: 19, end_offset: 30},
+      {type: :unprocessed, start_offset: 30, end_offset: 34},
+    ]
+
+    assert_tokens "<x-button class=\"test\">hello</x-button>", [
+      {type: :component_start, start_offset: 0, end_offset: 23},
+      {type: :unprocessed, start_offset: 23, end_offset: 28},
+      {type: :component_end, start_offset: 28, end_offset: 39},
+    ]
+
+    source = <<~RBLADE.strip
+      <x-button>
+      hello
+      </x-button>
+    RBLADE
+    assert_tokens source, [
+      {type: :component_start, start_offset: 0, end_offset: 10},
+      {type: :unprocessed, start_offset: 10, end_offset: 17},
+      {type: :component_end, start_offset: 17, end_offset: 28},
+    ]
+
+    source = <<~RBLADE.strip
+      abc
+      <x-button>
+      hello
+      </x-button>
+      def
+    RBLADE
+    assert_tokens source, [
+      {type: :unprocessed, start_offset: 0, end_offset: 4},
+      {type: :component_start, start_offset: 4, end_offset: 14},
+      {type: :unprocessed, start_offset: 14, end_offset: 21},
+      {type: :component_end, start_offset: 21, end_offset: 32},
+      {type: :unprocessed, start_offset: 32, end_offset: 36},
+    ]
+  end
 end

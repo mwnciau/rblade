@@ -32,5 +32,12 @@ module RBlade
         segments
       end.flatten!
     end
+
+    # Replaces verbatim statements with spaces of the same length. Used in comment offset calculation for source maps.
+    def self.nullify_verbatim(source)
+      source.gsub(/\s?(?<!\w)@verbatim(?!\w)\s?(?<contents>(?:[^@\s]++|[@\s])+?)\s?(?<!\w)@end_?verbatim(?!\w)\s?/i) do |match|
+        " " * match.length
+      end
+    end
   end
 end

@@ -178,4 +178,52 @@ class CompilesPrintsTest < TestCase
     assert_compiles_to "#{block_helper_funcs}1<%= block_helper_func do %>3 @ruby(end)5", nil, "12345"
     assert_compiles_to "#{block_helper_funcs}1<%= block_helper_func do %>3<% x = 'bad' %><% end %>5", nil, "12345"
   end
+
+  def test_prints_offsets
+    assert_tokens "{{foo}}", [{type: :print, start_offset: 0, end_offset: 7}]
+    assert_tokens "abc {{foo}} def", [
+      {type: :unprocessed, start_offset: 0, end_offset: 4},
+      {type: :print, start_offset: 4, end_offset: 11},
+      {type: :unprocessed, start_offset: 11, end_offset: 15},
+    ]
+
+    assert_tokens "{!!foo!!}", [{type: :print, start_offset: 0, end_offset: 9}]
+    assert_tokens "abc {!!foo!!} def", [
+      {type: :unprocessed, start_offset: 0, end_offset: 4},
+      {type: :print, start_offset: 4, end_offset: 13},
+      {type: :unprocessed, start_offset: 13, end_offset: 17},
+    ]
+
+    assert_tokens "<%=foo%>", [{type: :print, start_offset: 0, end_offset: 8}]
+    assert_tokens "abc <%=foo%> def", [
+      {type: :unprocessed, start_offset: 0, end_offset: 4},
+      {type: :print, start_offset: 4, end_offset: 12},
+      {type: :unprocessed, start_offset: 12, end_offset: 16},
+    ]
+
+    assert_tokens "<%==foo%>", [{type: :print, start_offset: 0, end_offset: 9}]
+    assert_tokens "abc <%==foo%> def", [
+      {type: :unprocessed, start_offset: 0, end_offset: 4},
+      {type: :print, start_offset: 4, end_offset: 13},
+      {type: :unprocessed, start_offset: 13, end_offset: 17},
+    ]
+
+    assert_tokens <<~RBLADE.strip, [{type: :print, start_offset: 0, end_offset: 9}]
+      {{
+      foo
+      }}
+    RBLADE
+    source = <<~RBLADE
+      abc
+      {{
+      foo
+      }}
+      def
+    RBLADE
+    assert_tokens source, [
+      {type: :unprocessed, start_offset: 0, end_offset: 4},
+      {type: :print, start_offset: 4, end_offset: 13},
+      {type: :unprocessed, start_offset: 13, end_offset: 18},
+    ]
+  end
 end

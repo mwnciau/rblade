@@ -63,7 +63,7 @@ class TestCase < Minitest::Test
   end
 
   def assert_tokens(tokens_or_source, expected_tokens)
-    tokens = tokens_or_source.is_a?(Array) ? tokens_or_source : RBlade::Compiler.tokenize_string(tokens_or_source)
+    tokens = tokens_or_source.is_a?(Array) ? tokens_or_source : RBlade::Compiler.tokenize_string(tokens_or_source, RBlade::ComponentStore.new)
 
     assert_equal expected_tokens.length, tokens.length
 

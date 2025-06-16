@@ -30,8 +30,8 @@ module RBlade
           next if $~.nil?
 
           if $~[:unsafe_rblade].present? || $~[:erb_tag] == "<%=="
-            if $~[:escape_unsafe_rblade] == '@'
-              RBlade::Utility.append_unprocessed_string_segment!(token, segments, $&.delete_prefix('@'))
+            if $~[:escape_unsafe_rblade] == "@"
+              RBlade::Utility.append_unprocessed_string_segment!(token, segments, $&.delete_prefix("@"))
             else
               start_offset = segments.last&.end_offset || token.start_offset
               segments << create_token(
@@ -42,8 +42,8 @@ module RBlade
               )
             end
           elsif $~[:safe_rblade].present? || $~[:erb_tag] == "<%="
-            if $~[:escape_safe_rblade] == '@'
-              RBlade::Utility.append_unprocessed_string_segment!(token, segments, $&.delete_prefix('@'))
+            if $~[:escape_safe_rblade] == "@"
+              RBlade::Utility.append_unprocessed_string_segment!(token, segments, $&.delete_prefix("@"))
             else
               start_offset = segments.last&.end_offset || token.start_offset
               segments << create_token(

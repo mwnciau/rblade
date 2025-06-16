@@ -39,15 +39,45 @@ module RBlade
 
   class Compiler
     def self.compile_string(string_template, component_store)
-      tokens = tokenize_string string_template
+      tokens = tokenize_string string_template, component_store
 
-      component_compiler = CompilesComponents.new(component_store)
-      component_compiler.compile! tokens
-      component_compiler.ensure_all_tags_closed
       compile_tokens tokens
     end
 
-    def self.tokenize_string(string_template)
+    def self.generate_source_map(string_template, component_store)
+      tokens = tokenize_string string_template, component_store
+      source_map = SourceMap.new(string_template)
+
+      i = 0
+      while i < tokens.count
+        token = tokens[i]
+
+        if token.type == :unprocessed || token.type == :raw_text
+          start_offset = token.start_offset
+          compiled_code = +"@output_buffer.raw_buffer<<-'"
+
+          # Merge together consecutive prints
+          while tokens[i + 1]&.type == :unprocessed || tokens[i + 1]&.type == :raw_text
+            compiled_code << RBlade.escape_quotes(token.value)
+            i += 1
+            token = tokens[i]
+          end
+
+          compiled_code << RBlade.escape_quotes(token.value)
+          compiled_code << "';"
+
+          source_map.add(start_offset, token.end_offset, compiled_code)
+        else
+          source_map.add(token.start_offset, token.end_offset, token.value)
+        end
+
+        i += 1
+      end
+
+      source_map
+    end
+
+    def self.tokenize_string(string_template, component_store)
       tokens = [Token.new(:unprocessed, string_template, 0, string_template.length)]
 
       CompilesVerbatim.new.compile! tokens
@@ -56,6 +86,10 @@ module RBlade
       CompilesInjections.new.compile! tokens
       TokenizesStatements.new.tokenize! tokens
       CompilesStatements.new.compile! tokens
+
+      component_compiler = CompilesComponents.new(component_store)
+      component_compiler.compile! tokens
+      component_compiler.ensure_all_tags_closed
 
       tokens
     end

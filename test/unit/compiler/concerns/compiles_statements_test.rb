@@ -74,4 +74,34 @@ class CompilesStatementsTest < TestCase
     assert_compiles_to "@sum(1, 2)", nil, "3"
     assert_compiles_to "@sum (1, 2, 3)", nil, "6"
   end
+
+  def test_statements_offsets
+    assert_tokens "@end", [{type: :statement, start_offset: 0, end_offset: 4}]
+    assert_tokens "abc @end def", [
+      {type: :unprocessed, start_offset: 0, end_offset: 3},
+      {type: :statement, start_offset: 3, end_offset: 9},
+      {type: :unprocessed, start_offset: 9, end_offset: 12},
+    ]
+
+    assert_tokens "@if(true)", [{type: :statement, start_offset: 0, end_offset: 9}]
+    assert_tokens "abc @if(true) def", [
+      {type: :unprocessed, start_offset: 0, end_offset: 3},
+      {type: :statement, start_offset: 3, end_offset: 14},
+      {type: :unprocessed, start_offset: 14, end_offset: 17},
+    ]
+
+    assert_tokens <<~RBLADE, [{type: :statement, start_offset: 0, end_offset: 5}]
+      @end
+    RBLADE
+    source = <<~RBLADE
+      abc
+      @end
+      def
+    RBLADE
+    assert_tokens source, [
+      {type: :unprocessed, start_offset: 0, end_offset: 3},
+      {type: :statement, start_offset: 3, end_offset: 9},
+      {type: :unprocessed, start_offset: 9, end_offset: 13},
+    ]
+  end
 end

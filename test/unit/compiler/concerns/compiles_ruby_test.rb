@@ -79,4 +79,38 @@ class CompilesRubyTest < TestCase
     assert_compiles_to "@ruby some ruby @end_ruby", "some ruby;"
     assert_compiles_to "@ruby some ruby @eNd_RuBy", "some ruby;"
   end
+
+  def test_ruby_offsets
+    assert_tokens "@ruby code @endruby", [{type: :ruby, start_offset: 0, end_offset: 19}]
+    assert_tokens "abc @ruby code @endruby def", [
+      {type: :unprocessed, start_offset: 0, end_offset: 3},
+      {type: :ruby, start_offset: 3, end_offset: 24},
+      {type: :unprocessed, start_offset: 24, end_offset: 27},
+    ]
+
+    assert_tokens "<% code %>", [{type: :ruby, start_offset: 0, end_offset: 10}]
+    assert_tokens "abc <% code %> def", [
+      {type: :unprocessed, start_offset: 0, end_offset: 4},
+      {type: :ruby, start_offset: 4, end_offset: 14},
+      {type: :unprocessed, start_offset: 14, end_offset: 18},
+    ]
+
+    assert_tokens <<~RBLADE, [{type: :ruby, start_offset: 0, end_offset: 20}]
+      @ruby
+      code
+      @endruby
+    RBLADE
+    source = <<~RBLADE
+      abc
+      @ruby
+      code
+      @endruby
+      def
+    RBLADE
+    assert_tokens source, [
+      {type: :unprocessed, start_offset: 0, end_offset: 3},
+      {type: :ruby, start_offset: 3, end_offset: 24},
+      {type: :unprocessed, start_offset: 24, end_offset: 28},
+    ]
+  end
 end
