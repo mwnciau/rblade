@@ -1,4 +1,4 @@
-## 3.2.0 [UNRELEASED]
+## 3.2.0 [2025-06-16]
 - Add translate_location method to improve error messages in RBlade templates
 
 ## 3.1.1 [2025-05-11]
